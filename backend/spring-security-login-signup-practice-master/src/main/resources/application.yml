@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/security_test?useSSL=false&useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 1234
+  devtools:
+    restart:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+  jwt:
+    secret: govlepel@$&
+  social:
+    kakao:
+      client_id: 11b821dcbb6f03f8387133bc30aa4891
+      redirect: /social/login/kakao
+      url:
+        login: https://kauth.kakao.com/oauth/authorize
+        token: https://kauth.kakao.com/oauth/token
+        profile: https://kapi.kakao.com/v2/user/me
+  url:
+    base: http://localhost:8080
+
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .ftl

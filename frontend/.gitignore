@@ -1,0 +1,29 @@
+
+# Created by https://www.gitignore.io/api/nuxtjs,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=nuxtjs,visualstudiocode
+
+### Nuxtjs ###
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/nuxtjs,visualstudiocode
