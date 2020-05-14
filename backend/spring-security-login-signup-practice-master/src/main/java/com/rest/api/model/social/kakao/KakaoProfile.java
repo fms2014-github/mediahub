@@ -1,4 +1,4 @@
-package com.rest.api.model.social;
+package com.rest.api.model.social.kakao;
 
 import lombok.Getter;
 import lombok.Setter;

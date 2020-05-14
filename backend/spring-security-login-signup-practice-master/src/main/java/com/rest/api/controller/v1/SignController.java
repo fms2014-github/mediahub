@@ -5,7 +5,7 @@ import com.rest.api.model.MemberEntity;
 import com.rest.api.model.response.CommonResult;
 import com.rest.api.model.response.SingleResult;
 import com.rest.api.config.security.JwtTokenProvider;
-import com.rest.api.model.social.KakaoProfile;
+import com.rest.api.model.social.kakao.KakaoProfile;
 import com.rest.api.service.MemberService;
 import com.rest.api.service.ResponseService;
 import com.rest.api.service.social.KakaoService;
