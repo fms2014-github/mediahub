@@ -88,3 +88,7 @@ sw.*
 
 # Vim swap files
 *.swp
+
+private.key
+csrl.csrl
+crt.crt
