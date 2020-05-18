@@ -55,17 +55,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/commonMixin';
 #livechat-component {
     width: 260px;
     #streamer-name {
-        padding: 10px;
-        background: linear-gradient(to bottom, rgb(220, 220, 220), rgb(195, 195, 195), rgb(180, 180, 180), rgb(195, 195, 195), rgb(220, 220, 220));
+        padding: 5px;
+        background: linear-gradient(
+            to bottom,
+            rgb(205‬, 205‬, 205‬),
+            rgb(185, 185, 185),
+            rgb(170, 170, 170),
+            rgb(185, 185, 185),
+            rgb(205‬, 205‬, 205‬)
+        );
     }
     #message-list {
         padding: 0 8px;
         height: 500px;
         overflow: auto;
-        scrollbar-width: thin;
+        @include scrollbar('&');
+        border-bottom-width: 1px;
+        border-bottom-color: #cdcdcd;
+        border-bottom-style: solid;
         img {
             vertical-align: middle;
             border-radius: 100%;
@@ -100,11 +111,11 @@ export default {
             }
 
             .enable-youtube {
-                background-color: rgb(255, 0, 0);
+                background-color: $youtube-color;
                 color: white;
             }
             .enable-twitch {
-                background-color: rgb(145, 71, 255);
+                background-color: $twitch-color;
                 color: white;
             }
         }
