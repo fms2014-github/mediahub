@@ -17,8 +17,8 @@
         </div>
         <div id="send-message">
             <div id="select-platform">
-                <span id="youtube">YT</span>
-                <span id="twitch">TW</span>
+                <span id="youtube" class="enable-youtube">YT</span>
+                <span id="twitch" class="enable-twitch">TW</span>
             </div>
             <input type="text" name="message" />
         </div>
@@ -65,6 +65,7 @@ export default {
         padding: 0 8px;
         height: 500px;
         overflow: auto;
+        scrollbar-width: thin;
         img {
             vertical-align: middle;
             border-radius: 100%;
@@ -80,14 +81,37 @@ export default {
         }
     }
     #send-message {
+        margin-top: 4px;
         #select-platform {
             display: inline-block;
             width: 10%;
             height: 100%;
+            margin: 2px;
+            span {
+                display: inline-block;
+                width: 100%;
+                vertical-align: top;
+                text-align: center;
+                font: {
+                    size: 0.8rem;
+                }
+                border-radius: 3px;
+                background-color: rgb(150, 150, 150);
+            }
+
+            .enable-youtube {
+                background-color: rgb(255, 0, 0);
+                color: white;
+            }
+            .enable-twitch {
+                background-color: rgb(145, 71, 255);
+                color: white;
+            }
         }
         input[name='message'] {
             vertical-align: top;
-            width: 87%;
+            width: calc(100% - 10% - 10px);
+            margin: 2px 0;
             padding: 10px 5px;
         }
     }
