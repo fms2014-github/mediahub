@@ -90,5 +90,5 @@ sw.*
 *.swp
 
 private.key
-csrl.csrl
+csrl.csr
 crt.crt

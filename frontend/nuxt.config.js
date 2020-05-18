@@ -50,6 +50,7 @@ export default {
   /*
    ** Build configuration
    */
+  rootDir: __dirname,
   build: {
     /*
      ** You can extend webpack config here

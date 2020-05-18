@@ -1,0 +1,17 @@
+version: '3'
+services: 
+    nuxtapp:
+        build: 
+            context: .
+            dockerfile: ./Dockerfile-nuxt
+    nginxproxy:
+        build: 
+            context: .
+            dockerfile: ./Dockerfile-nginx
+        # image: nginx
+        volumes:
+         - ./nginx/set.conf:/etc/nginx/nginx.conf
+        ports:
+         - "80:80"
+         - "443:443"
+        # command: /bin/bash -c "exec nginx -g 'daemon off;'"
