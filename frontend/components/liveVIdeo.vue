@@ -9,8 +9,8 @@
                 id="youtube-video"
                 class="back-slide"
                 :player-vars="{ autoplay: 0 }"
-                :player-width="720"
-                :player-height="405"
+                :player-width="0"
+                :player-height="0"
                 :video-id="play"
                 @ready="ready"
             />
@@ -35,17 +35,27 @@ export default {
     methods: {
         init() {
             const options = {
-                width: 720,
-                height: 405,
+                width: 0,
+                height: 0,
                 channel: 'silphtv',
             }
             // eslint-disable-next-line no-undef,no-var
             this.twitchPlayer = new Twitch.Player('twitch-video', options)
+            // eslint-disable-next-line no-undef
+            this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                document.querySelector('#twitch-video iframe').style.width = '720px'
+                document.querySelector('#twitch-video iframe').style.height = '405px'
+            })
         },
         ready(e) {
             this.player = e.target
+            document.querySelector('#youtube-video iframe').style.width = '720px'
+            document.querySelector('#youtube-video iframe').style.height = '405px'
         },
-        pause() {
+        youtubePlay() {
+            this.player.playVideo()
+        },
+        youtubePause() {
             this.player.pauseVideo()
         },
         nextSlide() {
@@ -53,8 +63,10 @@ export default {
             const twitchState = document.getElementById('twitch-video').classList
             if (youtubeState[0] === 'back-slide') {
                 youtubeState.replace('back-slide', 'front-slide')
+                this.youtubePlay()
             } else {
                 youtubeState.replace('front-slide', 'back-slide')
+                this.youtubePause()
             }
             if (twitchState[0] === 'back-slide') {
                 twitchState.replace('back-slide', 'front-slide')
@@ -86,6 +98,8 @@ export default {
         width: calc(#{$video-width} + 50px);
         height: $video-height;
         #youtube-video {
+            width: $video-width;
+            height: $video-height;
             position: absolute;
             transition: all 0.5s;
         }
