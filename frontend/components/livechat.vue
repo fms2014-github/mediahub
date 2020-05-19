@@ -58,7 +58,9 @@ export default {
 @import '~/assets/commonMixin';
 #livechat-component {
     width: 260px;
+    height: 500px;
     #streamer-name {
+        height: 36px;
         padding: 5px;
         background: linear-gradient(
             to bottom,
@@ -71,7 +73,7 @@ export default {
     }
     #message-list {
         padding: 0 8px;
-        height: 500px;
+        height: calc(100% - 36px - 48px);
         overflow: auto;
         @include scrollbar('&');
         border-bottom-width: 1px;
@@ -92,6 +94,7 @@ export default {
         }
     }
     #send-message {
+        height: 48px;
         margin-top: 4px;
         #select-platform {
             display: inline-block;
