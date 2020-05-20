@@ -1,6 +1,8 @@
 <template>
     <div>
-        <slideBar />
+        <client-only placeholder="loading...">
+            <slideBar />
+        </client-only>
     </div>
 </template>
 
