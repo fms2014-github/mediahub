@@ -1,14 +1,14 @@
 <template>
     <div>
-        <livechat></livechat>
+        <nav-bar></nav-bar>
     </div>
 </template>
 
 <script>
-import livechat from '@/components/livechat.vue'
+import navBar from '@/components/navBar.vue'
 export default {
     components: {
-        livechat,
+        navBar,
     },
 }
 </script>
