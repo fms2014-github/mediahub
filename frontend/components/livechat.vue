@@ -6,19 +6,25 @@
         <div id="message-list">
             <div v-for="item in testlist" :key="item.id" class="receive-message-list">
                 <div v-if="!item.me" class="receive-message">
-                    <img class="profile-image" src="https://via.placeholder.com/24" />
+                    <div class="profile">
+                        <img class="profile-image" src="https://via.placeholder.com/24" />
+                        <span>{{ item.nickname }}</span>
+                    </div>
                     <span>채팅 기록{{ item.message }} 입니다.</span>
                 </div>
                 <div v-if="item.me" class="receive-message my-message">
+                    <div class="profile">
+                        <img class="profile-image" src="https://via.placeholder.com/24" />
+                        <span>{{ item.nickname }}</span>
+                    </div>
                     <span>채팅 기록{{ item.message }} 입니다.</span>
-                    <img class="profile-image" src="https://via.placeholder.com/24" />
                 </div>
             </div>
         </div>
         <div id="send-message">
             <div id="select-platform">
-                <span id="youtube" class="enable-youtube">YT</span>
-                <span id="twitch" class="enable-twitch">TW</span>
+                <span class="youtube" @click="selectPlatform">YT</span>
+                <span class="twitch platform-disable" @click="selectPlatform">TW</span>
             </div>
             <input type="text" name="message" />
         </div>
@@ -30,26 +36,34 @@ export default {
     data() {
         return {
             testlist: [
-                { me: false, message: 1 },
-                { me: false, message: 2 },
-                { me: false, message: 3 },
-                { me: false, message: 4 },
-                { me: false, message: 5 },
-                { me: false, message: 6 },
-                { me: true, message: 7 },
-                { me: false, message: 8 },
-                { me: false, message: 9 },
-                { me: false, message: 10 },
-                { me: false, message: 11 },
-                { me: false, message: 12 },
-                { me: false, message: 13 },
-                { me: true, message: 14 },
-                { me: false, message: 15 },
-                { me: false, message: 16 },
-                { me: false, message: 17 },
-                { me: false, message: 18 },
+                { nickname: '상대방', me: false, message: 1 },
+                { nickname: '상대방', me: false, message: 2 },
+                { nickname: '상대방', me: false, message: 3 },
+                { nickname: '상대방', me: false, message: 4 },
+                { nickname: '상대방', me: false, message: 5 },
+                { nickname: '상대방', me: false, message: 6 },
+                { nickname: '나', me: true, message: 7 },
+                { nickname: '상대방', me: false, message: 8 },
+                { nickname: '상대방', me: false, message: 9 },
+                { nickname: '상대방', me: false, message: 10 },
+                { nickname: '상대방', me: false, message: 11 },
+                { nickname: '상대방', me: false, message: 12 },
+                { nickname: '상대방', me: false, message: 13 },
+                { nickname: '나', me: true, message: 14 },
+                { nickname: '상대방', me: false, message: 15 },
+                { nickname: '상대방', me: false, message: 16 },
+                { nickname: '상대방', me: false, message: 17 },
+                { nickname: '상대방', me: false, message: 18 },
             ],
         }
+    },
+    methods: {
+        selectPlatform() {
+            const selector = document.querySelectorAll('#select-platform span')
+            for (let i = 0; i < selector.length; i++) {
+                selector[i].classList.toggle('platform-disable')
+            }
+        },
     },
 }
 </script>
@@ -57,8 +71,7 @@ export default {
 <style lang="scss" scoped>
 @import '~/assets/commonMixin';
 #livechat-component {
-    width: 260px;
-    height: $video-height;
+    width: 300px;
     #streamer-name {
         height: 36px;
         padding: 5px;
@@ -88,8 +101,15 @@ export default {
         }
         .receive-message {
             margin: 12px 0px;
+            width: 75%;
+            margin-right: calc(25% - 16px);
+            padding: 8px;
+            background-color: gray;
+            border-radius: 8px;
         }
         .my-message {
+            margin-left: calc(25% - 16px);
+            background-color: rgb(255, 205, 0);
             text-align: right;
         }
     }
@@ -106,20 +126,21 @@ export default {
                 width: 100%;
                 vertical-align: top;
                 text-align: center;
+                border-radius: 3px;
                 font: {
                     size: 0.8rem;
                 }
-                border-radius: 3px;
-                background-color: rgb(150, 150, 150);
             }
-
-            .enable-youtube {
+            .youtube {
                 background-color: $youtube-color;
                 color: white;
             }
-            .enable-twitch {
+            .twitch {
                 background-color: $twitch-color;
                 color: white;
+            }
+            .platform-disable {
+                background-color: rgb(150, 150, 150);
             }
         }
         input[name='message'] {
