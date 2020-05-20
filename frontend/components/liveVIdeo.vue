@@ -116,6 +116,7 @@ export default {
         }
     }
     #changeVideo {
+        width: 36px;
         background-color: rgba(0, 0, 0, 0);
         border-color: rgba(0, 0, 0, 0);
         transform: translateY(20%);
@@ -133,7 +134,7 @@ export default {
             color: rgb(180, 180, 180);
             radius: 8px 8px 0 0;
         }
-        transform: translateX(100%) translateY(-34px) rotate(40deg);
+        transform: translateX(10px) translateY(-35px) rotate(40deg);
     }
     #changeVideo::after {
         display: inline-block;
