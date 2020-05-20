@@ -72,6 +72,7 @@ export default {
 @import '~/assets/commonMixin';
 #livechat-component {
     width: 300px;
+    height: $video-height;
     #streamer-name {
         height: 36px;
         padding: 5px;
