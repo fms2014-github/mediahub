@@ -116,13 +116,20 @@ export default {
         }
     }
     #changeVideo {
-        width: 36px;
+        width: 60px;
+        height: 90px;
+        padding: 0px;
+        margin: 0px;
+        vertical-align: top;
         background-color: rgba(0, 0, 0, 0);
         border-color: rgba(0, 0, 0, 0);
         transform: translateY(20%);
     }
     #changeVideo::before {
         display: inline-block;
+        vertical-align: middle;
+        position: absolute;
+        top: 2px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -132,12 +139,15 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 8px 8px 0 0;
+            radius: 8px 8px 0 9px;
         }
-        transform: translateX(10px) translateY(-35px) rotate(40deg);
+        transform: rotate(40deg);
     }
     #changeVideo::after {
         display: inline-block;
+        vertical-align: middle;
+        position: absolute;
+        bottom: 2px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -147,7 +157,7 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 0 0 8px 8px;
+            radius: 9px 0 8px 8px;
         }
         transform: rotate(-40deg);
     }
