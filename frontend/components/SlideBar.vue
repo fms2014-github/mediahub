@@ -2,7 +2,7 @@
     <div id="slide-bar">
         <div id="slide-container">
             <div class="left move-button">
-                <img src="@/assets/images/arrow_left_icon.png" @click="move(1)" />
+                <img class="image" src="@/assets/images/arrow_left_icon.png" @click="move(1)" />
             </div>
             <div id="inline-block">
                 <div v-for="(item, index) in plays" :id="'v' + index" :key="item" :class="'video v' + index">
@@ -10,17 +10,19 @@
                         v-if="index % 2 == 0"
                         :id="'youtube-video' + index"
                         class="back-slide"
-                        :player-vars="{ autoplay: 0 }"
+                        :player-vars="{ autoplay: 0, rel: 0 }"
                         :player-width="'100%'"
                         :player-height="330"
                         :video-id="item"
                         @ready="ready(index, $event)"
+                        @playing="playing"
+                        @paused="pause"
                     />
                     <div v-else :id="'v' + index"></div>
                 </div>
             </div>
             <div class="right move-button">
-                <img src="@/assets/images/arrow_right_icon.png" @click="move(-1)" />
+                <img class="image" src="@/assets/images/arrow_right_icon.png" @click="move(-1)" />
             </div>
         </div>
     </div>
@@ -34,24 +36,25 @@ export default {
             plays: [
                 'fvjpE_wFL5A',
                 'BcqxLCWn-CE',
-                'pPAAFMtDUzo',
+                'Xzuy9C9Y9P4',
                 'VBWGwLrC8yY',
-                'dXq1JDKudgM',
+                'Mcnu-jrpwS4',
                 'Vsj54gbwcbQ',
-                'Rf_xmNMuuPQ',
+                'ky7EbHBmwwo',
                 'NqwgNCPzCTg',
-                'gIowzVds_tE',
+                'FbxO4R8137Q',
                 'Nt8Ec7sS6Oc',
             ],
-            twitchs: ['dancingshana', 'carpe', 'wpckor', 'valorantkorea', 'rosebari', 'hwiba_h', 'yugyungwoo', 'dyohb', 'poongkotv', 'jegalyangtv'],
-            liveList: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            twitchs: ['dancingshana', 'ch1ckenkun', 'wpckor', 'tmxk319', 'rosebari', 'silphtv', 'yugyungwoo', 'bamgasi87', 'poongkotv', 'dyohb'],
+            liveList: new Array(10),
+            isPlay: false,
         }
     },
     created() {},
     mounted() {
         for (let i = 1; i < this.twitchs.length; i += 2) {
             const options = {
-                width: 750,
+                width: '100%',
                 height: 330,
                 channel: this.twitchs[i],
             }
@@ -63,33 +66,53 @@ export default {
                 video.pause()
             })
         }
+
+        window.onkeydown = () => {
+            if (event.keyCode !== 32) return
+            if (this.curIdx % 2 === 0) {
+                if (this.isPlay) this.liveList[this.curIdx].pauseVideo()
+                else this.liveList[this.curIdx].playVideo()
+            } else if (this.liveList[this.curIdx].isPaused()) {
+                this.liveList[this.curIdx].play()
+            } else this.liveList[this.curIdx].pause()
+        }
     },
     methods: {
         move(dir) {
+            if (!this.liveList[this.curIdx]) return
             const videos = document.getElementsByClassName('video')
             const N = videos.length
-            let temp
+            let idx
             for (let i = 0; i < N; i++) {
-                temp = Number(document.getElementById('v' + i).className.substring(7, 8)) + dir
-                if (temp < 0) temp = N - 1
-                document.getElementById('v' + i).className = 'video v' + (temp % N)
+                idx = this.cal(Number(document.getElementById('v' + i).className.substring(7, 8)), dir, N)
+                document.getElementById('v' + i).className = 'video v' + idx
             }
-            const d = dir * -1
             if (this.curIdx % 2 === 0) {
                 this.liveList[this.curIdx].stopVideo()
-                if (this.curIdx + d < 0) this.curIdx = N - 1
-                else this.curIdx = (this.curIdx + d) % N
+                this.curIdx = this.cal(this.curIdx, -dir, N)
                 this.liveList[this.curIdx].play()
             } else {
                 this.liveList[this.curIdx].pause()
-                if (this.curIdx + d < 0) this.curIdx = N - 1
-                else this.curIdx = (this.curIdx + d) % N
+                this.curIdx = this.cal(this.curIdx, -dir, N)
                 this.liveList[this.curIdx].playVideo()
             }
         },
+        cal(idx, dir, N) {
+            const next = idx + dir
+            if (next < 0) return N - 1
+            return next % N
+        },
         ready(index, event) {
             this.liveList.splice(index, 1, event.target)
-            if (index === 2) event.target.playVideo()
+            if (index === 2) {
+                event.target.playVideo()
+            }
+        },
+        playing(event) {
+            this.isPlay = true
+        },
+        pause(event) {
+            this.isPlay = false
         },
     },
 }
@@ -100,7 +123,7 @@ export default {
     // padding-left: 10%;
 
     #slide-container {
-        background-color: aqua;
+        background-color: rgb(40, 40, 40);
         position: relative;
         width: 100%;
         height: 400px;
@@ -109,8 +132,7 @@ export default {
             position: absolute;
             display: inline-block;
 
-            background-color: red;
-            vertical-align: middle;
+            // background-color: red;
             width: 80%;
             height: 400px;
             padding: 20px;
@@ -166,9 +188,13 @@ export default {
         .move-button {
             position: absolute;
             display: inline-block;
-            /* width: 5%; */
             height: auto;
             top: 50%;
+            transform: translateY(-50%);
+        }
+        .move-button:active {
+            box-shadow: 0px 0px 3px 3px rgb(247, 200, 114);
+            border-radius: 7px;
         }
         .left {
             left: 5%;
@@ -177,6 +203,9 @@ export default {
         .right {
             right: 5%;
             z-index: 10;
+        }
+        .image {
+            filter: invert(100%);
         }
     }
 }
