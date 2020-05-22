@@ -43,12 +43,12 @@ export default {
 #sidebar {
     display: flex;
     flex-direction: column;
-    width: 64px;
+    width: 72px;
     height: 100vh;
     border: {
         width: 0 2px 0 0;
         color: rgb(180, 180, 180);
-        style: soild;
+        style: solid;
     }
     svg {
         width: 42px;
