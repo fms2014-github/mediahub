@@ -33,6 +33,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ResponseService responseService;
 
+
     @Transactional
     public CommonResult joinUser(String email, String password) {
         memberRepository.save(MemberEntity.builder()
@@ -42,7 +43,17 @@ public class MemberService implements UserDetailsService {
                 .build());
         return responseService.getSuccessResult();
     }
-
+    /**
+     *
+     * @param email Gmail Email required
+     * @param provider OAuth Provider
+     * @return signup process result
+     *
+     * 회원가입시 처리해야 될 부분은?
+     * 1. Google Access Token도 받아와서 Auth로 저장시켜주기
+     * 2. 트위치 인증도 회원가입할때 같이 처리해주는 부분
+     * 3. 회원가입할때 인증에 따라서 목록 받아와주기.
+     */
     @Transactional
     public void joinSocialJoin(String email, String provider){
 

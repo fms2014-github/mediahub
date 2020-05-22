@@ -1,7 +1,13 @@
 package com.rest.api.service.social;
 
 import com.google.gson.Gson;
+import com.rest.api.advice.exception.CustomMemberNotFoundException;
+import com.rest.api.model.ChannelEntity;
+import com.rest.api.model.MemberEntity;
+import com.rest.api.model.oauth.AuthEntity;
+import com.rest.api.model.response.ListResult;
 import com.rest.api.model.social.twitch.RetTwitchAuth;
+import com.rest.api.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -11,9 +17,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class TwitchService {
+    private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
     private final Environment env;
     private final Gson gson;
@@ -29,32 +39,21 @@ public class TwitchService {
     private String twitchClientSecret;
     @Value("${spring.social.twitch.code_result_redirect}")
     private String twitchCodeResultRedirect;
+    @Value("${spring.social.twitch.twitch_api_v5_scope}")
+    private String scope;
+    @Value("${spring.social.twitch.url.twitch_api_v5_user}")
+    private String twitchUserRequestUrl;
+    @Value("${spring.social.twitch.accept}")
+    private String accept;
 
 
-//    public KakaoProfile getKakaoProfile(String accessToken) {
-//        // Set header : Content-type: application/x-www-form-urlencoded
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//        headers.set("Authorization", "Bearer " + accessToken);
-//        // Set http entity
-//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
-//        try {
-//            // Request profile
-//            ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.kakao.url.profile"), request, String.class);
-//            if (response.getStatusCode() == HttpStatus.OK)
-//                return gson.fromJson(response.getBody(), KakaoProfile.class);
-//        } catch (Exception e) {
-//            throw new CustomCommunicationException();
-//        }
-//        throw new CustomCommunicationException();
-//    }
     public String getImplicitCodeFlowUrl() {
         StringBuilder url = new StringBuilder()
                 .append(env.getProperty("spring.social.twitch.url.token"))
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=token")
                 .append("&redirect_uri=").append(baseUrl).append(twitchRedirect)
-                .append("&scope=user:edit user:read:email user:edit:follows");
+                .append("&scope=").append(scope);
         return url.toString();
     }
 
@@ -100,11 +99,96 @@ public class TwitchService {
         return url.toString();
     }
 
-    /*
-    트위치 팔로우 리스트 받아오기기
-    curl -H 'Accept: application/vnd.twitchtv.v5+json' \
-    -H 'Client-ID: uo6dggojyb8d6soh92zknwmi5ej1q2' \
-    -X GET 'https://api.twitch.tv/kraken/users/44322889/follows/channels'
-     */
 
+
+
+
+    /**
+     *
+     * 트위치 팔로우 리스트 받아오기기
+     * curl -H 'Accept: application/vnd.twitchtv.v5+json' \
+     * -H 'Client-ID: uo6dggojyb8d6soh92zknwmi5ej1q2' \
+     * -X GET 'https://api.twitch.tv/kraken/users/{twitch_user_id}/follows/channels'
+     *
+     * @param twitchUserId twitch 개인 고유 id 필요
+     * @return 아직 못정함.
+     */
+    public ListResult<ChannelEntity> getTwitchAllChannelsByUser(String twitchUserId){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/vnd.twitchtv.v5+json");
+        headers.add("Client-ID", twitchClientId);
+        // Set parameter
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        StringBuilder url = new StringBuilder()
+                .append(twitchUserRequestUrl)
+                .append("/")
+                .append(twitchUserId)
+                .append("/follows/channels");
+//                .append("https://api.twitch.tv/kraken/users/131655528/follows/channels"); //테스트 URL
+
+
+        // Set http entity
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
+//                restTemplate.getForEntity(url.toString(), String.class, request);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Twitch Follow List ***************************");
+            System.out.println(response.getBody());
+            System.out.println("Twitch Follow List **********endend***********");
+//            return gson.fromJson(response.getBody(), ListResult<ChannelEntity.class);
+        }
+
+        return null;
+    }
+
+
+    /**
+     *
+     * 리프레시 토큰으로 토큰 재발급 받기기
+     * POST https://id.twitch.tv/oauth2/token
+     * --data-urlencode
+     * ?grant_type=refresh_token
+     * &refresh_token=<your refresh token>
+     * &client_id=<your client ID>
+     * &client_secret=<your client secret>
+     *
+     * @param email user email
+     * @return Twitch Access Token 재발급 요청한 결과 RetTwitchAuth
+     *
+     * 1. email 인자로 받음
+     * 2. Database에서 Twitch Refresh token 가져옴
+     * 3. POST 요청 만들어서 json Data 요청
+     * 4. 실패시 Return null
+     * 5. 성공시 Return RetTwitchAuth
+     */
+    public RetTwitchAuth getTwitchAccessTokenWithRefreshToken(String email) {
+        MemberEntity member = memberRepository.findByEmail(email).orElseThrow(CustomMemberNotFoundException::new);;
+        List<AuthEntity> authList = member.getAuth();
+        String refreshToken = null;
+        for(AuthEntity auth : authList){
+            if(auth.getAuth_provider().equals("twitch"))
+                refreshToken = auth.getRefresh_token();
+
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        // Set parameter
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "refresh_token");
+        params.add("refresh_token", refreshToken);
+        params.add("client_id", twitchClientId);
+        params.add("client_secret", twitchClientSecret);
+
+        // Set http entity
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.twitch.url.token").concat("--data-urlencode"), request, String.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println(response.getBody());
+            return gson.fromJson(response.getBody(), RetTwitchAuth.class);
+        }
+
+        return null;
+    }
 }
