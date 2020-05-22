@@ -19,6 +19,9 @@ module.exports = {
   ],
   // add your custom rules here 
   rules: {
-    'prettier/prettier': 1
+    'prettier/prettier': 1,
+    'no-undef': 0,
+    'no-unused-vars': 0,
+    'no-console': 0
   }
 }
