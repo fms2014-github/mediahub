@@ -15,6 +15,7 @@
                 <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">
                     GitHub
                 </a>
+                <nuxt-link to="/main">SlideBar TEST</nuxt-link>
             </div>
         </div>
     </div>

@@ -14,7 +14,11 @@ export default {
                 content: process.env.npm_package_description || '',
             },
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
+        ],
+        script: [{ src: 'https://player.twitch.tv/js/embed/v1.js' }],
     },
     /*
      ** Customize the progress-bar color
@@ -27,7 +31,7 @@ export default {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [],
+    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }],
     /*
      ** Nuxt.js dev-modules
      */
