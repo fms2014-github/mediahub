@@ -2,29 +2,40 @@
     <div id="nav-bar">
         <router-link id="logo" to="#">로고</router-link>
         <router-link to="#"><login-icon></login-icon></router-link>
-        <router-link to="#"
+        <!-- <router-link to="#"
             ><span class="material-icons">
                 notifications
             </span></router-link
-        >
+        > -->
+        <span class="material-icons" @click="show">
+            notifications
+        </span>
         <router-link to="#"
             ><span class="material-icons">
                 help
             </span></router-link
         >
+        <!-- <alarm></alarm> -->
     </div>
 </template>
 
 <script>
 import loginIcon from '~/assets/icon/sign-in.svg?inline'
+import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
 export default {
     components: {
         loginIcon,
+        // alarm,
         // logoutIcon,
     },
     mounted() {},
+    methods: {
+        show() {
+            alert('dd')
+        },
+    },
 }
 </script>
 
