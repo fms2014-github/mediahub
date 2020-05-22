@@ -2,8 +2,8 @@ package com.rest.api.service.social;
 
 import com.google.gson.Gson;
 import com.rest.api.advice.exception.CustomCommunicationException;
-import com.rest.api.model.social.KakaoProfile;
-import com.rest.api.model.social.RetKakaoAuth;
+import com.rest.api.model.social.kakao.KakaoProfile;
+import com.rest.api.model.social.kakao.RetKakaoAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;

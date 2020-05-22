@@ -1,6 +1,7 @@
 package com.rest.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rest.api.model.oauth.AuthEntity;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,6 +37,12 @@ public class MemberEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "auth_id")
+    private List<AuthEntity> auth;
 
 
     @Override
