@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import slideBar from '~/components/slideBar.vue'
+import slideBar from '~/components/slideBar'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
     components: {
