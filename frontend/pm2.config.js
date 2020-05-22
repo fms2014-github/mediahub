@@ -10,13 +10,13 @@ module.exports = {
             args: `-c ${join(__dirname, 'nuxt.config.js')}`,
             env: {
                 HOST: '0.0.0.0',
-                PORT: 8080
+                PORT: 8080,
             },
             autorestart: true,
             max_memory_restart: '1G',
             wait_ready: true,
-            listen_timeout: 10000,
-            kill_timeout: 5000
-        }
-    ]
+            listen_timeout: 20000,
+            kill_timeout: 5000,
+        },
+    ],
 }

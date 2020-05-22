@@ -10,7 +10,7 @@ services:
             dockerfile: ./Dockerfile-nginx
         # image: nginx
         volumes:
-         - ./nginx/set.conf:/etc/nginx/nginx.conf
+         - ./nginx/set1.conf:/etc/nginx/nginx.conf
         ports:
          - "80:80"
          - "443:443"
