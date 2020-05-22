@@ -1,3 +1,4 @@
+e;
 package com.rest.api.model.oauth;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +28,5 @@ public class AuthEntity {
     private String refresh_token;
 
     @Column(length = 50)
-    private String token_type;
-
+    private String token_typ
 }
