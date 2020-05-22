@@ -41,10 +41,10 @@ export default {
 
 <style lang="scss" scoped>
 #sidebar {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     width: 72px;
-    height: 100vh;
+    height: calc(100vh - 62px);
     border: {
         width: 0 2px 0 0;
         color: rgb(180, 180, 180);
@@ -53,5 +53,6 @@ export default {
     svg {
         width: 42px;
     }
+    vertical-align: top;
 }
 </style>
