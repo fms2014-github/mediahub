@@ -118,7 +118,6 @@ public class TwitchService {
         headers.add("Accept", "application/vnd.twitchtv.v5+json");
         headers.add("Client-ID", twitchClientId);
         // Set parameter
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         StringBuilder url = new StringBuilder()
                 .append(twitchUserRequestUrl)
@@ -126,7 +125,6 @@ public class TwitchService {
                 .append(twitchUserId)
                 .append("/follows/channels");
 //                .append("https://api.twitch.tv/kraken/users/131655528/follows/channels"); //테스트 URL
-
 
         // Set http entity
         HttpEntity entity = new HttpEntity(headers);
