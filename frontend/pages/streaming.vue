@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import liveChat from '@/components/liveChat.vue'
+import liveChat from '@/components/livechat.vue'
 import liveVideo from '@/components/liveVideo.vue'
 
 export default {

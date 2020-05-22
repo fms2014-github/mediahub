@@ -1,6 +1,5 @@
 .nuxt/
 node_modules/
-nginx/
 Dockerfile-nginx
 Dockerfile-nuxt
 docker-compose.yml

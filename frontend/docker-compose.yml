@@ -1,16 +1,9 @@
 version: '3'
 services: 
     nuxtapp:
-        build: 
-            context: .
-            dockerfile: ./Dockerfile-nuxt
+        image: fms2014/service-test:nuxtapp
     nginxproxy:
-        build: 
-            context: .
-            dockerfile: ./Dockerfile-nginx
-        # image: nginx
-        volumes:
-         - ./nginx/set1.conf:/etc/nginx/nginx.conf
+        image: fms2014/service-test:nginx
         ports:
          - "80:80"
          - "443:443"

@@ -1,4 +1,5 @@
 FROM nginx:latest
 COPY ./private.key /etc/nginx/
 COPY ./crt.crt /etc/nginx/
+COPY ./nginx/set1.conf /etc/nginx/nginx.conf
 CMD ["nginx", "-g", "daemon off;" ]
