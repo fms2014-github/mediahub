@@ -44,6 +44,11 @@ public class MemberEntity implements UserDetails {
     @JoinColumn(name = "auth_id")
     private List<AuthEntity> auth;
 
+    @OneToMany(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "label_id")
+    private List<LabelEntity> labelList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

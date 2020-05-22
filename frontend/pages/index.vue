@@ -1,9 +1,21 @@
 <template>
-    <div id="mainPage"></div>
+    <div id="mainPage">
+        <client-only placeholder="loading...">
+            <slide-bar />
+        </client-only>
+        <video-form></video-form>
+    </div>
 </template>
 
 <script>
-export default {}
+import slideBar from '~/components/slideBar.vue'
+import videoForm from '~/components/main/videoForm.vue'
+export default {
+    components: {
+        slideBar,
+        videoForm,
+    },
+}
 </script>
 
 <style lang="scss" scoped>
