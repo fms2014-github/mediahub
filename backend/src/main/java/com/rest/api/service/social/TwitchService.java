@@ -1,7 +1,6 @@
 package com.rest.api.service.social;
 
 import com.google.gson.Gson;
-import com.rest.api.model.social.kakao.RetKakaoAuth;
 import com.rest.api.model.social.twitch.RetTwitchAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,4 +99,12 @@ public class TwitchService {
                 .append("&scope=user:edit user:read:email user:edit:follows");
         return url.toString();
     }
+
+    /*
+    트위치 팔로우 리스트 받아오기기
+    curl -H 'Accept: application/vnd.twitchtv.v5+json' \
+    -H 'Client-ID: uo6dggojyb8d6soh92zknwmi5ej1q2' \
+    -X GET 'https://api.twitch.tv/kraken/users/44322889/follows/channels'
+     */
+
 }
