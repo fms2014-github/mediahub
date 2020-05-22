@@ -1,19 +1,20 @@
 package com.rest.api.controller.common;
 
 import com.google.gson.Gson;
-import com.rest.api.model.social.RetKakaoAuth;
+import com.rest.api.model.social.kakao.RetKakaoAuth;
+import com.rest.api.model.social.twitch.RetTwitchAuth;
 import com.rest.api.service.social.KakaoService;
+import com.rest.api.service.social.TwitchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/social/login")
@@ -22,6 +23,7 @@ public class SocialController {
     private final RestTemplate restTemplate;
     private final Gson gson;
     private final KakaoService kakaoService;
+    private final TwitchService twitchService;
     @Value("${spring.url.base}")
     private String baseUrl;
     @Value("${spring.social.kakao.client_id}")
@@ -50,5 +52,44 @@ public class SocialController {
         mav.addObject("authInfo", rka);
         mav.setViewName("social/redirectKakao");
         return mav;
+    }
+
+    @GetMapping(value = "/twitch/code")
+    public String redirectCodeTwitch(@RequestParam String code) {
+        System.out.println(code);
+        RetTwitchAuth rta = twitchService.getTwitchTokenInfo(code);
+        System.out.println(rta);
+        return null;
+    }
+
+    @GetMapping(value = "/twitch/code/result")
+    public String redirectCodeResultTwitch(@RequestBody RetTwitchAuth rta) {
+
+        System.out.println(rta);
+        return null;
+    }
+
+    @GetMapping(value = "/twitch/token")
+    public String redirectTwitch(@RequestParam String code) {
+        System.out.println(code);
+        return null;
+    }
+
+
+
+    @GetMapping(value = "/twitch/implicit")
+    public String implicitCodeFlow() {
+        return twitchService.getImplicitCodeFlowUrl();
+    }
+
+    @GetMapping(value = "/twitch/authorization")
+    public String getAuthorizationCodeFlowUrl() {
+        return twitchService.getAuthorizationCodeFlowUrl();
+
+    }
+    @GetMapping(value = "/twitch/client")
+    public String clientCredentialsFlow() {
+        return twitchService.getClientCredentialsFlowUrl();
+
     }
 }
