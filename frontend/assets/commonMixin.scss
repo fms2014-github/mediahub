@@ -1,0 +1,23 @@
+$twitch-color: rgb(145, 71, 255);
+$youtube-color: rgb(255, 0, 0);
+$video-width: 720px;
+$video-height: 405px;
+
+@mixin scrollbar($selector){
+    #{$selector} {
+        scrollbar-width: thin;
+        #{$selector}::-webkit-scrollbar {
+            width: 6px;
+            background-color: rgb(245, 245, 245);
+        }
+        #{$selector}::-webkit-scrollbar-thumb {
+            background-color: rgb(220‬, 220‬, 220‬);
+        }
+        #{$selector}::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(191, 191, 191);
+        }
+        #{$selector}::-webkit-scrollbar-thumb:active {
+            background-color: rgb(110, 110, 110);
+        }
+    }
+}
