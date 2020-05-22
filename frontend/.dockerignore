@@ -4,3 +4,6 @@ nginx/
 Dockerfile-nginx
 Dockerfile-nuxt
 docker-compose.yml
+private.key
+csrl.csr
+crt.crt
