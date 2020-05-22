@@ -4,7 +4,7 @@
 
 <script>
 import navBar from '@/components/navBar.vue'
-import sideBar from '@/components/sidebar.vue'
+import sideBar from '@/components/sideBar.vue'
 export default {
     components: {
         navBar,

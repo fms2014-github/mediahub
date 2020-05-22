@@ -1,9 +1,9 @@
 <template>
-    <div id="video">
+    <div id="videoForm-container">
         <div class="videoDiv">
             <div class="videoLists">
                 <div class="videoList">
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -41,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="videoList">
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -100,7 +100,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <div class="videoList">
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -169,7 +169,7 @@
                             allowfullscreen
                         ></iframe>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -179,7 +179,7 @@
                             allowfullscreen
                         ></iframe>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -189,7 +189,7 @@
                             allowfullscreen
                         ></iframe>
                     </div>
-                    <div class="video">
+                    <div class="videoForm">
                         <iframe
                             width="560"
                             height="315"
@@ -209,55 +209,57 @@
 export default {}
 </script>
 
-<style>
-.videoDiv {
-    width: 80%;
-    margin: 40px 100px;
-    /* background-color: red; */
-}
-.videoLists {
-    display: block;
-    padding: 30px;
-    /* background-color: rgb(226, 223, 177); */
-}
-.videoList {
-    margin: 20px 0;
-    display: flex;
-    /* background-color: pink; */
-}
-.video {
-    width: 270px;
-    margin: 10px;
-}
-iframe {
-    width: 100%;
-    height: 151px;
-    padding: 5px;
-}
-.profile {
-    display: flex;
-    margin: 0 5px 0 0;
-    padding: 5px;
-}
-.profileImg {
-    width: 40px;
-    height: 40px;
-}
-.profileContent {
-    display: block;
-    padding: 5px 0 0 10px;
-}
-.profileTitle {
-    font-weight: 700;
-    font-size: 15px;
-}
-.profileNickname {
-    font-size: 13px;
-    color: rgb(77, 77, 77);
-}
-.profileHits,
-.profileDate {
-    font-size: 13px;
-    color: rgb(77, 77, 77);
+<style lang="scss" scoped>
+#videoForm-container {
+    .videoDiv {
+        width: 80%;
+        margin: 40px 100px;
+        /* background-color: red; */
+    }
+    .videoLists {
+        display: block;
+        padding: 30px;
+        /* background-color: rgb(226, 223, 177); */
+    }
+    .videoList {
+        margin: 20px 0;
+        display: flex;
+        /* background-color: pink; */
+    }
+    .videoForm {
+        width: 270px;
+        margin: 10px;
+    }
+    iframe {
+        width: 100%;
+        height: 151px;
+        padding: 5px;
+    }
+    .profile {
+        display: flex;
+        margin: 0 5px 0 0;
+        padding: 5px;
+    }
+    .profileImg {
+        width: 40px;
+        height: 40px;
+    }
+    .profileContent {
+        display: block;
+        padding: 5px 0 0 10px;
+    }
+    .profileTitle {
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .profileNickname {
+        font-size: 13px;
+        color: rgb(77, 77, 77);
+    }
+    .profileHits,
+    .profileDate {
+        font-size: 13px;
+        color: rgb(77, 77, 77);
+    }
 }
 </style>
