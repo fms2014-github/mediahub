@@ -85,7 +85,7 @@ export default {
 #live-video {
     display: inline-flex;
     align-items: center;
-    height: $video-height;
+    height: 100%;
     button,
     #live-slider {
         display: inline-block;
@@ -130,7 +130,7 @@ export default {
         display: inline-block;
         vertical-align: middle;
         position: absolute;
-        top: 2px;
+        top: 0px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -140,7 +140,7 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 8px 8px 0 9px;
+            radius: 8px 8px 0 8px;
         }
         transform: rotate(40deg);
     }
@@ -148,7 +148,7 @@ export default {
         display: inline-block;
         vertical-align: middle;
         position: absolute;
-        bottom: 2px;
+        bottom: 0px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -158,7 +158,7 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 9px 0 8px 8px;
+            radius: 8px 0 8px 8px;
         }
         transform: rotate(-40deg);
     }
