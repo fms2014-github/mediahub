@@ -25,29 +25,32 @@ public class SocialController {
     private String kakaoClientId;
     @Value("${spring.social.kakao.redirect}")
     private String kakaoRedirect;
-//    /**
-//     * 카카오 로그인 페이지 url 넘겨주는 작업이 필요함
-//     */
-//    @GetMapping
-//    public String socialLogin() {
-//        StringBuilder loginUrl = new StringBuilder()
-//                .append(env.getProperty("spring.social.kakao.url.login"))
-//                .append("?client_id=").append(kakaoClientId)
-//                .append("&response_type=code")
-//                .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
-//        return loginUrl.toString();
-//    }
-//    /**
-//     * 카카오 인증 완료 후 리다이렉트는 프론트로 해줘야합니다.
-//     * 임시로 서버가 받는 코드를 작성해놓았습니다.
-//     */
-//    @GetMapping(value = "/kakao")
-//    public ModelAndView redirectKakao(ModelAndView mav, @RequestParam String code) {
+
+
+    /**
+     * 구글 로그인
+     * @return
+     */
+    @GetMapping
+    public String socialLogin() {
+        StringBuilder loginUrl = new StringBuilder()
+                .append(env.getProperty("spring.social.kakao.url.login"))
+                .append("?client_id=").append(kakaoClientId)
+                .append("&response_type=code")
+                .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
+        return loginUrl.toString();
+    }
+    /**
+     * 카카오 인증 완료 후 리다이렉트는 프론트로 해줘야합니다.
+     * 임시로 서버가 받는 코드를 작성해놓았습니다.
+     */
+    @GetMapping(value = "/google")
+    public ModelAndView redirectGoogle(ModelAndView mav, @RequestParam String code) {
 //        RetKakaoAuth rka = kakaoService.getKakaoTokenInfo(code);
 //        mav.addObject("authInfo", rka);
 //        mav.setViewName("social/redirectKakao");
-//        return mav;
-//    }
+        return mav;
+    }
 
     @GetMapping(value = "/twitch/code")
     public String redirectCodeTwitch(@RequestParam String code) {

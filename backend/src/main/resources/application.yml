@@ -4,23 +4,38 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/security_test?useSSL=false&useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/auth_test?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: 1234
+    password: 02d103
   devtools:
     restart:
       enabled: true
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   messages:
     basename: i18n/exception
     encoding: UTF-8
   jwt:
-    secret: govlepel@$&
+    secret: C45FF95D3AE216CC621748587CE42
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
+            clientSecret: XHhA4GlqOVJZkVmhHHuP1uxj
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+              - "https://www.googleapis.com/auth/youtube"
   social:
     kakao:
       client_id: 11b821dcbb6f03f8387133bc30aa4891
@@ -43,6 +58,8 @@ spring:
         authorize: https://id.twitch.tv/oauth2/authorize
         token: https://id.twitch.tv/oauth2/token
         twitch_api_v5_user : https://api.twitch.tv/kraken/users
+    google:
+#      구글 이부분
   url:
     base: http://localhost:8080
 

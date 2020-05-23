@@ -24,6 +24,9 @@ public class MemberEntity implements UserDetails {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(length = 20, nullable = false)
     private String email;
 
@@ -31,8 +34,18 @@ public class MemberEntity implements UserDetails {
     @Column(length = 100)
     private String password;
 
-    @Column(length = 100)
-    private String provider;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    @Column
+    private String profileUrl;
+
+    @Column
+    private String providerId;
+
+    @Column(length = 1)
+    private int firstLogin;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
