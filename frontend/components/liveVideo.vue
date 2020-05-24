@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import liveChat from '@/components/livechat.vue'
+import liveChat from '@/components/liveChat.vue'
 export default {
     components: {
         liveChat,
