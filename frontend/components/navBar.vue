@@ -44,7 +44,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     height: 56px;
     border: {
         style: solid;

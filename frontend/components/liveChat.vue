@@ -1,5 +1,5 @@
 <template>
-    <div id="livechat-component">
+    <div id="live-chat">
         <div id="streamer-name">스트리머 A채팅방 입니다.</div>
         <div id="message-list">
             <div v-for="item in testlist" :key="item.id" class="receive-message-list">
@@ -68,9 +68,16 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/commonMixin';
-#livechat-component {
+#live-chat {
     display: inline-block;
-    width: 300px;
+    min-width: 300px;
+    height: 90%;
+    border: {
+        width: 1px;
+        color: rgb(150, 150, 150);
+        style: solid;
+    }
+    background-color: white;
     #streamer-name {
         height: 36px;
         padding: 5px;
@@ -118,11 +125,12 @@ export default {
         #select-platform {
             display: inline-block;
             width: 10%;
-            height: 100%;
             margin: 2px;
             span {
                 display: inline-block;
                 width: 100%;
+                padding: 2px 1px;
+                margin: 1px;
                 vertical-align: top;
                 text-align: center;
                 border-radius: 3px;
