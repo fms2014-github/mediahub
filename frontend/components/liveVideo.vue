@@ -5,22 +5,19 @@
         </div>
         <div id="live-slider">
             <div id="back-blind" class="back-slide"></div>
-            <youtube
-                id="youtube-video"
-                class="back-slide"
-                :player-vars="{ autoplay: 0 }"
-                :player-width="0"
-                :player-height="0"
-                :video-id="play"
-                @ready="ready"
-            />
+            <youtube id="youtube-video" class="back-slide" :player-vars="{ autoplay: 0 }" :video-id="play" @ready="ready" />
             <div id="twitch-video" class="front-slide"></div>
         </div>
+        <live-chat />
     </div>
 </template>
 
 <script>
+import liveChat from '@/components/livechat.vue'
 export default {
+    components: {
+        liveChat,
+    },
     data() {
         return {
             play: 'P6blDnXcXaY',
@@ -35,22 +32,22 @@ export default {
     methods: {
         init() {
             const options = {
-                width: 0,
-                height: 0,
                 channel: 'silphtv',
             }
             // eslint-disable-next-line no-undef,no-var
             this.twitchPlayer = new Twitch.Player('twitch-video', options)
             // eslint-disable-next-line no-undef
             this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
-                document.querySelector('#twitch-video iframe').style.width = '720px'
-                document.querySelector('#twitch-video iframe').style.height = '405px'
+                document.querySelector('#twitch-video iframe').style.width = '100%'
+                document.querySelector('#twitch-video iframe').style.height = '100%'
+                document.querySelector('#twitch-video iframe').style.position = 'absolute'
             })
         },
         ready(e) {
             this.player = e.target
-            document.querySelector('#youtube-video iframe').style.width = '720px'
-            document.querySelector('#youtube-video iframe').style.height = '405px'
+            document.querySelector('#youtube-video iframe').style.width = '100%'
+            document.querySelector('#youtube-video iframe').style.height = '100%'
+            document.querySelector('#youtube-video iframe').style.position = 'absolute'
         },
         youtubePlay() {
             this.player.playVideo()
@@ -83,35 +80,48 @@ export default {
 <style lang="scss" scoped>
 @import '~/assets/commonMixin';
 #live-video {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    height: $video-height;
-    button,
-    #live-slider {
-        display: inline-block;
+    justify-content: center;
+    margin-top: 0px;
+    height: 100vh;
+    max-height: 600px;
+    min-height: 540px;
+    #live-chat {
+        float: right;
     }
+    button,
     #button-wrap {
-        display: inline-block;
-        margin: 30px;
+        margin: 30px 30px 30px 0;
     }
     #live-slider {
         position: relative;
-        width: calc(#{$video-width} + 50px);
-        height: $video-height;
+        width: calc(100% - 180px);
+        height: 100%;
+        margin-right: 40px;
+        max-width: 960px;
+        max-height: 540px;
+        min-width: 640px;
+        min-height: 360px;
+        float: left;
         #youtube-video {
-            width: $video-width;
-            height: $video-height;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
             position: absolute;
             transition: all 0.5s;
         }
         #twitch-video {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
             position: absolute;
             transition: all 0.5s;
         }
         #back-blind {
-            width: $video-width;
-            height: $video-height;
             position: absolute;
+            width: 100%;
+            height: 100%;
             z-index: 2;
             background-color: rgba(0, 0, 0, 0);
         }
@@ -130,7 +140,7 @@ export default {
         display: inline-block;
         vertical-align: middle;
         position: absolute;
-        top: 2px;
+        top: 0px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -140,7 +150,7 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 8px 8px 0 9px;
+            radius: 8px 8px 0 8px;
         }
         transform: rotate(40deg);
     }
@@ -148,7 +158,7 @@ export default {
         display: inline-block;
         vertical-align: middle;
         position: absolute;
-        bottom: 2px;
+        bottom: 0px;
         background-color: rgb(180, 180, 180);
         content: '';
         padding: 0px;
@@ -158,19 +168,21 @@ export default {
             width: 1px;
             style: solid;
             color: rgb(180, 180, 180);
-            radius: 9px 0 8px 8px;
+            radius: 8px 0 8px 8px;
         }
         transform: rotate(-40deg);
     }
 }
 
 .back-slide {
-    top: 0px;
+    top: 50%;
+    transform: translateY(-50%);
     left: 0px;
     z-index: 1;
 }
 .front-slide {
-    top: 0px;
+    top: 50%;
+    transform: translateY(-50%);
     left: 30px;
     z-index: 4;
 }

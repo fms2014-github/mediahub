@@ -1,5 +1,11 @@
 <template>
-    <div><nav-bar></nav-bar><side-bar></side-bar><nuxt /></div>
+    <div id="app">
+        <nav-bar />
+        <div id="content">
+            <side-bar />
+            <nuxt />
+        </div>
+    </div>
 </template>
 
 <script>
@@ -13,4 +19,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#app {
+    #content {
+        display: flex;
+    }
+}
+</style>

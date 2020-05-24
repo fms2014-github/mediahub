@@ -2,9 +2,7 @@ $twitch-color: rgb(145, 71, 255);
 $youtube-color: rgb(255, 0, 0);
 $video-width: 720px;
 $video-height: 405px;
-body{
-    margin: 0;
-}
+
 @mixin scrollbar($selector){
     #{$selector} {
         scrollbar-width: thin;
