@@ -1,5 +1,5 @@
 <template>
-    <div id="sidebar">
+    <div id="side-bar">
         <liveBroadcast></liveBroadcast>
         <h4>카테고리</h4>
         <div id="category"></div>
@@ -40,11 +40,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#sidebar {
-    display: inline-flex;
+#side-bar {
+    display: flex;
     flex-direction: column;
-    width: 72px;
-    height: calc(100vh - 62px);
+    min-width: 72px;
     border: {
         width: 0 2px 0 0;
         color: rgb(180, 180, 180);

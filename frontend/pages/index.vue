@@ -1,9 +1,9 @@
 <template>
-    <div id="mainPage">
+    <div id="main-page">
         <client-only placeholder="loading...">
             <slide-bar />
         </client-only>
-        <video-form></video-form>
+        <video-form />
     </div>
 </template>
 
@@ -19,10 +19,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#mainPage {
-    display: inline-block;
-    width: calc(100% - 74px);
-    height: calc(100vh - 62px);
-    background-color: rgb(200, 200, 200);
+#main-page {
+    display: block;
+    width: calc(100% - 72px);
+    height: 100%;
 }
 </style>
