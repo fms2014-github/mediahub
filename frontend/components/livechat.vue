@@ -69,8 +69,8 @@ export default {
 <style lang="scss" scoped>
 @import '~/assets/commonMixin';
 #livechat-component {
+    display: inline-block;
     width: 300px;
-    height: $video-height;
     #streamer-name {
         height: 36px;
         padding: 5px;
@@ -85,7 +85,7 @@ export default {
     }
     #message-list {
         padding: 0 8px;
-        height: calc(100% - 36px - 48px);
+        height: calc(100% - 98px);
         overflow: auto;
         @include scrollbar('&');
         border-bottom-width: 1px;
@@ -144,7 +144,7 @@ export default {
         }
         input[name='message'] {
             vertical-align: top;
-            width: calc(100% - 10% - 10px);
+            width: calc(100% - 10% - 22px);
             margin: 2px 0;
             padding: 10px 5px;
         }

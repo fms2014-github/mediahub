@@ -4,17 +4,20 @@
             <live-video></live-video>
         </client-only>
         <live-chat></live-chat>
+        <video-form></video-form>
     </div>
 </template>
 
 <script>
-import liveChat from '@/components/liveChat.vue'
+import liveChat from '@/components/livechat.vue'
 import liveVideo from '@/components/liveVideo.vue'
+import videoForm from '@/components/main/videoForm.vue'
 
 export default {
     components: {
         liveChat,
         liveVideo,
+        videoForm,
     },
     mounted() {},
 }
@@ -22,13 +25,15 @@ export default {
 
 <style lang="scss" scoped>
 #streaming {
-    display: inline-flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: inline-block;
     width: calc(100% - 74px);
-    height: calc(100vh - 62px);
+    height: calc(100vh - 58px);
+    #live-video {
+        height: 50vh;
+        vertical-align: top;
+    }
     #livechat-component {
-        flex-shrink: 0;
+        height: 50vh;
     }
 }
 </style>
