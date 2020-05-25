@@ -65,7 +65,7 @@ spring:
       code_redirect: /social/login/google/code
       code_result_redirect: /social/login/google/code/result
 
-      google_api_v2_scope: email profile https://www.googleapis.com/auth/youtube
+      google_api_v2_scope: https://www.googleapis.com/auth/youtube
       accept: application/x-www-form-urlencoded
       youtube_data_api_v3: https://www.googleapis.com/youtube/v3/
       url:

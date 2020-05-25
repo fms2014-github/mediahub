@@ -4,15 +4,27 @@ import com.ssafy.d103.auth.config.AppProperties;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
 public class TokenProvider {
 
+    @Value("spring.security.oauth2.client.registration.google.clientSecret")
+    private String secretKey;
+    private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
+
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
 
     private AppProperties appProperties;
 
@@ -33,13 +45,13 @@ public class TokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(appProperties.getAuth().getTokenSecret())
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -48,7 +60,7 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             logger.error("Invalid JWT signature");

@@ -54,7 +54,20 @@ public class GoogleService {
                 .append("?scope=").append(scope)
                 .append("&state=state_parameter_passthrough_value")
                 .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect)
-                //.append("&access_type=offline")
+                .append("&access_type=offline")
+                .append("&response_type=code")
+                .append("&approval_prompt=force")
+                .append("&client_id=").append(googleClientId)
+                .append("&client_id=").append(googleClientSecret);
+        return url.toString();
+    }
+
+    public String getTokens(){
+        StringBuilder url = new StringBuilder()
+                .append(env.getProperty("spring.social.google.url.authorize"))
+                .append("?scope=").append(scope)
+                .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect)
+                .append("&access_type=offline")
                 .append("&response_type=code")
                 .append("&client_id=").append(googleClientId);
         return url.toString();
@@ -67,11 +80,14 @@ public class GoogleService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // Set parameter
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
         params.add("grant_type", "authorization_code");
         params.add("client_id", googleClientId);
         params.add("client_secret", googleClientSecret);
         params.add("code", code);
         params.add("redirect_uri", baseUrl + googleCodeRedirect);
+        params.add("access_type", "offline");
+        params.add("approval_prompt","force");
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);

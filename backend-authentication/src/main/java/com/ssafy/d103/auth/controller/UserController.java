@@ -32,7 +32,7 @@ public class UserController {
      * @param userPrincipal
      * @return
      */
-    @Api()
+//    @Api()
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     public MemberEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
@@ -45,25 +45,25 @@ public class UserController {
      * @param userPrincipal
      * @return
      */
-    @GetMapping("/user/auth")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getUserAuth(@CurrentUser UserPrincipal userPrincipal){
-        Optional<MemberEntity> member = userRepository.findById(userPrincipal.getId());
-        List<AuthEntity> authList = member.get().getAuth();
-
-        if(authList == null){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-
-        List<AuthDto> authDtoList = new LinkedList<>();
-        for(AuthEntity authEntity : authList){
-            authDtoList.add(new AuthDto().builder()
-                                .access_token(authEntity.getAccess_token())
-                                .provider(authEntity.getAuth_provider())
-                                .build());
-        }
-
-        return new ResponseEntity(authDtoList, HttpStatus.OK);
-    }
+//    @GetMapping("/user/auth")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<?> getUserAuth(@CurrentUser UserPrincipal userPrincipal){
+//        Optional<MemberEntity> member = userRepository.findById(userPrincipal.getId());
+//        List<AuthEntity> authList = member.get().getAuth();
+//
+//        if(authList == null){
+//            return new ResponseEntity(HttpStatus.NO_CONTENT);
+//        }
+//
+//        List<AuthDto> authDtoList = new LinkedList<>();
+//        for(AuthEntity authEntity : authList){
+//            authDtoList.add(new AuthDto().builder()
+//                                .access_token(authEntity.getAccess_token())
+//                                .provider(authEntity.getAuth_provider())
+//                                .build());
+//        }
+//
+//        return new ResponseEntity(authDtoList, HttpStatus.OK);
+//    }
 
 }
