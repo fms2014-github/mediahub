@@ -70,14 +70,16 @@ export default {
 @import '~/assets/commonMixin';
 #live-chat {
     display: inline-block;
-    min-width: 300px;
-    height: 90%;
+    width: 100%;
+    min-width: 200px;
+    max-width: 400px;
     border: {
         width: 1px;
         color: rgb(150, 150, 150);
         style: solid;
     }
     background-color: white;
+    height: 100%;
     #streamer-name {
         height: 36px;
         padding: 5px;
@@ -107,14 +109,14 @@ export default {
         }
         .receive-message {
             margin: 12px 0px;
-            width: 75%;
-            margin-right: calc(25% - 16px);
+            width: 70%;
+            margin-right: calc(30% - 16px);
             padding: 8px;
             background-color: gray;
             border-radius: 8px;
         }
         .my-message {
-            margin-left: calc(25% - 16px);
+            margin-left: calc(30% - 16px);
             background-color: rgb(255, 205, 0);
             text-align: right;
         }

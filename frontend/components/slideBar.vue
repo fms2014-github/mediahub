@@ -120,8 +120,7 @@ export default {
 
 <style lang="scss" scoped>
 #slide-bar {
-    // padding-left: 10%;
-
+    align-self: stretch;
     #slide-container {
         background-color: rgb(40, 40, 40);
         position: relative;
