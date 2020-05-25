@@ -1,7 +1,9 @@
 package com.rest.api.controller.common;
 
 import com.google.gson.Gson;
+import com.rest.api.model.social.google.RetGoogleAuth;
 import com.rest.api.model.social.twitch.RetTwitchAuth;
+import com.rest.api.service.social.GoogleService;
 import com.rest.api.service.social.TwitchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ public class SocialController {
     private final RestTemplate restTemplate;
     private final Gson gson;
     private final TwitchService twitchService;
+    private final GoogleService googleService;
     @Value("${spring.url.base}")
     private String baseUrl;
     @Value("${spring.social.kakao.client_id}")
@@ -44,12 +47,21 @@ public class SocialController {
      * 카카오 인증 완료 후 리다이렉트는 프론트로 해줘야합니다.
      * 임시로 서버가 받는 코드를 작성해놓았습니다.
      */
-    @GetMapping(value = "/google")
-    public ModelAndView redirectGoogle(ModelAndView mav, @RequestParam String code) {
-//        RetKakaoAuth rka = kakaoService.getKakaoTokenInfo(code);
-//        mav.addObject("authInfo", rka);
-//        mav.setViewName("social/redirectKakao");
-        return mav;
+    @GetMapping(value = "/{service}/{accesstoken}")///
+    public String youtubeService(@PathVariable("service") String service, @PathVariable("accesstoken") String accesstoken) {
+        return googleService.getYouTubeDataAPI(accesstoken, service);
+    }
+    @GetMapping(value = "/google/code")
+    public String redirectCodeGoogle(@RequestParam String code) {
+        System.out.println("google redirect code");
+        System.out.println(code);
+        RetGoogleAuth rga = googleService.getGoogleTokenInfo(code);
+        //System.out.println(rga);
+        return null;
+    }
+    @GetMapping(value = "/google/implicit")
+    public String redirectGoogle() {
+        return googleService.getImplicitCodeFlowUrl();
     }
 
     @GetMapping(value = "/twitch/code")
