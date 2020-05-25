@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.ssafy.d103.auth.model.AuthEntity;
 import com.ssafy.d103.auth.model.MemberEntity;
 import com.ssafy.d103.auth.repository.MemberRepository;
+import com.ssafy.d103.auth.twitch.dto.ChannelListDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,23 +27,23 @@ public class TwitchService {
     private final RestTemplate restTemplate;
     private final Environment env;
     private final Gson gson;
-    @Value("${base}")
+    @Value("${spring.twitch.url.base}")
     private String baseUrl;
-    @Value("${spring.security.oauth2.client.registration.twitch.client_id}")
+    @Value("${spring.twitch.client_id}")
     private String twitchClientId;
-    @Value("${spring.security.oauth2.client.registration.twitch.redirect}")
+    @Value("${spring.twitch.redirect}")
     private String twitchRedirect;
-    @Value("${spring.security.oauth2.client.registration.twitch.code_redirect}")
+    @Value("${spring.twitch.code_redirect}")
     private String twitchCodeRedirect;
-    @Value("${spring.security.oauth2.client.registration.twitch.client_secret}")
+    @Value("${spring.twitch.client_secret}")
     private String twitchClientSecret;
-    @Value("${spring.security.oauth2.client.registration.twitch.code_result_redirect}")
+    @Value("${spring.twitch.code_result_redirect}")
     private String twitchCodeResultRedirect;
-    @Value("${spring.security.oauth2.client.registration.twitch.twitch_api_v5_scope}")
+    @Value("${spring.twitch.twitch_api_v5_scope}")
     private String scope;
-    @Value("${spring.security.oauth2.client.registration.twitch.url.twitch_api_v5_user}")
+    @Value("${spring.twitch.url.twitch_api_v5_user}")
     private String twitchUserRequestUrl;
-    @Value("${spring.security.oauth2.client.registration.twitch.accept}")
+    @Value("${spring.twitch.accept}")
     private String accept;
 
     /**
@@ -121,7 +123,7 @@ public class TwitchService {
      * @param twitchUserId twitch 개인 고유 id 필요
      * @return String 채널 json data 반환
      */
-    public String getTwitchAllChannelsByUser(String twitchUserId){
+    public List<ChannelListDto> getTwitchAllChannelsByUser(String twitchUserId){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/vnd.twitchtv.v5+json");
         headers.add("Client-ID", twitchClientId);
@@ -134,11 +136,14 @@ public class TwitchService {
 
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
-        String result = null;
+        List<ChannelListDto> channelList = null;
         if (response.getStatusCode() == HttpStatus.OK) {
-            result = response.getBody();
+            ChannelListDto[] channels = gson.fromJson(response.getBody(), ChannelListDto[].class);
+            channelList = Arrays.asList(channels);
+            return channelList;
         }
-        return result;
+
+        return channelList;
     }
 
 
@@ -163,7 +168,7 @@ public class TwitchService {
      */
     public RetTwitchAuth getTwitchAccessTokenWithRefreshToken(String email) {
         Optional<MemberEntity> member = memberRepository.findByEmail(email);
-        List<AuthEntity> authList = member.get().getAuth();
+        List<AuthEntity> authList = member.get().getAuthList();
         String refreshToken = null;
         for(AuthEntity auth : authList){
             if(auth.getAuth_provider().equals("twitch"))

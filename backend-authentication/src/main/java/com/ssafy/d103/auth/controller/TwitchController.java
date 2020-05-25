@@ -6,6 +6,7 @@ import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.TokenProvider;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.twitch.TwitchService;
+import com.ssafy.d103.auth.twitch.dto.ChannelListDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -63,8 +65,9 @@ public class TwitchController {
     public ResponseEntity<?> synchronizeWithTwitch(@CurrentUser UserPrincipal userPrincipal) {
         long id = userPrincipal.getId();
         MemberEntity member = customUserDetailsService.loadMemberById(id);
-        String twitchUserId = twitchService.
-        twitchService.getTwitchAllChannelsByUser(twitchUserId);
+        String twitchUserId = (String) userPrincipal.getAttributes().get("twitchUserId");
+        List<ChannelListDto> channelList = twitchService.getTwitchAllChannelsByUser(twitchUserId);
+
         /*
         DB에 access token , refresh token 발급한 상태
         1. userid로 채널 불러옴
