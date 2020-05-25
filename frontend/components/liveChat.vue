@@ -152,7 +152,7 @@ export default {
         }
         input[name='message'] {
             vertical-align: top;
-            width: calc(100% - 10% - 22px);
+            width: calc(100% - 10% - 25px);
             margin: 2px 0;
             padding: 10px 5px;
         }

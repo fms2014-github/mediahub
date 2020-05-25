@@ -21,6 +21,7 @@ export default {
 
 <style lang="scss" scoped>
 #app {
+    min-width: 1080px;
     #content {
         display: flex;
     }

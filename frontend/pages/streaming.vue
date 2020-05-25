@@ -27,6 +27,7 @@ export default {
 #streaming {
     display: block;
     width: calc(100% - 72px);
+    min-width: 1076px;
     height: 100%;
     #live-component {
         background-color: rgb(220, 220, 220);
