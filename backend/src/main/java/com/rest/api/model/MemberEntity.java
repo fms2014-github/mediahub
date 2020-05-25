@@ -3,6 +3,7 @@ package com.rest.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rest.api.model.oauth.AuthEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,7 +45,8 @@ public class MemberEntity implements UserDetails {
     @Column
     private String providerId;
 
-    @Column(length = 1)
+    @Column(length = 1, nullable = false)
+    @ColumnDefault(value = "0")
     private int firstLogin;
 
     @ElementCollection(fetch = FetchType.EAGER)

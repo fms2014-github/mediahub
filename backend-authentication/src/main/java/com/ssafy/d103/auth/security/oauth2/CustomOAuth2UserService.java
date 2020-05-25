@@ -3,6 +3,7 @@ package com.ssafy.d103.auth.security.oauth2;
 import com.ssafy.d103.auth.exception.OAuth2AuthenticationProcessingException;
 import com.ssafy.d103.auth.model.AuthProvider;
 import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.RoleType;
 import com.ssafy.d103.auth.repository.UserRepository;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfo;
@@ -17,6 +18,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -82,7 +85,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberEntity.setName(oAuth2UserInfo.getName());
         memberEntity.setEmail(oAuth2UserInfo.getEmail());
         memberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
-        //user.setRole(RoleType.USER.toString());
+        memberEntity.setFirstLogin(0);
+        memberEntity.setRoles(Collections.singletonList(RoleType.MEMBER));
         return userRepository.save(memberEntity);
     }
 

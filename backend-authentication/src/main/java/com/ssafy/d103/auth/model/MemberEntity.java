@@ -2,6 +2,7 @@ package com.ssafy.d103.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MemberEntity{
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 100, nullable = false)
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -39,8 +40,11 @@ public class MemberEntity{
     @Column
     private String providerId;
 
-    @Column(length = 1)
+    @Column(length = 1, nullable = false)
+    @ColumnDefault(value = "0")
     private Integer firstLogin;
+
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
