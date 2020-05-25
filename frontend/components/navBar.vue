@@ -45,6 +45,7 @@ export default {
     justify-content: flex-end;
     align-items: center;
     width: 100%;
+    min-width: 1150px;
     height: 56px;
     border: {
         style: solid;

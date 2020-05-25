@@ -87,6 +87,7 @@ export default {
     height: 100vh;
     max-height: 600px;
     min-height: 540px;
+    min-width: 1070px;
     #live-chat {
         float: right;
     }
