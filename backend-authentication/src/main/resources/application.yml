@@ -45,6 +45,20 @@ spring:
 #            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
 #            scope:
 #              - user:read:email
+          twitch:
+            client_id: oqnfm929440pohis4h4xd1rfr4cd2u
+            client_secret: fdjtsgas5medibeedgh3tnjp7zuwkf
+            redirect: /social/login/twitch
+            code_redirect: /social/login/twitch/code
+            code_result_redirect: /social/login/twitch/code/result
+
+            twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read
+            accept: application/vnd.twitchtv.v5+json
+            new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
+            url:
+              authorize: https://id.twitch.tv/oauth2/authorize
+              token: https://id.twitch.tv/oauth2/token
+              twitch_api_v5_user: https://api.twitch.tv/kraken/users
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v7.0/dialog/oauth

@@ -7,7 +7,7 @@ import com.ssafy.d103.auth.payload.ApiResponse;
 import com.ssafy.d103.auth.payload.AuthResponse;
 import com.ssafy.d103.auth.payload.LoginRequest;
 import com.ssafy.d103.auth.payload.SignUpRequest;
-import com.ssafy.d103.auth.repository.UserRepository;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.TokenProvider;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
