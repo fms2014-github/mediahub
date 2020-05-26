@@ -71,7 +71,6 @@ export default {
 #live-chat {
     display: inline-block;
     min-width: 300px;
-    height: 90%;
     border: {
         width: 1px;
         color: rgb(150, 150, 150);
@@ -92,7 +91,7 @@ export default {
     }
     #message-list {
         padding: 0 8px;
-        height: calc(100% - 98px);
+        height: calc(100% - 94px);
         overflow: auto;
         @include scrollbar('&');
         border-bottom-width: 1px;
@@ -107,14 +106,14 @@ export default {
         }
         .receive-message {
             margin: 12px 0px;
-            width: 75%;
-            margin-right: calc(25% - 16px);
+            width: 70%;
+            margin-right: calc(30% - 16px);
             padding: 8px;
             background-color: gray;
             border-radius: 8px;
         }
         .my-message {
-            margin-left: calc(25% - 16px);
+            margin-left: calc(30% - 16px);
             background-color: rgb(255, 205, 0);
             text-align: right;
         }

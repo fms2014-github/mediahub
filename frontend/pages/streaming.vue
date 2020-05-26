@@ -13,6 +13,7 @@
 
 <script>
 import liveVideo from '@/components/liveVideo.vue'
+
 import videoForm from '@/components/main/videoForm.vue'
 
 export default {
@@ -20,17 +21,23 @@ export default {
         liveVideo,
         videoForm,
     },
-    mounted() {},
 }
 </script>
 
 <style lang="scss" scoped>
 #streaming {
-    display: block;
-    width: calc(100% - 72px);
-    min-width: 1076px;
-    height: 100%;
+    margin: 58px 0 0 74px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: calc(100% - 58px);
+    #live-component {
+        width: 156.25vh;
+        padding-right: 340px;
+    }
     hr {
+        width: 100%;
         margin: 1%;
         box-shadow: 0px 0px 2px 1px rgb(180, 180, 180);
         background-color: rgb(180, 180, 180);
@@ -39,6 +46,7 @@ export default {
         }
         height: 1px;
         clear: both;
+        flex-grow: 100;
     }
     h1 {
         margin: 20px 0 10px 20px;
@@ -46,6 +54,7 @@ export default {
             weight: 800;
             size: 2rem;
         }
+        flex-wrap: wrap;
     }
 }
 </style>

@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#main-page {
+#view-component {
     display: block;
     width: calc(100% - 72px);
     height: 100%;

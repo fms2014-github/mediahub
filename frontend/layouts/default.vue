@@ -21,9 +21,8 @@ export default {
 
 <style lang="scss" scoped>
 #app {
-    min-width: 1080px;
-    #content {
-        display: flex;
-    }
+    width: 100%;
+    min-width: calc(1280px + 74px);
+    background-color: rgb(240, 240, 240);
 }
 </style>
