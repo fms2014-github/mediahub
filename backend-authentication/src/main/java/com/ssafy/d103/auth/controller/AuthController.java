@@ -32,7 +32,11 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+<<<<<<< HEAD
     private MemberRepository memberRepository;
+=======
+    private MemberRepository userRepository;
+>>>>>>> feature/backend-twitch
 
     @Autowired
     private PasswordEncoder passwordEncoder;

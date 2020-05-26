@@ -41,4 +41,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return UserPrincipal.create(memberEntity);
     }
+
+    @Transactional
+    public MemberEntity loadMemberById(Long id){
+        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", id)
+        );
+        return memberEntity;
+    }
 }

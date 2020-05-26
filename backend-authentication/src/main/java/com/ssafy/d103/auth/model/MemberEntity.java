@@ -18,6 +18,7 @@ import java.util.List;
 public class MemberEntity{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Column(nullable = false)
@@ -50,17 +51,44 @@ public class MemberEntity{
     @Builder.Default
     private List<RoleType> roles = new ArrayList<>();
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "auth_id")
-    private List<AuthEntity> auth;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AuthEntity> authList = new ArrayList<>();
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "label_id")
-    private List<LabelEntity> labelList;
+    public void addAuth(final AuthEntity auth){
+        authList.add(auth);
+    }
 
+    public void removeAuth(final AuthEntity auth){
+        authList.remove(auth);
+        auth.setMember(null);
+    }
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LabelEntity> labelList = new ArrayList<>();
+
+    public void addLabel(final LabelEntity label){
+        labelList.add(label);
+    }
+
+    public void removeLabel(final LabelEntity label){
+        labelList.remove(label);
+        label.setMember(null);
+    }
+
+    @Override
+    public String toString() {
+        return "MemberEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", provider=" + provider +
+                ", profileUrl='" + profileUrl + '\'' +
+                ", providerId='" + providerId + '\'' +
+                ", firstLogin=" + firstLogin +
+                ", roles=" + roles +
+                ", auth=" + authList +
+                ", labelList=" + labelList +
+                '}';
+    }
 }
