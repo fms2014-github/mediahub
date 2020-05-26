@@ -1,19 +1,17 @@
 <template>
     <div id="button">
         <div id="button-container">
-            <div id="inline-block">
-                <div v-if="kind === 'y'">
-                    <div class="flex-container">
-                        <div class="youtube-white button">가입</div>
-                        <div class="youtube-red button">구독</div>
-                    </div>
+            <div v-if="kind === 'y'">
+                <div class="flex-container">
+                    <div class="youtube-white button">가입</div>
+                    <div class="youtube-red button">구독</div>
                 </div>
-                <div v-else>
-                    <div class="flex-container">
-                        <div class="twitch button">팔로우</div>
-                        <div class="twitch button">구독</div>
-                        <div class="twitch button">후원</div>
-                    </div>
+            </div>
+            <div v-else>
+                <div class="flex-container">
+                    <div class="twitch button">팔로우</div>
+                    <div class="twitch button">구독</div>
+                    <div class="twitch button">후원</div>
                 </div>
             </div>
         </div>
@@ -22,13 +20,7 @@
 
 <script>
 export default {
-    data: () => {
-        return {
-            kind: 'y',
-            play: 'fvjpE_wFL5A',
-            isPlay: false,
-        }
-    },
+    props: { kind: { type: String, default: '' } },
     created() {},
     mounted() {},
     methods: {},
@@ -39,54 +31,37 @@ export default {
 #button {
     #button-container {
         // background-color: rgb(40, 40, 40);
-        position: relative;
+        display: inline-block;
         width: 100%;
-        height: 40px;
+        height: 60px;
 
-        #inline-block {
-            position: absolute;
-            display: inline-block;
-
-            // background-color: red;
-            width: 70%;
-            height: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-
-            .video {
-                position: absolute;
-                width: 100%;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-            .flex-container {
-                display: inline-flex;
-                width: 100%;
-                justify-content: flex-end;
-            }
-            .button {
-                margin-left: 2%;
-                width: 8%;
-                height: 35px;
-                text-align: center;
-                line-height: 35px;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 1rem;
-            }
-            .youtube-white {
-                background-color: white;
-                border: 1px solid black;
-            }
-            .youtube-red {
-                background-color: #e24821;
-                border: 1px solid red;
-                color: white;
-            }
-            .twitch {
-                background-color: #d6c7ff;
-                border: 1px solid #d6c7ff;
-            }
+        .flex-container {
+            display: inline-flex;
+            width: 100%;
+            justify-content: flex-end;
+        }
+        .button {
+            margin-left: 2%;
+            width: 8%;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .youtube-white {
+            background-color: white;
+            border: 1px solid black;
+        }
+        .youtube-red {
+            background-color: #e24821;
+            border: 1px solid red;
+            color: white;
+        }
+        .twitch {
+            background-color: #d6c7ff;
+            border: 1px solid #d6c7ff;
         }
     }
 }

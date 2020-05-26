@@ -2,14 +2,14 @@
     <div id="upload-video">
         <div id="upload-vcontainer">
             <div id="inline-block">
-                <div v-if="kind === 'y'">
+                <div v-if="playInfo.kind === 'y'">
                     <youtube
                         id="youtube-video"
                         class="back-slide video"
                         :player-vars="{ autoplay: 1, rel: 0, loop: 1, playlist: play }"
                         :player-width="'100%'"
                         :player-height="500"
-                        :video-id="play"
+                        :video-id="playInfo.play"
                         @ready="ready"
                         @playing="playing"
                         @paused="pause"
@@ -25,21 +25,22 @@
 
 <script>
 export default {
+    // props: { kind: String },
+    props: { playInfo: { type: Object, default: null } },
     data: () => {
         return {
-            kind: 'y',
-            play: 'fvjpE_wFL5A',
+            // play: 'fvjpE_wFL5A',
             isPlay: false,
+            Info: {},
         }
     },
     created() {},
     mounted() {
-        if (this.kind === 't') {
+        if (this.playInfo.kind === 't') {
             const options = {
                 width: '100%',
                 height: 500,
-                video: '624698735', // 영상,
-                Info: {},
+                video: this.playInfo.play, // 영상,
                 // clip: 'CoweringFrozenTeaPeanutButterJellyTime',
             }
 
@@ -49,7 +50,7 @@ export default {
 
         window.onkeydown = () => {
             if (event.keyCode !== 32) return
-            if (this.kind === 'y') {
+            if (this.playInfo.kind === 'y') {
                 if (this.isPlay) this.Info.pauseVideo()
                 else this.Info.playVideo()
             } else if (this.Info.isPaused()) {
@@ -75,7 +76,6 @@ export default {
 <style lang="scss" scoped>
 #upload-video {
     #upload-vcontainer {
-        // background-color: rgb(40, 40, 40);
         position: relative;
         width: 100%;
         height: 600px;
@@ -83,31 +83,14 @@ export default {
         #inline-block {
             position: absolute;
             display: inline-block;
-
-            // background-color: red;
-            width: 70%;
+            width: 100%;
             height: 600px;
-            left: 50%;
-            transform: translateX(-50%);
 
             .video {
                 position: absolute;
                 width: 100%;
                 top: 50%;
                 transform: translateY(-50%);
-            }
-            .flex-container {
-                display: inline-flex;
-                width: 100%;
-                justify-content: flex-end;
-            }
-            .button {
-                // position: absolute;
-                margin-left: 5px;
-                width: 8%;
-                height: 35px;
-                bottom: 0px;
-                background-color: #d6c7ff;
             }
         }
     }

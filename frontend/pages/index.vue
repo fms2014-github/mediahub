@@ -1,18 +1,18 @@
 <template>
     <div id="main-page">
         <client-only placeholder="loading...">
-            <slide-bar />
+            <live-video-slide-bar />
         </client-only>
         <video-form />
     </div>
 </template>
 
 <script>
-import slideBar from '~/components/slideBar.vue'
+import liveVideoSlideBar from '~/components/liveVideoSlideBar.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
     components: {
-        slideBar,
+        liveVideoSlideBar,
         videoForm,
     },
 }
