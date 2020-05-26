@@ -6,7 +6,7 @@
                     <youtube
                         id="youtube-video"
                         class="back-slide video"
-                        :player-vars="{ autoplay: 1, rel: 0, loop: 1, playlist: play }"
+                        :player-vars="{ autoplay: 1, rel: 0, loop: 1, playlist: playInfo.play }"
                         :player-width="'100%'"
                         :player-height="500"
                         :video-id="playInfo.play"

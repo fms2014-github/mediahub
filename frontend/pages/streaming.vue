@@ -25,8 +25,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#streaming {
-    margin: 58px 0 0 74px;
+#router-view {
     display: flex;
     justify-content: center;
     align-items: center;

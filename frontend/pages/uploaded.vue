@@ -5,9 +5,9 @@
                 <upload-video :play-info="playInfo" />
             </client-only>
             <sub-button :kind="playInfo.kind" />
-            <!-- <hr />
+            <hr />
             <h1>추천 영상</h1>
-            <video-form /> -->
+            <video-form />
         </div>
     </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     components: {
         uploadVideo,
         subButton,
-        // videoForm,
+        videoForm,
     },
     data: () => {
         return {
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#uploaded-page {
+#router-view {
     display: flex;
     justify-content: center;
     width: calc(100% - 72px);
