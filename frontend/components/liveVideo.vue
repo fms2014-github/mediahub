@@ -168,7 +168,7 @@ export default {
             }
             #live-chat {
                 position: absolute;
-                margin-left: calc(100% + 50px);
+                margin-left: calc(100% + 70px);
                 height: calc(100% - 2px);
             }
         }
