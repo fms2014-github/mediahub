@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-<<<<<<< HEAD
     private MemberRepository memberRepository;
 
     @Autowired
     private YouTubeService youTubeService;
-=======
-    private MemberRepository userRepository;
->>>>>>> feature/backend-twitch
 
     /**
      *

@@ -19,10 +19,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-<<<<<<< HEAD
-=======
+
 import java.awt.*;
->>>>>>> feature/backend-twitch
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +30,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-<<<<<<< HEAD
     private MemberRepository memberRepository;
-=======
-    private MemberRepository userRepository;
->>>>>>> feature/backend-twitch
-
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -97,12 +90,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
         memberEntity.setFirstLogin(0);
         memberEntity.setRoles(Collections.singletonList(RoleType.MEMBER));
-<<<<<<< HEAD
         return memberRepository.save(memberEntity);
-=======
-//        memberEntity.setLabelList(createRootLabel());
-        return userRepository.save(memberEntity);
->>>>>>> feature/backend-twitch
     }
 
     private MemberEntity updateExistingUser(MemberEntity existingMemberEntity, OAuth2UserInfo oAuth2UserInfo) {
