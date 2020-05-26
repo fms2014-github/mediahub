@@ -1,12 +1,16 @@
 package com.ssafy.d103.auth.controller;
 
 import com.google.api.services.youtube.model.*;
+import com.ssafy.d103.auth.security.CurrentUser;
+import com.ssafy.d103.auth.security.UserPrincipal;
+import com.ssafy.d103.auth.youtube.RetGoogleAuth;
 import com.ssafy.d103.auth.youtube.YouTubeDataAPI;
+import com.ssafy.d103.auth.youtube.YouTubeService;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -14,21 +18,35 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/youtube")
 public class YouTubeRestController {
+    @Autowired
+    YouTubeService youTubeService;
+
     @GetMapping(value = "/test")
-    public String test(){
-        return "test";
+    @PreAuthorize("hasRole('USER')")
+    public String test(@CurrentUser UserPrincipal userPrincipal){
+        return youTubeService.getImplicitCodeFlowUrl();
     }
+
+    @GetMapping(value = "/google/code")
+    //@PreAuthorize("hasRole('USER')")
+    public String redirectCodeGoogle(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
+        System.out.println("google redirect code");
+        System.out.println(code);
+        RetGoogleAuth rga = youTubeService.getGoogleTokenInfo(code);
+        return null;
+    }
+
+    ///////////////////
     @GetMapping(value = "/api/channels/{channelId}")
     public ChannelListResponse getChannels(@PathVariable("channelId") String channelId) throws IOException {
-
         ChannelListResponse result = YouTubeDataAPI.getYouTubeService()
                 .channels()
                 .list("id,snippet,brandingSettings,contentDetails,invideoPromotion,statistics,topicDetails")
                 .setId(channelId)
                 .execute();
-
         return result;
     }
+
     @GetMapping(value = "/api/subscriptions")
     public SubscriptionListResponse getSubscriptions() throws IOException {
         Long maxResult = 100L;

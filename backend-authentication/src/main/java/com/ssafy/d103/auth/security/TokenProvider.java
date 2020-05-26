@@ -35,6 +35,7 @@ public class TokenProvider {
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
+
         claims.put("roles",userPrincipal.getAuthorities());
 
         Date now = new Date();

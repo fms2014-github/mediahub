@@ -3,7 +3,7 @@ package com.ssafy.d103.auth.security;
 
 import com.ssafy.d103.auth.exception.ResourceNotFoundException;
 import com.ssafy.d103.auth.model.MemberEntity;
-import com.ssafy.d103.auth.repository.UserRepository;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        MemberEntity memberEntity = userRepository.findByEmail(email)
+        MemberEntity memberEntity = memberRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email : " + email)
         );
@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(Long id) {
-        MemberEntity memberEntity = userRepository.findById(id).orElseThrow(
+        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("User", "id", id)
         );
 

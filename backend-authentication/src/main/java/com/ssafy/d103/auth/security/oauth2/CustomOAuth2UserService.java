@@ -4,7 +4,7 @@ import com.ssafy.d103.auth.exception.OAuth2AuthenticationProcessingException;
 import com.ssafy.d103.auth.model.AuthProvider;
 import com.ssafy.d103.auth.model.MemberEntity;
 import com.ssafy.d103.auth.model.RoleType;
-import com.ssafy.d103.auth.repository.UserRepository;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfo;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfoFactory;
@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
 
     @Override
@@ -50,7 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<MemberEntity> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Optional<MemberEntity> userOptional = memberRepository.findByEmail(oAuth2UserInfo.getEmail());
         MemberEntity memberEntity;
         if(userOptional.isPresent()) {
             memberEntity = userOptional.get();
@@ -87,13 +86,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
         memberEntity.setFirstLogin(0);
         memberEntity.setRoles(Collections.singletonList(RoleType.MEMBER));
-        return userRepository.save(memberEntity);
+        return memberRepository.save(memberEntity);
     }
 
     private MemberEntity updateExistingUser(MemberEntity existingMemberEntity, OAuth2UserInfo oAuth2UserInfo) {
         existingMemberEntity.setName(oAuth2UserInfo.getName());
         existingMemberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
-        return userRepository.save(existingMemberEntity);
+        return memberRepository.save(existingMemberEntity);
     }
 
 }

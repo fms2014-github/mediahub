@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'com.google.cloud.tools.jib' version '1.0.0'
 }
 
 group = 'com.ssafy.d103'
@@ -21,6 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'io.springfox:springfox-swagger2:2.6.1'
     implementation 'io.springfox:springfox-swagger-ui:2.6.1'
+    implementation 'com.google.code.gson:gson'
     runtimeOnly 'mysql:mysql-connector-java'
     compileOnly 'org.projectlombok:lombok'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
