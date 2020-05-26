@@ -3,7 +3,7 @@
         <nav-bar />
         <div id="content">
             <side-bar />
-            <nuxt id="view-component" />
+            <nuxt />
         </div>
     </div>
 </template>
@@ -21,9 +21,8 @@ export default {
 
 <style lang="scss" scoped>
 #app {
+    width: 100%;
+    min-width: calc(1280px + 74px);
     background-color: rgb(240, 240, 240);
-    #view-component {
-        margin: 58px 0 0 74px;
-    }
 }
 </style>

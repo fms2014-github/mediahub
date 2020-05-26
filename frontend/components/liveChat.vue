@@ -70,16 +70,13 @@ export default {
 @import '~/assets/commonMixin';
 #live-chat {
     display: inline-block;
-    width: 100%;
-    min-width: 200px;
-    max-width: 400px;
+    min-width: 300px;
     border: {
         width: 1px;
         color: rgb(150, 150, 150);
         style: solid;
     }
     background-color: white;
-    height: 100%;
     #streamer-name {
         height: 36px;
         padding: 5px;
@@ -94,7 +91,7 @@ export default {
     }
     #message-list {
         padding: 0 8px;
-        height: calc(100% - 98px);
+        height: calc(100% - 94px);
         overflow: auto;
         @include scrollbar('&');
         border-bottom-width: 1px;

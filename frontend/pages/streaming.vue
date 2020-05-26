@@ -5,9 +5,9 @@
                 <live-video></live-video>
             </client-only>
         </div>
-        <hr />
+        <!--<hr />
         <h1>스트리머 A의 다른 영상</h1>
-        <video-form />
+        <video-form />-->
     </div>
 </template>
 
@@ -19,23 +19,21 @@ import videoForm from '@/components/main/videoForm.vue'
 export default {
     components: {
         liveVideo,
-        videoForm,
+        // videoForm,
     },
 }
 </script>
 
 <style lang="scss" scoped>
-#view-component {
-    width: calc(100% - 74px);
-    flex-shrink: 0;
-    height: 100%;
-    min-width: 1280px;
+#streaming {
+    margin: 58px 0 0 74px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 58px);
     #live-component {
-        width: 100%;
-        #live-video {
-            height: calc(100vh - 256px);
-            min-height: 409.5px;
-        }
+        width: 156.25vh;
+        padding-right: 340px;
     }
     hr {
         margin: 1%;
