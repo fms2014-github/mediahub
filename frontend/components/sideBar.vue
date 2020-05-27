@@ -27,10 +27,10 @@ export default {
         function subList(parentNode, data) {
             for (const list in data) {
                 if (data[list].constructor === Array) {
-                    console.log(list)
+                    // console.log(list)
                     subList(parentNode, data[list])
                 } else {
-                    console.log(data[list])
+                    // console.log(data[list])
                 }
             }
         }
