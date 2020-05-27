@@ -5,6 +5,7 @@
                 <img class="image" src="@/assets/images/arrow_left_icon.png" @click="move(1)" />
             </div>
             <div id="inline-block">
+                <div v-for="n in 5" :key="n" :class="'loading d' + n"></div>
                 <div v-for="(item, index) in plays" :id="'v' + index" :key="item" :class="'video v' + index">
                     <youtube
                         v-if="index % 2 == 0"
@@ -32,6 +33,7 @@
 export default {
     data: () => {
         return {
+            loadingCnt: 0,
             curIdx: 2,
             plays: [
                 'fvjpE_wFL5A',
@@ -45,10 +47,21 @@ export default {
                 'FbxO4R8137Q',
                 'Nt8Ec7sS6Oc',
             ],
-            twitchs: ['dancingshana', 'ch1ckenkun', 'wpckor', 'tmxk319', 'rosebari', 'silphtv', 'yugyungwoo', 'bamgasi87', 'poongkotv', 'dyohb'],
+            twitchs: ['dancingshana', 'ch1ckenkun', 'wpckor', 'tmxk319', 'rosebari', 'silphtv', 'yugyungwoo', 'h0270', 'poongkotv', 'bamgasi87'],
             liveList: new Array(10),
             isPlay: false,
         }
+    },
+    watch: {
+        loadingCnt(newValue, oldValue) {
+            if (newValue === 10) {
+                const d = document.getElementsByClassName('loading')
+                for (let i = 0; i < d.length; i++) {
+                    d[i].style.display = 'none'
+                }
+                this.liveList[this.curIdx].playVideo()
+            }
+        },
     },
     created() {},
     mounted() {
@@ -64,6 +77,7 @@ export default {
             // eslint-disable-next-line no-undef
             this.liveList[i].addEventListener(Twitch.Player.READY, () => {
                 this.liveList[i].pause()
+                this.loadingCnt++
             })
         }
 
@@ -103,10 +117,8 @@ export default {
             return next % N
         },
         ready(index, event) {
+            this.loadingCnt++
             this.liveList.splice(index, 1, event.target)
-            if (index === 2) {
-                event.target.playVideo()
-            }
         },
         playing(event) {
             this.isPlay = true
@@ -136,12 +148,50 @@ export default {
             left: 50%;
             transform: translateX(-50%);
 
+            .loading {
+                background-color: #e6e6ea;
+                display: inline-block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                height: 330;
+                box-shadow: 1px 1px 10px black;
+            }
+            .d1 {
+                left: 5%;
+                width: 30%;
+                height: 210px;
+                z-index: 1;
+            }
+            .d2 {
+                left: 12%;
+                width: 40%;
+                height: 270px;
+                z-index: 2;
+            }
+            .d3 {
+                left: 20%;
+                width: 60%;
+                height: 330px;
+                z-index: 3;
+            }
+            .d4 {
+                right: 12%;
+                width: 40%;
+                height: 270px;
+                z-index: 2;
+            }
+            .d5 {
+                right: 5%;
+                width: 30%;
+                height: 210px;
+                z-index: 1;
+            }
             .video {
                 display: inline-block;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                // border: 1px solid black;
                 overflow: hidden;
                 transition: all 0.2s;
             }
@@ -149,12 +199,13 @@ export default {
                 left: 5%;
                 width: 30%;
                 height: 210px;
+                z-index: 0;
             }
             .v1 {
                 left: 12%;
-                z-index: 1;
                 width: 40%;
                 height: 270px;
+                z-index: 1;
             }
             .v2 {
                 left: 20%;
@@ -164,15 +215,15 @@ export default {
             }
             .v3 {
                 right: 12%;
-                z-index: 1;
                 width: 40%;
                 height: 270px;
+                z-index: 1;
             }
             .v4 {
                 right: 5%;
-                z-index: 0;
                 width: 30%;
                 height: 210px;
+                z-index: 0;
             }
             .v5,
             .v6,
