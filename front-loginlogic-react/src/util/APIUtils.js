@@ -49,3 +49,53 @@ export function signup(signupRequest) {
         body: JSON.stringify(signupRequest)
     });
 }
+
+export function youtubeAPI(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/token/code",
+        method:'GET',
+    })
+}
+
+export function twitchAPI(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/twitch/token-url",
+        method:'GET',
+    })
+}
+
+export function youtubeGetSubscriptions(token){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/subscriptions/"+token,
+        method:'GET',
+    })
+}
+
+export function youtubeGetVideoId(channelId, token){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/search/"+channelId+"/"+token,
+        method:'GET',
+    })
+}
+
+export function youtubeTest(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/subscriptions/test",
+        method:'GET',
+    })
+}
