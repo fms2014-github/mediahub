@@ -39,17 +39,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/commonMixin';
 #nav-bar {
     display: flex;
+    position: fixed;
+    top: 0px;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
-    height: 56px;
-    border: {
-        style: solid;
-        width: 0 0 2px 0;
-        color: rgb(196, 196, 196);
-    }
+    height: $nav-bar-height;
+    background-color: white;
+    z-index: 9999;
     #logo {
         position: absolute;
         left: 0px;

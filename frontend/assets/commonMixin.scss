@@ -1,7 +1,7 @@
 $twitch-color: rgb(145, 71, 255);
 $youtube-color: rgb(255, 0, 0);
-$video-width: 720px;
-$video-height: 405px;
+$side-bar-width: 74px;
+$nav-bar-height: 58px;
 
 @mixin scrollbar($selector){
     #{$selector} {
@@ -21,3 +21,10 @@ $video-height: 405px;
         }
     }
 }
+
+.page-enter-active, .page-leave-active {
+    transition: opacity .3s;
+  }
+  .page-enter, .page-leave-to {
+    opacity: 0;
+  }

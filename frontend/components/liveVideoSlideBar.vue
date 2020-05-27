@@ -1,5 +1,5 @@
 <template>
-    <div id="slide-bar">
+    <div id="live-video-slide-bar">
         <div id="slide-container">
             <div class="left move-button">
                 <img class="image" src="@/assets/images/arrow_left_icon.png" @click="move(1)" />
@@ -62,8 +62,8 @@ export default {
             const video = new Twitch.Player('v' + i, options)
             this.liveList.splice(i, 1, video)
             // eslint-disable-next-line no-undef
-            video.addEventListener(Twitch.Player.READY, () => {
-                video.pause()
+            this.liveList[i].addEventListener(Twitch.Player.READY, () => {
+                this.liveList[i].pause()
             })
         }
 
@@ -119,9 +119,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#slide-bar {
-    // padding-left: 10%;
-
+#live-video-slide-bar {
     #slide-container {
         background-color: rgb(40, 40, 40);
         position: relative;
@@ -135,7 +133,6 @@ export default {
             // background-color: red;
             width: 80%;
             height: 400px;
-            padding: 20px;
             left: 50%;
             transform: translateX(-50%);
 
