@@ -56,13 +56,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#channel {
+#router-view {
     width: calc(100% - 74px);
     #profile-div {
         width: 90%;
         height: 200px;
-        margin: 20px 5%;
-        background-color: rgb(247, 247, 247);
+        margin: 78px 5%;
+        background-color: rgb(196, 173, 197);
     }
     #profile {
         height: 100px;
