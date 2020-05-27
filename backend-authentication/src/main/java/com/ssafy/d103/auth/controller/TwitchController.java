@@ -28,13 +28,13 @@ import java.util.Optional;
 @Api(tags = {"1. Twitch"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/v1/twitch")
+@RequestMapping(value = "/twitch")
 public class TwitchController {
 
     private final TwitchService twitchService;
     private final CustomUserDetailsService customUserDetailsService;
 
-    @GetMapping(value = "user")
+    @GetMapping(value = "/user")
     public ResponseEntity<?> getUser(@ApiParam(value = "유저 토큰", required = true) @RequestParam String access_token) {
         // twitchService 호출해서 유저 정보 넘기면 된다.
         return null;
@@ -42,12 +42,12 @@ public class TwitchController {
 
     @GetMapping(value = "/token-url")
     public ResponseEntity<?> redirectTwitch() {
-        return new ResponseEntity(twitchService.getImplicitCodeFlowUrl(), HttpStatus.OK);
+        return ResponseEntity.ok("\""+twitchService.getImplicitCodeFlowUrl()+"\"");
     }
 
     @GetMapping(value = "/token/code")
     public ResponseEntity<?> redirectCodeTwitch(@RequestParam String code) {
-        return new ResponseEntity(twitchService.getTwitchTokenInfo(code).getAccess_token(), HttpStatus.OK);
+        return ResponseEntity.ok("\""+twitchService.getTwitchTokenInfo(code).getAccess_token()+"\"");
     }
 
     /**

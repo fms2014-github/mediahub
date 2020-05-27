@@ -45,11 +45,9 @@ public class MemberEntity{
     @ColumnDefault(value = "0")
     private Integer firstLogin;
 
-
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<RoleType> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false,length=20)
+    private RoleType role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AuthEntity> authList = new ArrayList<>();
@@ -86,7 +84,7 @@ public class MemberEntity{
                 ", profileUrl='" + profileUrl + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", firstLogin=" + firstLogin +
-                ", roles=" + roles +
+                ", role=" + role +
                 ", auth=" + authList +
                 ", labelList=" + labelList +
                 '}';

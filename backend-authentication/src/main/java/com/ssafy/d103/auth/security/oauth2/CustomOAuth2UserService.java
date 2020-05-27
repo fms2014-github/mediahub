@@ -48,7 +48,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-
+        System.out.println("aAuth2User : " + oAuth2User.getAttributes());
+        System.out.println("oAuth2UserInfo : " + oAuth2UserInfo.getAttributes());
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
@@ -89,7 +90,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberEntity.setEmail(oAuth2UserInfo.getEmail());
         memberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
         memberEntity.setFirstLogin(0);
-        memberEntity.setRoles(Collections.singletonList(RoleType.MEMBER));
+        memberEntity.setRole(RoleType.MEMBER);
+        System.out.println(memberEntity);
         return memberRepository.save(memberEntity);
     }
 

@@ -19,28 +19,28 @@ public class YouTubeService {
     private final Gson gson;
     private final Environment env;
     private String baseUrl = "http://localhost:8080";
-    @Value("${spring.social.google.client_id}")
+    @Value("${social.google.client_id}")
     private String googleClientId;
-    @Value("${spring.social.google.redirect}")
+    @Value("${social.google.redirect}")
     private String googleRedirect;
-    @Value("${spring.social.google.code_redirect}")
+    @Value("${social.google.code_redirect}")
     private String googleCodeRedirect;
-    @Value("${spring.social.google.client_secret}")
+    @Value("${social.google.client_secret}")
     private String googleClientSecret;
-    @Value("${spring.social.google.code_result_redirect}")
+    @Value("${social.google.code_result_redirect}")
     private String googleCodeResultRedirect;
-    @Value("${spring.social.google.google_api_v2_scope}")
+    @Value("${social.google.google_api_v2_scope}")
     private String scope;
-    @Value("${spring.social.google.url.google_api_v2_user}")
+    @Value("${social.google.url.google_api_v2_user}")
     private String googleUserRequestUrl;
-    @Value("${spring.social.google.accept}")
+    @Value("${social.google.accept}")
     private String accept;
-    @Value("${spring.social.google.youtube_data_api_v3}")
+    @Value("${social.google.youtube_data_api_v3}")
     private String youtubeDataAPIuri;
 
     public String getImplicitCodeFlowUrl() {
         StringBuilder url = new StringBuilder()
-                .append(env.getProperty("spring.social.google.url.authorize"))
+                .append(env.getProperty("social.google.url.authorize"))
                 .append("?scope=").append(scope)
                 .append("&state=state_parameter_passthrough_value")
                 .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect)
@@ -68,12 +68,32 @@ public class YouTubeService {
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.google.url.token"), request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.google.url.token"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             System.out.println("getGoogleTokenIfo : " + response.getBody());
             return gson.fromJson(response.getBody(), RetGoogleAuth.class);
         }
         return null;
     }
+    public String getYouTubeDataAPI(String accessToken, String youtubeService) {
+        StringBuilder url = new StringBuilder()
+                .append(youtubeDataAPIuri)
+                .append(youtubeService)
+                .append("?part=snippet")
+                .append("&mine=true")
+                .append("&access_token=").append(accessToken);
+        return url.toString();
+    }
 
+    public String getYouTubeVideoId(String channelId, String accessToken, String youtubeService) {
+        StringBuilder url = new StringBuilder()
+                .append(youtubeDataAPIuri)
+                .append(youtubeService)
+                .append("?part=snippet")
+                .append("&channelId=").append(channelId)
+                .append("eventType=live")
+                .append("type=video")
+                .append("&access_token=").append(accessToken);
+        return url.toString();
+    }
 }
