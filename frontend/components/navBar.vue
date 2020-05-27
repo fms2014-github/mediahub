@@ -2,20 +2,17 @@
     <div id="nav-bar">
         <router-link id="logo" to="#">로고</router-link>
         <router-link to="#"><login-icon></login-icon></router-link>
-        <!-- <router-link to="#"
-            ><span class="material-icons">
-                notifications
-            </span></router-link
-        > -->
-        <span class="material-icons" @click="show">
+        <span id="alarm-icon" class="material-icons" @click="alarmCheck = !alarmCheck">
             notifications
         </span>
-        <router-link to="#"
-            ><span class="material-icons">
+        <router-link to="#">
+            <span id="help-icon" class="material-icons">
                 help
-            </span></router-link
-        >
-        <!-- <alarm></alarm> -->
+            </span>
+        </router-link>
+        <div v-if="alarmCheck" class="alarm-div">
+            <alarm></alarm>
+        </div>
     </div>
 </template>
 
@@ -27,15 +24,17 @@ import alarm from '~/components/main/alarm.vue'
 export default {
     components: {
         loginIcon,
-        // alarm,
+        alarm,
         // logoutIcon,
     },
-    mounted() {},
-    methods: {
-        show() {
-            alert('dd')
-        },
+
+    data: () => {
+        return {
+            alarmCheck: false,
+        }
     },
+    mounted() {},
+    methods: {},
 }
 </script>
 
@@ -63,13 +62,22 @@ export default {
         text-decoration: none;
         margin: 0px 20px;
     }
-    a:last-child {
+    #alarm-icon {
+        margin: 0px 20px;
+    }
+    #help-icon {
         margin-right: 40px;
     }
     a {
         span {
             font-size: 32px;
         }
+    }
+    .alarm-div {
+        position: absolute;
+        top: 58px;
+        right: 110px;
+        z-index: 10;
     }
 }
 svg {
