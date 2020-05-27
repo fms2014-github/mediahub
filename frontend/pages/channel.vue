@@ -63,6 +63,7 @@ export default {
         height: 200px;
         margin: 78px 5%;
         background-color: rgb(196, 173, 197);
+        display: inline-block;
     }
     #profile {
         height: 100px;
