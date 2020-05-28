@@ -2,7 +2,7 @@ package com.ssafy.d103.auth.security;
 
 
 import com.ssafy.d103.auth.exception.ResourceNotFoundException;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,28 +25,28 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        MemberEntity memberEntity = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email : " + email)
         );
 
-        return UserPrincipal.create(memberEntity);
+        return UserPrincipal.create(member);
     }
 
     @Transactional
     public UserDetails loadUserById(Long id) {
-        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(
+        Member member = memberRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("User", "id", id)
         );
 
-        return UserPrincipal.create(memberEntity);
+        return UserPrincipal.create(member);
     }
 
     @Transactional
-    public MemberEntity loadMemberById(Long id){
-        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(
+    public Member loadMemberById(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
-        return memberEntity;
+        return member;
     }
 }

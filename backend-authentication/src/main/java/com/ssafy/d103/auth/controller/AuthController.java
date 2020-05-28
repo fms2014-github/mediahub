@@ -2,7 +2,7 @@ package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.exception.BadRequestException;
 import com.ssafy.d103.auth.model.AuthProvider;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.payload.ApiResponse;
 import com.ssafy.d103.auth.payload.AuthResponse;
 import com.ssafy.d103.auth.payload.LoginRequest;
@@ -32,7 +32,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,21 +58,21 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(memberRepository.existsByEmail(signUpRequest.getEmail())) {
+        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new BadRequestException("Email address already in use.");
         }
 
         // Creating user's account
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setName(signUpRequest.getName());
-        memberEntity.setEmail(signUpRequest.getEmail());
-        memberEntity.setPassword(signUpRequest.getPassword());
-        memberEntity.setProvider(AuthProvider.local);
+        Member member = new Member();
+        member.setName(signUpRequest.getName());
+        member.setEmail(signUpRequest.getEmail());
+        member.setPassword(signUpRequest.getPassword());
+        member.setProvider(AuthProvider.local);
         //user.setRole(RoleType.USER.toString());
 
-        memberEntity.setPassword(passwordEncoder.encode(memberEntity.getPassword()));
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
 
-        MemberEntity result = memberRepository.save(memberEntity);
+        Member result = userRepository.save(member);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user/me")

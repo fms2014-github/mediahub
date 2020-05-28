@@ -13,15 +13,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "auth")
-public class AuthEntity {
+public class Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auth_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private Member member;
 
     @Column(length = 100)
     private String auth_provider;
@@ -34,6 +34,9 @@ public class AuthEntity {
 
     @Column(length = 50)
     private String token_type;
+
+    @Column(length = 50)
+    private int user_id;
 
     @Override
     public String toString() {

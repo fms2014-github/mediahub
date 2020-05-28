@@ -1,11 +1,10 @@
 package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.exception.ResourceNotFoundException;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.UserPrincipal;
-import com.ssafy.d103.auth.youtube.YouTubeService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,22 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private YouTubeService youTubeService;
+    private MemberRepository userRepository;
 
     /**
      *
      * @param userPrincipal
-     * @return memberEntity
+     * @return
      */
 //    @Api()
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    public MemberEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        System.out.println(youTubeService.getImplicitCodeFlowUrl());
-        return memberRepository.findById(userPrincipal.getId())
+    public Member getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        return userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
 
