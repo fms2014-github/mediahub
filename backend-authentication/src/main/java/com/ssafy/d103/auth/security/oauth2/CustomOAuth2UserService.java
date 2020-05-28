@@ -88,7 +88,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setEmail(oAuth2UserInfo.getEmail());
         member.setProfileUrl(oAuth2UserInfo.getImageUrl());
         member.setFirstLogin(0);
-        member.setRoles(Collections.singletonList(RoleType.MEMBER));
+        member.setRole(RoleType.MEMBER);
 //        memberEntity.setLabelList(createRootLabel());
         return userRepository.save(member);
     }

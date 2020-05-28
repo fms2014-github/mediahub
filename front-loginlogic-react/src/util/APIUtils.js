@@ -49,3 +49,84 @@ export function signup(signupRequest) {
         body: JSON.stringify(signupRequest)
     });
 }
+
+export function youtubeAPI(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/token/code",
+        method:'GET',
+    })
+}
+
+export function twitchAPI(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/twitch/token-url",
+        method:'GET',
+    })
+}
+
+export function youtubeGetSubscriptions(token){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/subscriptions/"+token,
+        method:'GET',
+    })
+}
+
+export function youtubeGetVideoId(channelId, token){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/search/"+channelId+"/"+token,
+        method:'GET',
+    })
+}
+
+export function youtubeTest(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/subscriptions/test",
+        method:'GET',
+    })
+}
+
+export function googleRefreshingAccessToken(REFRESH_TOKEN){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    console.log(REFRESH_TOKEN);
+    const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    })
+    
+    if(localStorage.getItem(ACCESS_TOKEN)) {
+        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+    }
+    let options = {
+        method: 'POST',
+        body: JSON.stringify(REFRESH_TOKEN)
+    }
+    const defaults = {headers: headers};
+    options = Object.assign({}, defaults, options);
+
+    return fetch(API_BASE_URL + "/youtube/google/refreshing", options)
+    .then(response => 
+        response.json().then(json => {
+            if(!response.ok) {
+                return Promise.reject(json);
+            }
+            return json;
+        })
+    );
+}

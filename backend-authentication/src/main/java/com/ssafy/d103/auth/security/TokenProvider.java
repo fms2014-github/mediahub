@@ -35,13 +35,14 @@ public class TokenProvider {
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
-        claims.put("roles",userPrincipal.getAuthorities());
+
+        claims.put("role",userPrincipal.getAuthorities());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 
         return Jwts.builder()
-//                .setSubject(Long.toString(userPrincipal.getId()))
+                .setSubject(Long.toString(userPrincipal.getId()))
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

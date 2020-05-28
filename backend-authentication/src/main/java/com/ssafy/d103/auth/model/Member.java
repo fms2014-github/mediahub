@@ -45,11 +45,9 @@ public class Member {
     @ColumnDefault(value = "0")
     private Integer firstLogin;
 
-
-
-    @ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<RoleType> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false,length=20)
+    private RoleType role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Auth> auth = new ArrayList<Auth>();
@@ -75,7 +73,7 @@ public class Member {
                 ", profileUrl='" + profileUrl + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", firstLogin=" + firstLogin +
-                ", roles=" + roles +
+                ", roles=" + role +
                 ", auth=" + auth +
                 '}';
     }

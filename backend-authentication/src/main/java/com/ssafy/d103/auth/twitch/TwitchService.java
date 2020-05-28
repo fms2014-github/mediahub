@@ -28,32 +28,35 @@ public class TwitchService {
     private final RestTemplate restTemplate;
     private final Environment env;
     private final Gson gson;
-    @Value("${spring.twitch.url.base}")
+    @Value("${social.base_url}")
     private String baseUrl;
-    @Value("${spring.twitch.client_id}")
+    @Value("${social.twitch.client_id}")
     private String twitchClientId;
-    @Value("${spring.twitch.redirect}")
-    private String twitchRedirect;
-    @Value("${spring.twitch.code_redirect}")
-    private String twitchCodeRedirect;
-    @Value("${spring.twitch.client_secret}")
+    @Value("${social.twitch.client_secret}")
     private String twitchClientSecret;
-    @Value("${spring.twitch.code_result_redirect}")
+    @Value("${social.twitch.redirect}")
+    private String twitchRedirect;
+    @Value("${social.twitch.code_redirect}")
+    private String twitchCodeRedirect;
+    @Value("${social.twitch.code_result_redirect}")
     private String twitchCodeResultRedirect;
-    @Value("${spring.twitch.twitch_api_v5_scope}")
+    @Value("${social.twitch.twitch_api_v5_scope}")
     private String scope;
-    @Value("${spring.twitch.url.twitch_api_v5_user}")
-    private String twitchUserRequestUrl;
-    @Value("${spring.twitch.accept}")
+    @Value("${social.twitch.url.accept}")
     private String accept;
+    @Value("${social.twitch.url.twitch_api_v5_user}")
+    private String twitchUserRequestUrl;
+    @Value("${social.twitch.url.authorize}")
+    private String authorize;
 
     /**
      * 트위치 인증 URI
      * @return 인증 주소 반환
      */
     public String getImplicitCodeFlowUrl() {
+        System.out.println(authorize);
         StringBuilder url = new StringBuilder()
-                .append(env.getProperty("spring.social.twitch.url.authorize"))
+                .append(authorize)
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=code")
                 .append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect)
@@ -63,7 +66,7 @@ public class TwitchService {
 
     public String getAuthorizationCodeFlowUrl() {
         StringBuilder url = new StringBuilder()
-                .append(env.getProperty("spring.social.twitch.url.token"))
+                .append(env.getProperty("social.twitch.url.token"))
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=token")
                 .append("&redirect_uri=").append(baseUrl).append(twitchRedirect)
@@ -73,7 +76,7 @@ public class TwitchService {
 
     public String getClientCredentialsFlowUrl() {
         StringBuilder url = new StringBuilder()
-                .append(env.getProperty("spring.social.twitch.url.token"))
+                .append(env.getProperty("social.twitch.url.token"))
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=token")
                 .append("&redirect_uri=").append(baseUrl).append(twitchRedirect)
@@ -102,7 +105,7 @@ public class TwitchService {
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.twitch.url.token"), request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             System.out.println(response.getBody());
             return gson.fromJson(response.getBody(), RetTwitchAuth.class);
@@ -174,7 +177,6 @@ public class TwitchService {
         for(Auth auth : authList){
             if(auth.getAuth_provider().equals("twitch"))
                 refreshToken = auth.getRefresh_token();
-
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -188,10 +190,11 @@ public class TwitchService {
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.twitch.url.token").concat("--data-urlencode"), request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token").concat("--data-urlencode"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println(response.getBody());
-            return gson.fromJson(response.getBody(), RetTwitchAuth.class);
+            RetTwitchAuth retTwitchAuth = gson.fromJson(response.getBody(), RetTwitchAuth.class);
+            System.out.println("getTwitchTokenIfo : " + retTwitchAuth);
+            return retTwitchAuth;
         }
 
         return null;
