@@ -23,7 +23,7 @@ spring:
             scope:
               - email
               - profile
-              - "https://www.googleapis.com/auth/youtube"
+#              - "https://www.googleapis.com/auth/youtube"
           facebook:
             clientId: 250967889352419
             clientSecret: 921b243471998d35132e143b7068c429
@@ -62,7 +62,7 @@ social:
     url:
       authorize: https://accounts.google.com/o/oauth2/v2/auth
       token: https://oauth2.googleapis.com/token
-      google_api_v2_user: https://api.twitch.tv/kraken/users
+      refreshing_access_token: https://accounts.google.com/o/oauth2/auth
   twitch:
     client_id: db8sw2xqe82gk1x78mkubkr5xh545p
     client_secret: 6ci34x9vzctu22s2gu1xw7bj0lcoab

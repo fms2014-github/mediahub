@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './Profile.css';
-import { youtubeAPI, twitchAPI, youtubeGetSubscriptions, youtubeGetVideoId, youtubeTest } from '../../util/APIUtils';
+import { youtubeAPI, twitchAPI, youtubeGetSubscriptions, youtubeGetVideoId, youtubeTest, googleRefreshingAccessToken } from '../../util/APIUtils';
 import Alert from 'react-s-alert';
 
 class Profile extends Component {
     state = {
         token: 'test',
-        channelId: ''
+        channelId: '',
+        refreshToken: 'refresh'
     }
     constructor(props) {
         super(props);
@@ -39,6 +40,11 @@ class Profile extends Component {
             token: event.target.value
         })
     }
+    handleRefreshTokenChange(event){
+        this.setState({
+            refreshToken: event.target.value
+        })
+    }
     handleChannelIdChange(event){
         this.setState({
             channelId: event.target.value
@@ -66,6 +72,15 @@ class Profile extends Component {
     }
     testButton(){
         youtubeTest()
+        .then(response =>{
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+        })
+    }
+    handleRefreshToken(){
+        googleRefreshingAccessToken(this.state.refreshToken)
         .then(response =>{
             console.log(response)
         }).catch(error => {
@@ -120,6 +135,10 @@ class Profile extends Component {
                     <button onClick={this.testButton}>
                         test button
                     </button>
+                </div>
+                <div>
+                    <input type="text" value={this.state.refreshToken} onChange={this.handleRefreshTokenChange.bind(this)}></input>
+                    <button onClick={this.handleRefreshToken.bind(this)}>youtubeAPI Subscriptions</button>
                 </div>
             </div>
         );

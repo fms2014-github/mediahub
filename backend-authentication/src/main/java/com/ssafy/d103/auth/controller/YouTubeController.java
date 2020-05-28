@@ -2,6 +2,7 @@ package com.ssafy.d103.auth.controller;
 
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
+import com.google.gson.Gson;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.youtube.RetGoogleAuth;
@@ -24,8 +25,8 @@ public class YouTubeController {
     @Autowired
     YouTubeService youTubeService;
 
+    //code 가져오기
     @GetMapping(value = "/token/code")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getCode(@CurrentUser UserPrincipal userPrincipal){
         System.out.println(userPrincipal.getId());
         System.out.println(userPrincipal.getEmail());
@@ -35,16 +36,23 @@ public class YouTubeController {
         return ResponseEntity.ok("\""+youTubeService.getImplicitCodeFlowUrl()+"\"");
     }
 
+    //code로 access token 및 refreshtoken 가져오기
     @GetMapping(value = "/google/code")
-    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code) {
         return ResponseEntity.ok(youTubeService.getGoogleTokenInfo(code));
     }
 
+    //refreshtoken으로 access token 갱신
+    @PostMapping(value = "/google/refreshing")
+    public ResponseEntity<?> refreshingGoogleAccessToken(@RequestBody String refreshToken) {
+        System.out.println(refreshToken);
+        return ResponseEntity.ok(youTubeService.getRefreshingAccessToken(refreshToken));
+    }
+
+    //accessToken으로 subscriptions 가지고 오기
     @GetMapping(value = "/subscriptions/{accessToken}")
     public ResponseEntity<?> getYouTubeSubscriptions(@PathVariable String accessToken){
-        System.out.println(accessToken);
-        return ResponseEntity.ok("\""+youTubeService.getYouTubeDataAPI(accessToken,"subscriptions")+"\"");
+        return ResponseEntity.ok("\""+youTubeService.getYouTubeSubscriptions(accessToken,"subscriptions")+"\"");
     }
 
     @GetMapping(value = "/search/{channelId}/{accessToken}")
@@ -53,7 +61,10 @@ public class YouTubeController {
         return ResponseEntity.ok("\""+youTubeService.getYouTubeVideoId(channelId, accessToken,"search")+"\"");
     }
 
-    //////////////youtube api test...
+    /*
+    * youtube api test codes
+    * 사용자 채팅을 들고올수 있습니다.
+    * */
     @GetMapping(value = "/subscriptions/test")
     public List<List<String>> getSubscriptions(@CurrentUser UserPrincipal userPrincipal) throws IOException{
         Long maxResult = 25L;

@@ -25,7 +25,7 @@ public class UserController {
     /**
      *
      * @param userPrincipal
-     * @return
+     * @return memberEntity
      */
 //    @Api()
     @GetMapping("/user/me")

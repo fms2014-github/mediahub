@@ -99,3 +99,34 @@ export function youtubeTest(){
         method:'GET',
     })
 }
+
+export function googleRefreshingAccessToken(REFRESH_TOKEN){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    console.log(REFRESH_TOKEN);
+    const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    })
+    
+    if(localStorage.getItem(ACCESS_TOKEN)) {
+        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+    }
+    let options = {
+        method: 'POST',
+        body: JSON.stringify(REFRESH_TOKEN)
+    }
+    const defaults = {headers: headers};
+    options = Object.assign({}, defaults, options);
+
+    return fetch(API_BASE_URL + "/youtube/google/refreshing", options)
+    .then(response => 
+        response.json().then(json => {
+            if(!response.ok) {
+                return Promise.reject(json);
+            }
+            return json;
+        })
+    );
+}

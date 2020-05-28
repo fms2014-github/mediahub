@@ -13,9 +13,11 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.ssafy.d103.auth.security.UserPrincipal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +35,12 @@ public class YouTubeDataAPI {
     private static FileDataStoreFactory DATA_STORE_FACTORY;
     @Value("${server.port}")
     private static int port;
-
+    @Value("${social.google.client_id}")
+    private static String googleClientId;
+    @Value("${social.google.client_secret}")
+    private static String clientSecret;
+    @Autowired
+    private static GoogleClientSecrets googleClientSecrets;
     static {
         try {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -49,6 +56,10 @@ public class YouTubeDataAPI {
         InputStream in = YouTubeDataAPI.class.getResourceAsStream("/client_secret.json");
         DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
         System.out.println(DATA_STORE_FACTORY);
+        GoogleClientSecrets.Details web = googleClientSecrets.getWeb();
+        web.setClientId(googleClientId);
+        web.setClientSecret(clientSecret);
+        System.out.println(web);
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)

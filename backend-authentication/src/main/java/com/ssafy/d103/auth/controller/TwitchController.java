@@ -16,10 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,5 +72,10 @@ public class TwitchController {
 
         return null;
     }
-
+    @GetMapping(value = "/refreshing/{refreshToken}")
+    public String refreshingGoogleAccessToken(@CurrentUser UserPrincipal userPrincipal, @PathVariable String refreshToken){
+        RetTwitchAuth retTwitchAuth = twitchService.getTwitchAccessTokenWithRefreshToken(userPrincipal.getEmail());
+        System.out.println(retTwitchAuth);
+        return null;
+    }
 }

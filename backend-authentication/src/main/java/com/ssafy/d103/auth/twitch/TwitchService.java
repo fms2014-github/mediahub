@@ -176,7 +176,6 @@ public class TwitchService {
         for(AuthEntity auth : authList){
             if(auth.getAuth_provider().equals("twitch"))
                 refreshToken = auth.getRefresh_token();
-
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -192,8 +191,9 @@ public class TwitchService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token").concat("--data-urlencode"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println(response.getBody());
-            return gson.fromJson(response.getBody(), RetTwitchAuth.class);
+            RetTwitchAuth retTwitchAuth = gson.fromJson(response.getBody(), RetTwitchAuth.class);
+            System.out.println("getTwitchTokenIfo : " + retTwitchAuth);
+            return retTwitchAuth;
         }
 
         return null;

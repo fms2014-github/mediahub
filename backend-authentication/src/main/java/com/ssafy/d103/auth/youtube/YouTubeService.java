@@ -11,6 +11,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+
 @RequiredArgsConstructor
 @Service
 public class YouTubeService {
@@ -31,8 +38,6 @@ public class YouTubeService {
     private String googleCodeResultRedirect;
     @Value("${social.google.google_api_v2_scope}")
     private String scope;
-    @Value("${social.google.url.google_api_v2_user}")
-    private String googleUserRequestUrl;
     @Value("${social.google.accept}")
     private String accept;
     @Value("${social.google.youtube_data_api_v3}")
@@ -48,6 +53,8 @@ public class YouTubeService {
                 .append("&response_type=code")
                 .append("&approval_prompt=force")
                 .append("&client_id=").append(googleClientId);
+        //ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
+        //System.out.println(response);
         return url.toString();
     }
     public RetGoogleAuth getGoogleTokenInfo(String code) {
@@ -64,6 +71,7 @@ public class YouTubeService {
         params.add("code", code);
         params.add("redirect_uri", baseUrl + googleCodeRedirect);
         params.add("access_type", "offline");
+        params.add("prompt","consent");
         params.add("approval_prompt","force");
 
         // Set http entity
@@ -75,7 +83,7 @@ public class YouTubeService {
         }
         return null;
     }
-    public String getYouTubeDataAPI(String accessToken, String youtubeService) {
+    public String getYouTubeSubscriptions(String accessToken, String youtubeService) {
         StringBuilder url = new StringBuilder()
                 .append(youtubeDataAPIuri)
                 .append(youtubeService)
@@ -85,6 +93,36 @@ public class YouTubeService {
         return url.toString();
     }
 
+    public RetGoogleAuth getRefreshingAccessToken(String refreshToken){
+        System.out.println(refreshToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Host", "accounts.google.com");
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+        StringBuilder sb = new StringBuilder();
+        sb.append(refreshToken);
+        // Set parameter
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        System.out.println(googleClientId);
+        System.out.println(googleClientSecret);
+        System.out.println(env.getProperty("social.google.url.token"));
+        params.add("grant_type", "refresh_token");
+        params.add("client_id", googleClientId);
+        params.add("client_secret", googleClientSecret);
+        params.add("refresh_token", refreshToken.substring(1,refreshToken.length()-1));
+        params.add("access_type","offline");
+
+        // Set http entity
+        System.out.println("refreshing!!!");
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("https://www.googleapis.com/oauth2/v4/token", request, String.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("getGoogleTokenIfo : " + response.getBody());
+            return gson.fromJson(response.getBody(), RetGoogleAuth.class);
+        }
+        return null;
+    }
+
+    ///// google youtube api test
     public String getYouTubeVideoId(String channelId, String accessToken, String youtubeService) {
         StringBuilder url = new StringBuilder()
                 .append(youtubeDataAPIuri)
