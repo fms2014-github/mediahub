@@ -1,21 +1,16 @@
 package com.ssafy.d103.auth.repository;
 
-import com.ssafy.d103.auth.model.AuthProvider;
-import com.ssafy.d103.auth.model.LabelEntity;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -30,96 +25,53 @@ class MemberRepositoryTest {
 
     @Test
     void memberRepotest(){
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setEmail("atlanboa");
-        memberEntity.setFirstLogin(0);
-        memberEntity.setName("김상헌");
-        memberEntity.setProvider(AuthProvider.google);
+
+        memberRepository.deleteAll();
+
+        Member member = new Member("김상헌", "atlanboa", AuthProvider.google, 0);
 
 
 
-        memberRepository.save(memberEntity);
+        memberRepository.saveAndFlush(member);
 
-        Optional<MemberEntity> member = memberRepository.findByEmail("atlanboa");
+        Member rMember = memberRepository.findByEmail("atlanboa").get();
 
-        LabelEntity label1 = new LabelEntity();
-        label1.setLabelName("루트 라벨");
-        label1.setMember(member.get());
+        Auth auth = new Auth();
+        auth.setAuth_provider(AuthProvider.twitch.toString());
+        auth.setAccess_token("access_token");
+        auth.setRefresh_token("refresh_token");
+        auth.setToken_type("bearer");
+        auth.setUser_id(1234);
+        rMember.getAuth().add(auth);
+        memberRepository.saveAndFlush(rMember);
 
-        memberEntity.addLabel(label1);
+        rMember = memberRepository.findByEmail("atlanboa").get();
 
-        memberRepository.save(memberEntity);
-        member = memberRepository.findByEmail("atlanboa");
+        System.out.println("여기까지 테스트");
+        Label label = new Label("루트 라벨");
+        label.setMemberId(rMember.getId());
 
-        memberEntity = member.get();
-        //루트 라벨 추가된 상태
-
-
-
-        //멤버 id랑 root 라벨 id로 찾아와봄
-        Optional<LabelEntity> rootLabel = labelRepository.findById(memberEntity.getLabelList().get(0).getId());
-        LabelEntity checkRootLabel = rootLabel.get();
-
-        // 라벨 추가할때 멤버 id랑 라벨 id아래에 추가하게 해주는거니깐 멤버id랑 라벨 id로 라벨 찾아와서 라벨 넣으면되겠네
-
-        LabelEntity label2 = new LabelEntity();
-        label2.setLabelName("라벨1의 자식1");
-        label2.setMember(memberEntity);
-        label2.setParent(checkRootLabel);
-
-        LabelEntity label3 = new LabelEntity();
-        label3.setLabelName("라벨1의 자식2");
-        label3.setMember(memberEntity);
-        label3.setParent(checkRootLabel);
-
-        labelRepository.save(label2);
-        labelRepository.save(label3);
+        labelRepository.saveAndFlush(label);
+        Label rLabel = labelRepository.findByMemberId(rMember.getId()).get();
 
 
 
-//        LabelEntity label4 = new LabelEntity();
-//        label4.setLabelName("라벨 1의 자식1의 손자1");
-//
-//
-//        label1.setMember(memberEntity);
+        Channel channel = new Channel();
+        channel.setProvider("트위치");
+        channel.setChannelId("트위치 채널 아이디");
+        channel.setProfileImg("트위치 채널 프로필 이미지");
+        channel.setFollower(1000L);
+        channel.setSubscriber(800L);
+        channel.setDescription("채널 설명입니다");
+
+        rLabel.getChannels().add(channel);
+        labelRepository.saveAndFlush(rLabel);
 
 
-        member = memberRepository.findByEmail("atlanboa");
+        Long labelId = rLabel.getId();
+        rLabel = labelRepository.findById(labelId).get();
 
-        MemberEntity checkMember = member.get();
-
-
-
-        memberRepository.save(checkMember);
-        member = memberRepository.findByEmail("atlanboa");
-        MemberEntity checkMember2 = member.get();
-
-        System.out.println(checkMember2);
-
-
-
-//        resultMember.getLabelList().add(label1);
-
-//        MemberEntity memberEntity2 = new MemberEntity().builder()
-//                .email("atlanboa2")
-//                .firstLogin(0)
-//                .name("김상헌")
-//                .provider(AuthProvider.google)
-//                .labelList(labelList)
-//                .build();
-//
-//        memberRepository.save(memberEntity);
-//
-//        member = memberRepository.findByEmail("atlanboa2");
-//
-//        resultMember = member.get();
-//        System.out.println(resultMember);
-//
-//        for(LabelEntity label : resultMember.getLabelList()){
-//            System.out.println(label);
-//        }
-
-
+        System.out.println("this is test");
 
 
     }

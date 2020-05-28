@@ -1,13 +1,11 @@
 package com.ssafy.d103.auth.controller;
 
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
-import com.ssafy.d103.auth.security.TokenProvider;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.twitch.TwitchService;
 import com.ssafy.d103.auth.twitch.dto.ChannelListDto;
-import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,14 +13,12 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Api(tags = {"1. Twitch"})
@@ -64,7 +60,7 @@ public class TwitchController {
     @GetMapping(value = "/synchronization")
     public ResponseEntity<?> synchronizeWithTwitch(@CurrentUser UserPrincipal userPrincipal) {
         long id = userPrincipal.getId();
-        MemberEntity member = customUserDetailsService.loadMemberById(id);
+        Member member = customUserDetailsService.loadMemberById(id);
         String twitchUserId = (String) userPrincipal.getAttributes().get("twitchUserId");
         List<ChannelListDto> channelList = twitchService.getTwitchAllChannelsByUser(twitchUserId);
 

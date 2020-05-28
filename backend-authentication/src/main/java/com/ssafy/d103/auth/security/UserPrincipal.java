@@ -1,6 +1,6 @@
 package com.ssafy.d103.auth.security;
 
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
     private Long id;
@@ -28,20 +27,20 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(MemberEntity memberEntity) {
+    public static UserPrincipal create(Member member) {
         List<GrantedAuthority> authorities = Collections.
                 singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UserPrincipal(
-                memberEntity.getId(),
-                memberEntity.getEmail(),
-                memberEntity.getPassword(),
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
                 authorities
         );
     }
 
-    public static UserPrincipal create(MemberEntity memberEntity, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = UserPrincipal.create(memberEntity);
+    public static UserPrincipal create(Member member, Map<String, Object> attributes) {
+        UserPrincipal userPrincipal = UserPrincipal.create(member);
         userPrincipal.setAttributes(attributes);
         return userPrincipal;
     }

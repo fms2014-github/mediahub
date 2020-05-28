@@ -1,7 +1,7 @@
 package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.exception.ResourceNotFoundException;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.UserPrincipal;
@@ -26,7 +26,7 @@ public class UserController {
 //    @Api()
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    public MemberEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public Member getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }

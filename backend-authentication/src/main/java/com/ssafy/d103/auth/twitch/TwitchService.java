@@ -1,8 +1,8 @@
 package com.ssafy.d103.auth.twitch;
 
 import com.google.gson.Gson;
-import com.ssafy.d103.auth.model.AuthEntity;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Auth;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.twitch.dto.ChannelListDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,10 +168,10 @@ public class TwitchService {
      * 5. 성공시 Return RetTwitchAuth
      */
     public RetTwitchAuth getTwitchAccessTokenWithRefreshToken(String email) {
-        Optional<MemberEntity> member = memberRepository.findByEmail(email);
-        List<AuthEntity> authList = member.get().getAuthList();
+        Optional<Member> member = memberRepository.findByEmail(email);
+        List<Auth> authList = (List) member.get().getAuth();
         String refreshToken = null;
-        for(AuthEntity auth : authList){
+        for(Auth auth : authList){
             if(auth.getAuth_provider().equals("twitch"))
                 refreshToken = auth.getRefresh_token();
 

@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Builder // builder를 사용할수 있게 합니다.
@@ -14,11 +15,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor // 인자없는 생성자를 자동으로 생성합니다.
 @AllArgsConstructor // 인자를 모두 갖춘 생성자를 자동으로 생성합니다.
-@Table(name = "member") // 'user' 테이블과 매핑됨을 명시
-public class MemberEntity{
+@Table(name = "members")
+public class Member {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
     @Column(nullable = false)
@@ -47,32 +47,21 @@ public class MemberEntity{
 
 
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<RoleType> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuthEntity> authList = new ArrayList<>();
+    private Collection<Auth> auth = new ArrayList<Auth>();
 
-    public void addAuth(final AuthEntity auth){
-        authList.add(auth);
-    }
+    @Column
+    private Long rootLabelId;
 
-    public void removeAuth(final AuthEntity auth){
-        authList.remove(auth);
-        auth.setMember(null);
-    }
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LabelEntity> labelList = new ArrayList<>();
-
-    public void addLabel(final LabelEntity label){
-        labelList.add(label);
-    }
-
-    public void removeLabel(final LabelEntity label){
-        labelList.remove(label);
-        label.setMember(null);
+    public Member(String name, String email, AuthProvider provider, int firstLogin){
+        this.name = name;
+        this.email = email;
+        this.provider = provider;
+        this.firstLogin = firstLogin;
     }
 
     @Override
@@ -87,8 +76,7 @@ public class MemberEntity{
                 ", providerId='" + providerId + '\'' +
                 ", firstLogin=" + firstLogin +
                 ", roles=" + roles +
-                ", auth=" + authList +
-                ", labelList=" + labelList +
+                ", auth=" + auth +
                 '}';
     }
 }
