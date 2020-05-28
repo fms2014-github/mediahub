@@ -1,11 +1,15 @@
 package com.ssafy.d103.auth.twitch;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
-import com.ssafy.d103.auth.twitch.dto.ChannelListDto;
+import com.ssafy.d103.auth.twitch.dto.FollowsDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
+import com.ssafy.d103.auth.twitch.model.TwitchUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -16,7 +20,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,10 +116,6 @@ public class TwitchService {
         return null;
     }
 
-
-
-
-
     /**
      *
      * 트위치 팔로우 리스트 받아오기기
@@ -125,9 +124,9 @@ public class TwitchService {
      * -X GET 'https://api.twitch.tv/kraken/users/{twitch_user_id}/follows/channels'
      *
      * @param twitchUserId twitch 개인 고유 id 필요
-     * @return String 채널 json data 반환
+     * @return List<FollowsDto> userid에 해당하는 팔로우하는 모든 채널
      */
-    public List<ChannelListDto> getTwitchAllChannelsByUser(String twitchUserId){
+    public List<FollowsDto> getTwitchAllChannelsByUser(String twitchUserId){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/vnd.twitchtv.v5+json");
         headers.add("Client-ID", twitchClientId);
@@ -140,14 +139,14 @@ public class TwitchService {
 
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
-        List<ChannelListDto> channelList = null;
+        List<FollowsDto> channelList = null;
         if (response.getStatusCode() == HttpStatus.OK) {
-            ChannelListDto[] channels = gson.fromJson(response.getBody(), ChannelListDto[].class);
-            channelList = Arrays.asList(channels);
-            return channelList;
+            JsonObject jsonObject = JsonParser.parseString(response.getBody()).getAsJsonObject();
+            JsonElement jsonElement = jsonObject.get("follows");
+            FollowsDto[] channels = gson.fromJson(jsonElement, FollowsDto[].class);
+            return Arrays.asList(channels);
         }
-
-        return channelList;
+        return null;
     }
 
 
@@ -196,11 +195,29 @@ public class TwitchService {
             System.out.println("getTwitchTokenIfo : " + retTwitchAuth);
             return retTwitchAuth;
         }
-
         return null;
     }
 
     /*
     유저 정보 받아오기
      */
+    public TwitchUser getTwitchUserInfo(String accessToken){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", env.getProperty("social.twitch.url.accept"));
+        headers.add("Client-ID", twitchClientId);
+        headers.set("Authorization", "OAuth ".concat(accessToken));
+
+        StringBuilder url = new StringBuilder()
+                .append(twitchUserRequestUrl);
+
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
+        TwitchUser twitchUser = null;
+        if (response.getStatusCode() == HttpStatus.OK) {
+            twitchUser = gson.fromJson(response.getBody(), TwitchUser.class);
+            return twitchUser;
+        }
+        return null;
+    }
+
 }

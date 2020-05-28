@@ -35,8 +35,8 @@ public class Auth {
     @Column(length = 50)
     private String token_type;
 
-    @Column(length = 50)
-    private int user_id;
+    @Column(name = "user_id", length = 50)
+    private int userId;
 
     @Override
     public String toString() {

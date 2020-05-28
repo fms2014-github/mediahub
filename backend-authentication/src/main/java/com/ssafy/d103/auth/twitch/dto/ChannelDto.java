@@ -16,4 +16,5 @@ public class ChannelDto {
     private String profile_banner;
     private String url;
     private String description;
+    private Long followers;
 }

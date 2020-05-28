@@ -3,6 +3,7 @@ package com.ssafy.d103.auth.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
