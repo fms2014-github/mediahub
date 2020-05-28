@@ -4,7 +4,7 @@
             <client-only placeholder="loading...">
                 <upload-video :play-info="playInfo" />
             </client-only>
-            <sub-button :kind="playInfo.kind" />
+            <sub-button :play-info="playInfo" />
             <hr />
             <h1>추천 영상</h1>
             <video-form />
@@ -25,8 +25,9 @@ export default {
     data: () => {
         return {
             playInfo: {
-                play: 'fvjpE_wFL5A',
                 kind: 'y',
+                play: 'fvjpE_wFL5A',
+                channelName: 'Lauv',
                 // play: '624698735',
                 // kind: 't',
             },

@@ -1,10 +1,9 @@
 <template>
     <div id="button">
         <div id="button-container">
-            <div v-if="kind === 'y'">
+            <div v-if="playInfo.kind === 'y'">
                 <div class="flex-container">
-                    <div class="youtube-white button">가입</div>
-                    <div class="youtube-red button">구독</div>
+                    <div id="yt-button-container-render"></div>
                 </div>
             </div>
             <div v-else>
@@ -20,9 +19,17 @@
 
 <script>
 export default {
-    props: { kind: { type: String, default: '' } },
+    props: { playInfo: { type: Object, default: null } },
     created() {},
-    mounted() {},
+    mounted() {
+        const container = document.getElementById('yt-button-container-render')
+        const options = {
+            channel: this.playInfo.channelName,
+            layout: 'default',
+            count: 'hidden',
+        }
+        gapi.ytsubscribe.render(container, options)
+    },
     methods: {},
 }
 </script>
@@ -39,29 +46,30 @@ export default {
             display: inline-flex;
             width: 100%;
             justify-content: flex-end;
-        }
-        .button {
-            margin-left: 2%;
-            width: 8%;
-            height: 35px;
-            text-align: center;
-            line-height: 35px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        .youtube-white {
-            background-color: white;
-            border: 1px solid black;
-        }
-        .youtube-red {
-            background-color: #e24821;
-            border: 1px solid red;
-            color: white;
-        }
-        .twitch {
-            background-color: #d6c7ff;
-            border: 1px solid #d6c7ff;
+
+            .button {
+                margin-left: 2%;
+                width: 8%;
+                height: 35px;
+                text-align: center;
+                line-height: 35px;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            .youtube-white {
+                background-color: white;
+                border: 1px solid black;
+            }
+            .youtube-red {
+                background-color: #e24821;
+                border: 1px solid red;
+                color: white;
+            }
+            .twitch {
+                background-color: #d6c7ff;
+                border: 1px solid #d6c7ff;
+            }
         }
     }
 }
