@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Builder // builder를 사용할수 있게 합니다.
@@ -14,8 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor // 인자없는 생성자를 자동으로 생성합니다.
 @AllArgsConstructor // 인자를 모두 갖춘 생성자를 자동으로 생성합니다.
-@Table(name = "member") // 'user' 테이블과 매핑됨을 명시
-public class MemberEntity{
+@Table(name = "members")
+public class Member {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -46,21 +47,36 @@ public class MemberEntity{
 
 
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<RoleType> roles = new ArrayList<>();
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "auth_id")
-    private List<AuthEntity> auth;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Auth> auth = new ArrayList<Auth>();
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "label_id")
-    private List<LabelEntity> labelList;
+    @Column
+    private Long rootLabelId;
 
+    public Member(String name, String email, AuthProvider provider, int firstLogin){
+        this.name = name;
+        this.email = email;
+        this.provider = provider;
+        this.firstLogin = firstLogin;
+    }
 
+    @Override
+    public String toString() {
+        return "MemberEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", provider=" + provider +
+                ", profileUrl='" + profileUrl + '\'' +
+                ", providerId='" + providerId + '\'' +
+                ", firstLogin=" + firstLogin +
+                ", roles=" + roles +
+                ", auth=" + auth +
+                '}';
+    }
 }

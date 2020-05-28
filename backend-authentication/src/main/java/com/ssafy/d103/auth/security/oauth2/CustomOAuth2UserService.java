@@ -2,9 +2,10 @@ package com.ssafy.d103.auth.security.oauth2;
 
 import com.ssafy.d103.auth.exception.OAuth2AuthenticationProcessingException;
 import com.ssafy.d103.auth.model.AuthProvider;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Label;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.model.RoleType;
-import com.ssafy.d103.auth.repository.UserRepository;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfo;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfoFactory;
@@ -18,15 +19,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
 
 
     @Override
@@ -50,18 +52,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<MemberEntity> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
-        MemberEntity memberEntity;
+        Optional<Member> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Member member;
         if(userOptional.isPresent()) {
-            memberEntity = userOptional.get();
-            if(!memberEntity.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+            member = userOptional.get();
+            if(!member.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
-                        memberEntity.getProvider() + " account. Please use your " + memberEntity.getProvider() +
+                        member.getProvider() + " account. Please use your " + member.getProvider() +
                         " account to login.");
             }
-            memberEntity = updateExistingUser(memberEntity, oAuth2UserInfo);
+            member = updateExistingUser(member, oAuth2UserInfo);
         } else {
-            memberEntity = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+            member = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
 //            StringBuilder url = new StringBuilder()
 //                    .append("localhost:8082")
 //                    .append("/api/subscriptions");
@@ -74,26 +76,34 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             // webhook 가정
         }
 
-        return UserPrincipal.create(memberEntity, oAuth2User.getAttributes());
+        return UserPrincipal.create(member, oAuth2User.getAttributes());
     }
 
-    private MemberEntity registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        MemberEntity memberEntity = new MemberEntity();
+    private Member registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        Member member = new Member();
 
-        memberEntity.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-        memberEntity.setProviderId(oAuth2UserInfo.getId());
-        memberEntity.setName(oAuth2UserInfo.getName());
-        memberEntity.setEmail(oAuth2UserInfo.getEmail());
-        memberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
-        memberEntity.setFirstLogin(0);
-        memberEntity.setRoles(Collections.singletonList(RoleType.MEMBER));
-        return userRepository.save(memberEntity);
+        member.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+        member.setProviderId(oAuth2UserInfo.getId());
+        member.setName(oAuth2UserInfo.getName());
+        member.setEmail(oAuth2UserInfo.getEmail());
+        member.setProfileUrl(oAuth2UserInfo.getImageUrl());
+        member.setFirstLogin(0);
+        member.setRoles(Collections.singletonList(RoleType.MEMBER));
+//        memberEntity.setLabelList(createRootLabel());
+        return userRepository.save(member);
     }
 
-    private MemberEntity updateExistingUser(MemberEntity existingMemberEntity, OAuth2UserInfo oAuth2UserInfo) {
-        existingMemberEntity.setName(oAuth2UserInfo.getName());
-        existingMemberEntity.setProfileUrl(oAuth2UserInfo.getImageUrl());
-        return userRepository.save(existingMemberEntity);
+    private Member updateExistingUser(Member existingMember, OAuth2UserInfo oAuth2UserInfo) {
+        existingMember.setName(oAuth2UserInfo.getName());
+        existingMember.setProfileUrl(oAuth2UserInfo.getImageUrl());
+        return userRepository.save(existingMember);
     }
 
+    private List<Label> createRootLabel(){
+        List<Label> list = new LinkedList<>();
+        Label label = new Label();
+        label.setLabelName("My Category");
+        list.add(label);
+        return list;
+    }
 }
