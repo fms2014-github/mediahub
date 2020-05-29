@@ -17,7 +17,7 @@
 
 <script>
 export default {
-    layout: 'sync',
+    layout: 'cover',
 }
 </script>
 

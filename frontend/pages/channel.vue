@@ -5,8 +5,6 @@
                 <img id="profile-img" src="../assets/images/mainHeader/profile2.png" />
                 <div class="profile-content">
                     <div id="profile-name">{{ streamer.name }}</div>
-                    <!-- <div v-if="streamer.ysubcnt != 0" id="subcnt" class="profile-subcnt">유튜브 구독자 {{ streamer.ysubcnt }}명</div>
-                    <div v-if="streamer.tsubcnt != 0" id="followcnt" class="profile-subcnt">트위치 팔로워 {{ streamer.tsubcnt }}명</div> -->
                     <span v-if="streamer.ysubcnt != 0" id="subcnt" class="profile-subcnt"
                         >구독자 <span class="cnt">{{ streamer.ysubcnt }}명</span></span
                     >
@@ -98,9 +96,9 @@ export default {
         // margin-bottom: 7px;
         // color: red;
     }
-    #followcnt {
-        // color: rgb(186, 37, 255);
-    }
+    // #followcnt {
+    //     // color: rgb(186, 37, 255);
+    // }
     #btns-div {
         width: 55vw;
     }

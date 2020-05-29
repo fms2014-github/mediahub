@@ -30,6 +30,36 @@ export default {
     },
     mounted() {
         this.init()
+        const tmi = require('tmi.js')
+        // Define configuration options
+        const opts = {
+            identity: {
+                username: 'test_bot',
+                password: 'oauth:c33fp5wsu5auevg8in2b02wb26n1qw',
+            },
+            channels: ['lol_ambition'],
+        }
+        // Create a client with our options
+        const client = new tmi.Client(opts)
+        // Register our event handlers (defined below)
+        client.on('message', onMessageHandler)
+        client.on('connected', onConnectedHandler)
+        // Connect to Twitch:
+        client.connect()
+        // Called every time a message comes in
+        function onMessageHandler(target, context, msg, self) {
+            if (self) {
+                return
+            } // Ignore messages from the bot
+            // Remove whitespace from chat message
+            console.log(context, msg)
+            const commandName = msg.trim()
+            console.log(commandName)
+        }
+        // Called every time the bot connects to Twitch chat
+        function onConnectedHandler(addr, port) {
+            console.log(`* Connected to ${addr}:${port}`)
+        }
     },
     methods: {
         init() {
