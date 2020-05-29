@@ -71,7 +71,6 @@ public class MemberController {
         return new ResponseEntity(memberDto, HttpStatus.OK);
     }
 
-    //라벨 위치 수정
     @ApiOperation(value = "라벨 위치 변경 요청")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "superLabelId", value = "상위 라벨 id", required = true),
@@ -98,7 +97,6 @@ public class MemberController {
     }
 
 
-    //라벨 정보 수정
     //라벨 삭제
     //라벨 생성
     //채널 추가
