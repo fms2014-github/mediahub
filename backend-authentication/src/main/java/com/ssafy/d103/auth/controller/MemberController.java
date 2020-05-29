@@ -84,6 +84,19 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "라벨 정보 변경 요청")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true),
+            @ApiImplicitParam(name = "labelName", value = "라벨 이름", required = true)
+    })
+    @PutMapping("/label")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName,
+                                                 @CurrentUser UserPrincipal userPrincipal){
+        labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 
     //라벨 정보 수정
     //라벨 삭제

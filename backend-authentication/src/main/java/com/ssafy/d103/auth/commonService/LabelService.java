@@ -33,4 +33,11 @@ public class LabelService {
         }
     }
 
+    public void updateLabelInformation(long labelId, String labelName){
+        Label label = labelRepository.findById(labelId).orElseThrow(()-> new LabelNotFoundException(labelId));
+        if(label != null){
+            label.setLabelName(labelName);
+            labelRepository.save(label);
+        }
+    }
 }
