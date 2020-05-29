@@ -47,7 +47,7 @@ public class YouTubeController {
     @GetMapping(value = "/token-code")
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code) {
         RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
-        Member member = customUserDetailsService.loadMemberById(3L);
+        Member member = customUserDetailsService.loadMemberById(1L);
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
         auth.setAccess_token(retGoogleAuth.getAccess_token());
@@ -82,16 +82,15 @@ public class YouTubeController {
     @Transactional
     public ResponseEntity<?> synchronizeWithGoogle(@CurrentUser UserPrincipal userPrincipal) {
         long id = userPrincipal.getId();
-        Member member = customUserDetailsService.loadMemberById(id);
+        Member member = customUserDetailsService.loadMemberById(1L);
 
-        Auth[] auths = null;
-        member.getAuth().toArray(auths);
         String refreshToken = null;
-        for(Auth a : auths){
+        for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("google")){
                 refreshToken = a.getRefresh_token();
             }
         }
+        System.out.println("refresh_token : " + refreshToken);
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
         SubscriptionListResponse subscriptionListResponse = null;
         try{
@@ -103,6 +102,7 @@ public class YouTubeController {
             e.printStackTrace();
         }
         Label rootLabel = labelService.getLabelById(member.getRootLabelId());
+        System.out.println(subscriptionListResponse.getEventId());
         List<Channel> channels = subscriptionListResponse.getItems().stream()
                 .map(item -> {
                     Channel channel = new Channel();

@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
+    @Transactional
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
         System.out.println("access token : "+oAuth2UserRequest.getAccessToken().getTokenValue());
@@ -69,21 +71,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
             member = updateExistingUser(member, oAuth2UserInfo);
         } else {
+            System.out.println("*********************멤버 저장, 루트 라벨 설정*********************");
             member = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
             Label label = createRootLabel(member);
             System.out.println(member.getId()+", "+member.getEmail());
-            System.out.println(label.getMemberId()+", "+label.getLabelName());
+            System.out.println(label.getId()+", "+ label.getMemberId()+", "+label.getLabelName());
+            member = setMemberRootLabel(member, label.getId());
+            System.out.println(member.getId()+", "+member.getEmail()+", "+member.getRootLabelId());
 
-//            StringBuilder url = new StringBuilder()
-//                    .append("localhost:8082")
-//                    .append("/api/subscriptions");
-//            ResponseEntity<String> response = restTemplate.getForEntity(url.toString(), String.class);
-            System.out.println("======================");
-//            System.out.println(response);
-            // 1.로그인 처리하면서 youtube 구독 리스트받아와야되고
-            // 2.로그인 처리하면서 twitch 인증부분도 추가해야되니깐?
-            // 3.인증 추가되면? 트위치 팔로우 리스트
-            // webhook 가정
+            System.out.println("===========멤버 저장, 루트 라벨 설정========");
+
         }
 
         return UserPrincipal.create(member, oAuth2User.getAttributes());
@@ -107,6 +104,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Label label = new Label("루트 라벨");
         label.setMemberId(member.getId());
         return labelRepository.save(label);
+    }
+
+    private Member setMemberRootLabel(Member member, Long rootLabelId){
+        member.setRootLabelId(rootLabelId);
+        return memberRepository.save(member);
     }
 
     private Member updateExistingUser(Member existingMember, OAuth2UserInfo oAuth2UserInfo) {

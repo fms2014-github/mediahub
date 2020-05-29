@@ -52,6 +52,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public void saveMember(Member member){
-        memberRepository.saveAndFlush(member);
+        memberRepository.save(member);
     }
 }
