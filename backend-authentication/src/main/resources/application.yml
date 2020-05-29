@@ -54,8 +54,8 @@ social:
     client_id: 946584424079-ip6hfgdki7hurq57p5trelm95ph8aa4h.apps.googleusercontent.com
     client_secret: JBBHYyVNKtepjZLDhRZwqjgM
     api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
-    redirect: /youtube/google/code
-    code_redirect: /youtube/google/code
+    redirect: /v1/youtube/token-code
+    code_redirect: /v1/youtube/token-code
     code_result_redirect: /social/login/google/code/result
     google_api_v2_scope: https://www.googleapis.com/auth/youtube
     accept: application/x-www-form-urlencoded

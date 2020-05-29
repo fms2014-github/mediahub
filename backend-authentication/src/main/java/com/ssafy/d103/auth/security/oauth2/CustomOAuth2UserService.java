@@ -5,6 +5,7 @@ import com.ssafy.d103.auth.model.AuthProvider;
 import com.ssafy.d103.auth.model.Label;
 import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.model.RoleType;
+import com.ssafy.d103.auth.repository.LabelRepository;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.security.oauth2.user.OAuth2UserInfo;
@@ -28,8 +29,10 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private MemberRepository userRepository;
+    private MemberRepository memberRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -55,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<Member> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Optional<Member> userOptional = memberRepository.findByEmail(oAuth2UserInfo.getEmail());
         Member member;
         if(userOptional.isPresent()) {
             member = userOptional.get();
@@ -67,6 +70,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             member = updateExistingUser(member, oAuth2UserInfo);
         } else {
             member = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+            Label label = createRootLabel(member);
+            System.out.println(member.getId()+", "+member.getEmail());
+            System.out.println(label.getMemberId()+", "+label.getLabelName());
+
 //            StringBuilder url = new StringBuilder()
 //                    .append("localhost:8082")
 //                    .append("/api/subscriptions");
@@ -93,13 +100,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setFirstLogin(0);
         member.setRole(RoleType.MEMBER);
 //        memberEntity.setLabelList(createRootLabel());
-        return userRepository.save(member);
+        return memberRepository.save(member);
+    }
+
+    private Label createRootLabel(Member member){
+        Label label = new Label("루트 라벨");
+        label.setMemberId(member.getId());
+        return labelRepository.save(label);
     }
 
     private Member updateExistingUser(Member existingMember, OAuth2UserInfo oAuth2UserInfo) {
         existingMember.setName(oAuth2UserInfo.getName());
         existingMember.setProfileUrl(oAuth2UserInfo.getImageUrl());
-        return userRepository.save(existingMember);
+        return memberRepository.save(existingMember);
     }
 
     private List<Label> createRootLabel(){

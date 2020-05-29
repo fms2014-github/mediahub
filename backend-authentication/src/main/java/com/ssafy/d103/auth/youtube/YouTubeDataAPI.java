@@ -84,21 +84,28 @@ public class YouTubeDataAPI {
                 .setFromTokenResponse(tokenResponse);
     }
 
-    public static YouTube getYouTubeService(String refreshToken) throws IOException{
-        Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(refreshToken);
-        if(!refreshToken.isEmpty()) {
-            //Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(refreshToken);
-            System.out.println(credential.getAccessToken());
-            System.out.println(credential.getRefreshToken());
-            //Credential credential_refresh = YouTubeDataAPI.createCredentialWithRefreshToken(refreshToken);
+    public static YouTube getYouTubeService(String refreshToken){
+        try {
+            Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(refreshToken);
+            if (!refreshToken.isEmpty()) {
+                //Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(refreshToken);
+                System.out.println(credential.getAccessToken());
+                System.out.println(credential.getRefreshToken());
+                //Credential credential_refresh = YouTubeDataAPI.createCredentialWithRefreshToken(refreshToken);
 //            System.out.println(credential_refresh.getRefreshToken());
 //            System.out.println(credential_refresh.getAccessToken());
-        }else{
-            System.out.println("refreshToken.isEmpty");
+            } else {
+                System.out.println("refreshToken.isEmpty");
+            }
+            return new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+                    .setApplicationName("")
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
-        return new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName("")
-                .build();
+
+
 //        return new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
 //            @Override
 //            public void initialize(HttpRequest request) throws IOException {

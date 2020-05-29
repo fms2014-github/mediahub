@@ -55,7 +55,7 @@ export function youtubeAPI(){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/youtube/token/code",
+        url: API_BASE_URL + "/v1/youtube/token-url",
         method:'GET',
     })
 }
@@ -75,7 +75,7 @@ export function youtubeGetSubscriptions(token){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/youtube/subscriptions/"+token,
+        url: API_BASE_URL + "/v1/youtube/subscriptions/"+token,
         method:'GET',
     })
 }
@@ -85,7 +85,7 @@ export function youtubeGetVideoId(channelId, token){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/youtube/search/"+channelId+"/"+token,
+        url: API_BASE_URL + "/v1/youtube/search/"+channelId+"/"+token,
         method:'GET',
     })
 }
@@ -95,7 +95,7 @@ export function youtubeTest(){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/youtube/subscriptions/test",
+        url: API_BASE_URL + "/v1/youtube/subscriptions/test",
         method:'GET',
     })
 }
@@ -120,7 +120,7 @@ export function googleRefreshingAccessToken(REFRESH_TOKEN){
     const defaults = {headers: headers};
     options = Object.assign({}, defaults, options);
 
-    return fetch(API_BASE_URL + "/youtube/google/refreshing", options)
+    return fetch(API_BASE_URL + "/v1/youtube/google/refreshing", options)
     .then(response => 
         response.json().then(json => {
             if(!response.ok) {
@@ -135,7 +135,7 @@ export function getLiveMessage(channelId){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/youtube/channelLive/" + channelId,
+        url: API_BASE_URL + "/v1/youtube/channelLive/" + channelId,
         method:'GET',
     })
 }

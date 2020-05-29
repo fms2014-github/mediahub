@@ -13,12 +13,12 @@ public class YoutubeDemoTests {
 
     @Test
     public void channels() throws IOException{
-        UserPrincipal userPrincipal = Mockito.mock(UserPrincipal.class);
-        ChannelListResponse result = YouTubeDataAPI.getYouTubeService(userPrincipal)
-                .channels()
-                .list("id,snippet,brandingSettings,contentDetails,invideoPromotion,statistics,topicDetails")
-                .setForUsername("NoCopyrightSounds")
-                .execute();
-        System.out.println(result);
+//        UserPrincipal userPrincipal = Mockito.mock(UserPrincipal.class);
+//        ChannelListResponse result = YouTubeDataAPI.getYouTubeService(userPrincipal)
+//                .channels()
+//                .list("id,snippet,brandingSettings,contentDetails,invideoPromotion,statistics,topicDetails")
+//                .setForUsername("NoCopyrightSounds")
+//                .execute();
+//        System.out.println(result);
     }
 }

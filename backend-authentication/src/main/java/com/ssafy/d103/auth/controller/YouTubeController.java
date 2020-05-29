@@ -1,45 +1,62 @@
 package com.ssafy.d103.auth.controller;
 
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.*;
+
+import com.google.api.services.youtube.model.Subscription;
+import com.google.api.services.youtube.model.SubscriptionListResponse;
 import com.google.gson.Gson;
+import com.ssafy.d103.auth.commonService.LabelService;
+import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
+import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.youtube.RetGoogleAuth;
 import com.ssafy.d103.auth.youtube.YouTubeDataAPI;
 import com.ssafy.d103.auth.youtube.YouTubeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags = {"youtube"})
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/youtube")
+@RequestMapping("/v1/youtube")
 public class YouTubeController {
-    @Autowired
-    YouTubeService youTubeService;
+    private final YouTubeService youTubeService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final LabelService labelService;
 
     //code 가져오기
-    @GetMapping(value = "/token/code")
+    @GetMapping(value = "/token-url")
     public ResponseEntity<?> getCode(@CurrentUser UserPrincipal userPrincipal){
-        System.out.println(userPrincipal.getId());
-        System.out.println(userPrincipal.getEmail());
-        System.out.println(userPrincipal.getName());
-        System.out.println(userPrincipal.getAttributes());
-        System.out.println(userPrincipal.getAuthorities());
         return ResponseEntity.ok("\""+youTubeService.getImplicitCodeFlowUrl()+"\"");
     }
 
     //code로 access token 및 refreshtoken 가져오기
-    @GetMapping(value = "/google/code")
+    @GetMapping(value = "/token-code")
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code) {
-        return ResponseEntity.ok(youTubeService.getGoogleTokenInfo(code));
+        RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
+        Member member = customUserDetailsService.loadMemberById(3L);
+        Auth auth = new Auth();
+        auth.setAuth_provider(AuthProvider.google.toString());
+        auth.setAccess_token(retGoogleAuth.getAccess_token());
+        auth.setRefresh_token(retGoogleAuth.getRefresh_token());
+        auth.setToken_type(retGoogleAuth.getToken_type());
+        auth.setMember(member);
+        member.getAuth().add(auth);
+        customUserDetailsService.saveMember(member);
+        return ResponseEntity.ok("{}");
     }
 
     //refreshtoken으로 access token 갱신
@@ -55,6 +72,49 @@ public class YouTubeController {
         return ResponseEntity.ok("\""+youTubeService.getYouTubeSubscriptions(accessToken,"subscriptions")+"\"");
     }
 
+    /***
+     *
+     * @param userPrincipal
+     * @return
+     */
+    @ApiOperation(value = "유튜브 동기화 요청, 구독 리스트 DB 저장")
+    @GetMapping(value = "/synchronization")
+    @Transactional
+    public ResponseEntity<?> synchronizeWithGoogle(@CurrentUser UserPrincipal userPrincipal) {
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
+
+        Auth[] auths = null;
+        member.getAuth().toArray(auths);
+        String refreshToken = null;
+        for(Auth a : auths){
+            if(a.getAuth_provider().equals("google")){
+                refreshToken = a.getRefresh_token();
+            }
+        }
+        YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
+        SubscriptionListResponse subscriptionListResponse = null;
+        try{
+            subscriptionListResponse = youTube.subscriptions()
+                .list("id, snippet, contentDetails")
+                .setMine(true)
+                .execute();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Label rootLabel = labelService.getLabelById(member.getRootLabelId());
+        List<Channel> channels = subscriptionListResponse.getItems().stream()
+                .map(item -> {
+                    Channel channel = new Channel();
+                    channel.setProvider(AuthProvider.google.toString());
+                    channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
+                    channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
+                    channel.setDescription(item.getSnippet().getDescription());
+                    return channel;
+                }).collect(Collectors.toList());
+        labelService.setChannelsRootLabel(rootLabel, channels);
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @GetMapping(value = "/search/{channelId}/{accessToken}")
     public ResponseEntity<?> getYouTubeVideoId(@PathVariable String channelId, @PathVariable String accessToken){
         System.out.println(channelId);
