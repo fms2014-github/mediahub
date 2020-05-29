@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Builder // builder를 사용할수 있게 합니다.
 @Entity // jpa entity임을 알립니다.
 @Getter // user 필드값의 getter를 자동으로 생성합니다.
 @Setter
@@ -62,19 +61,5 @@ public class Member {
         this.firstLogin = firstLogin;
     }
 
-    @Override
-    public String toString() {
-        return "MemberEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", provider=" + provider +
-                ", profileUrl='" + profileUrl + '\'' +
-                ", providerId='" + providerId + '\'' +
-                ", firstLogin=" + firstLogin +
-                ", roles=" + role +
-                ", auth=" + auth +
-                '}';
-    }
+
 }
