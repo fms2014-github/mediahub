@@ -65,7 +65,7 @@ export function twitchAPI(){
         return Promise.reject("No access token set.");
     }
     return request({
-        url: API_BASE_URL + "/twitch/token-url",
+        url: API_BASE_URL + "/v1/twitch/token-url",
         method:'GET',
     })
 }
@@ -129,4 +129,13 @@ export function googleRefreshingAccessToken(REFRESH_TOKEN){
             return json;
         })
     );
+}
+export function getLiveMessage(channelId){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/youtube/channelLive/" + channelId,
+        method:'GET',
+    })
 }

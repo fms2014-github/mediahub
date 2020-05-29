@@ -65,56 +65,23 @@ public class YouTubeController {
     * youtube api test codes
     * 사용자 채팅을 들고올수 있습니다.
     * */
-    @GetMapping(value = "/subscriptions/test")
-    public List<List<String>> getSubscriptions(@CurrentUser UserPrincipal userPrincipal) throws IOException{
+    @GetMapping(value = "/channelLive/{channelId}")
+    public SubscriptionListResponse getSubscriptions(@PathVariable String channelId) throws IOException{
         Long maxResult = 25L;
-        List<List<String>> chatMessages = new LinkedList<>();
-        YouTube youtube = YouTubeDataAPI.getYouTubeService(userPrincipal);
+        System.out.println(channelId);
+        YouTube youtube = YouTubeDataAPI.getYouTubeService("1//0eQl_D7lsBlB-CgYIARAAGA4SNwF-L9IrLBrFg45fli-5IVkShXDzW1fXU3GWeKeEJAqcCnvHGoeyaPz8jb_J1ezOK5dbUNN1iTU");
+        //
         SubscriptionListResponse result = youtube
                 .subscriptions()
                 .list("id, snippet, contentDetails")
                 .setMine(true)
                 .setMaxResults(maxResult)
                 .execute();
-        // 구독 정보 가져오기
-        System.out.println("test");
-        for (Subscription sub : result.getItems()){
-            SearchListResponse search = youtube
-                    .search()
-                    .list("snippet")
-                    .setChannelId(sub.getSnippet().getResourceId().getChannelId())
-                    .setEventType("live")
-                    .setType("video")
-                    .execute();
-            // 구독 정보에서 live streaming 중인 것 찾기
-            if(!search.getItems().isEmpty()) {
-                System.out.println("search" + sub.getSnippet().getTitle() + " : " + search);
-                System.out.println(search.getItems().size());
-                for (int i = 0; i < search.getItems().size(); i++){
-                    SearchResult searchResult = search.getItems().get(i);
-                    chatMessages.add(new LinkedList<String>());
-                    System.out.println(searchResult.getId().getVideoId());
-                    VideoListResponse videoListResponse = youtube
-                            .videos()
-                            .list("liveStreamingDetails")
-                            .setId(searchResult.getId().getVideoId())
-                            .execute();
-                    // streaming 중인것에서 video id 찾기 (한 채널에 2개 이상일 수 있습니다.)
-                    chatMessages.add(new LinkedList<>());
-
-                    for (Video v:videoListResponse.getItems()) {
-                        LiveChatMessageListResponse liveChatMessageListResponse = youtube
-                                .liveChatMessages()
-                                .list(v.getLiveStreamingDetails().getActiveLiveChatId(),"snippet")
-                                .execute();
-                        for (LiveChatMessage liveChatMessage:liveChatMessageListResponse.getItems()){
-                            chatMessages.get(i).add(liveChatMessage.getSnippet().getDisplayMessage());
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println(chatMessages);
-        return chatMessages;
+//        SearchListResponse search = youtube.search()
+//                .list("snippet")
+//                .setChannelId("UCX4sShAQf01LYjYQhG2ZgKg")
+//                .setType("video")
+//                .execute();
+        return result;
     }
 }

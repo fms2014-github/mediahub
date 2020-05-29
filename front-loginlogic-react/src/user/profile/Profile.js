@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './Profile.css';
-import { youtubeAPI, twitchAPI, youtubeGetSubscriptions, youtubeGetVideoId, youtubeTest, googleRefreshingAccessToken } from '../../util/APIUtils';
+import { youtubeAPI, twitchAPI, youtubeGetSubscriptions, youtubeGetVideoId,getLiveMessage, youtubeTest, googleRefreshingAccessToken } from '../../util/APIUtils';
 import Alert from 'react-s-alert';
 
 class Profile extends Component {
     state = {
         token: 'test',
-        channelId: '',
+        channelId: 'channelId',
         refreshToken: 'refresh'
     }
     constructor(props) {
@@ -60,7 +60,7 @@ class Profile extends Component {
             Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
         })
     }
-    youtubeGetVideoId(){
+    handleyoutubeGetVideoId(){
         console.log(this.state.token);
         youtubeGetSubscriptions(this.state.channelId, this.state.token)
         .then(response =>{
@@ -81,6 +81,15 @@ class Profile extends Component {
     }
     handleRefreshToken(){
         googleRefreshingAccessToken(this.state.refreshToken)
+        .then(response =>{
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+        })
+    }
+    handleChannelIdtoLiveMessage(){
+        getLiveMessage(this.state.channelId)
         .then(response =>{
             console.log(response)
         }).catch(error => {
@@ -129,7 +138,7 @@ class Profile extends Component {
                 </div>
                 <div>
                     <input type="text" value={this.state.channelId} onChange={this.handleChannelIdChange.bind(this)}></input>
-                    <button onClick={this.youtubeGetVideoId.bind(this)}>youtubeAPI Search</button>
+                    <button onClick={this.handleyoutubeGetVideoId.bind(this)}>youtubeAPI Search</button>
                 </div>
                 <div>
                     <button onClick={this.testButton}>
@@ -139,6 +148,11 @@ class Profile extends Component {
                 <div>
                     <input type="text" value={this.state.refreshToken} onChange={this.handleRefreshTokenChange.bind(this)}></input>
                     <button onClick={this.handleRefreshToken.bind(this)}>youtubeAPI Subscriptions</button>
+                </div>
+                <div>
+                    <button onClick={this.handleChannelIdtoLiveMessage.bind(this)}>
+                        channel to live
+                    </button>
                 </div>
             </div>
         );

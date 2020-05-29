@@ -41,7 +41,7 @@ class MemberRepositoryTest {
         auth.setAccess_token("access_token");
         auth.setRefresh_token("refresh_token");
         auth.setToken_type("bearer");
-        auth.setUser_id(1234);
+        auth.setUserId(1234);
         rMember.getAuth().add(auth);
         memberRepository.saveAndFlush(rMember);
 
