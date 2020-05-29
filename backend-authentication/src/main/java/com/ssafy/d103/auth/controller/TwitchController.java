@@ -98,11 +98,9 @@ public class TwitchController {
     public ResponseEntity<?> synchronizeWithTwitch(@CurrentUser UserPrincipal userPrincipal) {
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
-        Auth[] auths = null;
-        member.getAuth().toArray(auths);
         String twitchUserId = null;
 
-        for(Auth a : auths){
+        for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("twitch")){
                 twitchUserId = Long.toString(a.getUserId());
             }
