@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,15 @@ public class LabelService {
     public void setChannelsRootLabel(Label root, List channels){
         root.getChannels().addAll(channels);
         labelRepository.saveAndFlush(root);
+    }
+
+    public void updateLabelLocation(long superId, long subId){
+        Label subLabel = labelRepository.findById(subId).orElseThrow(() -> new LabelNotFoundException(subId));
+        Label superLabel = labelRepository.findById(subId).orElseThrow(() -> new LabelNotFoundException(superId));
+        if(subLabel != null & superLabel != null){
+            subLabel.setSuperLabel(superLabel);
+            labelRepository.save(subLabel);
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.ssafy.d103.auth.controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.dto.AuthDto;
 import com.ssafy.d103.auth.dto.MemberDto;
@@ -11,15 +13,19 @@ import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -38,7 +44,7 @@ public class MemberController {
      * @return
      */
 //    @Api()
-    @GetMapping("/user/me")
+    @GetMapping("/information")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<MemberDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         Member member = memberService.loadMemberById(userPrincipal.getId());
@@ -65,31 +71,24 @@ public class MemberController {
         return new ResponseEntity(memberDto, HttpStatus.OK);
     }
 
-    /**
-     *
-     * @param userPrincipal
-     * @return
-     */
-//    @GetMapping("/user/auth")
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<?> getUserAuth(@CurrentUser UserPrincipal userPrincipal){
-//        Optional<MemberEntity> member = memberRepository
-//       .findById(userPrincipal.getId());
-//        List<AuthEntity> authList = member.get().getAuth();
-//
-//        if(authList == null){
-//            return new ResponseEntity(HttpStatus.NO_CONTENT);
-//        }
-//
-//        List<AuthDto> authDtoList = new LinkedList<>();
-//        for(AuthEntity authEntity : authList){
-//            authDtoList.add(new AuthDto().builder()
-//                                .access_token(authEntity.getAccess_token())
-//                                .provider(authEntity.getAuth_provider())
-//                                .build());
-//        }
-//
-//        return new ResponseEntity(authDtoList, HttpStatus.OK);
-//    }
+    //라벨 위치 수정
+    @ApiOperation(value = "라벨 위치 변경 요청")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "superLabelId", value = "상위 라벨 id", required = true),
+            @ApiImplicitParam(name = "subLabelId", value = "하위 라벨 id", required = true)
+    })
+    @PutMapping("/label/location")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity updateLabelLocation(@RequestParam String superLabelId, @RequestParam String subLabelId, @CurrentUser UserPrincipal userPrincipal){
+        labelService.updateLabelLocation(Long.parseLong(subLabelId), Long.parseLong(subLabelId));
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    //라벨 정보 수정
+    //라벨 삭제
+    //라벨 생성
+    //채널 추가
+    //채널 삭제
 
 }
