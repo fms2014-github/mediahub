@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-//@Builder
+@Builder
 @ToString
 public class AuthDto {
     private String access_token;

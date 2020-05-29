@@ -89,6 +89,7 @@ public class TwitchController {
      * 1. 동기화할 유저 조회
      * 2. 구독 리스트 받아옴
      * 3. 회원이 가지고 있는 루트 라벨에 트위치 목록을 추가해줌
+     * 4. 동기화 이후에는 first 로그인 값을 올려줌
      * @param
      * @return
      */
@@ -121,6 +122,8 @@ public class TwitchController {
                 }).collect(Collectors.toList());
 
         labelService.setChannelsRootLabel(rootLabel, channels);
+        member.setFirstLogin(member.getFirstLogin()+1);
+        customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
 
