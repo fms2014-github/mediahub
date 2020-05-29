@@ -1,6 +1,6 @@
 spring:
   profiles:
-  active: local
+  active: dev
   datasource:
     url: jdbc:mysql://K02D1031.p.ssafy.io:3306/server_test?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
@@ -46,10 +46,7 @@ spring:
             authorizationUri: https://www.facebook.com/v7.0/dialog/oauth
             tokenUri: https://graph.facebook.com/v7.0/oauth/access_token
             userInfoUri: https://graph.facebook.com/v7.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
-#          twitch:
-#            authorizationUri: https://id.twitch.tv/oauth2
-#            tokenUri: https://id.twitch.tv/validate
-#            userInfoUri: https://id.twitch.tv/
+
 social:
   base_url: http://localhost:8080
   google:
@@ -86,15 +83,14 @@ app:
     tokenExpirationMsec: 864000000
   oauth2:
     authorizedRedirectUris:
+      - http://K02D1031.p.ssafy.io/oauth2/redirect
+      - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
       - http://localhost:3000/oauth2/redirect
-
-
-
 
 --- # 구분
 
 spring:
-  profiles: dev
+  profiles: local
   datasource:
     url: jdbc:mysql://K02D1031.p.ssafy.io:3306/media_platform?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
@@ -145,7 +141,7 @@ spring:
 #            tokenUri: https://id.twitch.tv/validate
 #            userInfoUri: https://id.twitch.tv/
 social:
-  base_url: http://K02D1031.p.ssafy.io:8080
+  base_url: http://K02D1031.p.ssafy.io:8081
   google:
     client_id: 946584424079-ip6hfgdki7hurq57p5trelm95ph8aa4h.apps.googleusercontent.com
     client_secret: JBBHYyVNKtepjZLDhRZwqjgM
@@ -182,3 +178,6 @@ app:
     authorizedRedirectUris:
       - http://K02D1031.p.ssafy.io/oauth2/redirect
       - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
+
+--- # Live
