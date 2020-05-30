@@ -58,13 +58,12 @@ public class MemberController {
                 .roles(member.getRole())
                 .auth(
                         member.getAuth().stream()
-                        .map(auth -> {
-                            auth = (Auth) auth;
-                            return new AuthDto().builder()
+                        .map(auth ->
+                             new AuthDto().builder()
                                     .access_token(auth.getAccess_token())
                                     .provider(auth.getAuth_provider())
-                                    .build();
-                        }).collect(Collectors.toList())
+                                    .build()
+                        ).collect(Collectors.toList())
                 )
                 .label(labelService.getLabelById(member.getRootLabelId()))
                 .build();
@@ -90,9 +89,19 @@ public class MemberController {
     })
     @PutMapping("/label")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName,
-                                                 @CurrentUser UserPrincipal userPrincipal){
+    public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName){
         labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "라벨 삭제 요청")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true)
+    })
+    @DeleteMapping("/label")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity deleteLabel(@RequestParam String labelId){
+        labelService.deleteLabel(Long.parseLong(labelId));
         return new ResponseEntity(HttpStatus.OK);
     }
 

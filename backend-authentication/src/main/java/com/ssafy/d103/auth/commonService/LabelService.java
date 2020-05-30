@@ -1,6 +1,7 @@
 package com.ssafy.d103.auth.commonService;
 
 import com.ssafy.d103.auth.exception.LabelNotFoundException;
+import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Label;
 import com.ssafy.d103.auth.repository.LabelRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,23 @@ public class LabelService {
         if(label != null){
             label.setLabelName(labelName);
             labelRepository.save(label);
+        }
+    }
+
+    public void deleteLabel(long labelId) {
+        Label targetLabel = labelRepository.findById(labelId).orElseThrow(()->new LabelNotFoundException(labelId));
+        if(targetLabel != null && targetLabel.getMemberId() == null){
+            Label superLabel = targetLabel.getSuperLabel();
+            targetLabel.getSubLabels().stream()
+                    .map(label -> {
+                        label.setSuperLabel(superLabel);
+                        return label;
+                    })
+                    .forEach((Label label) -> superLabel.getSubLabels().add(label));
+            targetLabel.getChannels().stream()
+                    .forEach((Channel channel) -> superLabel.getChannels().add(channel));
+            labelRepository.save(superLabel);
+            labelRepository.delete(targetLabel);
         }
     }
 }
