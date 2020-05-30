@@ -78,7 +78,7 @@ public class MemberController {
     @PutMapping("/label/location")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelLocation(@RequestParam String superLabelId, @RequestParam String subLabelId, @CurrentUser UserPrincipal userPrincipal){
-        labelService.updateLabelLocation(Long.parseLong(subLabelId), Long.parseLong(subLabelId));
+        labelService.updateLabelLocation(Long.parseLong(superLabelId), Long.parseLong(subLabelId));
         return new ResponseEntity(HttpStatus.OK);
     }
 
