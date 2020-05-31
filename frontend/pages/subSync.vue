@@ -16,8 +16,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     layout: 'cover',
+    middleware: 'authenticated',
+    mounted() {
+        console.log('subsync', this.getJwt())
+    },
+    methods: {
+        ...mapGetters({ getJwt: 'login/getJwt' }),
+    },
 }
 </script>
 

@@ -1,10 +1,10 @@
 <template>
     <div id="login-page">
-        <div id="login-page-modal">
+        <div v-show="loading" id="login-page-modal">
             <h1>동영상 통합 관리 서비스</h1>
             <h2>Social Login</h2>
             <div id="login-button-wrap">
-                <button id="border-animate" @click="test"><img src="../assets/images/google-logo.png" />Login with Google</button>
+                <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
                 <div class="border"></div>
                 <div class="border"></div>
                 <div class="border"></div>
@@ -16,20 +16,45 @@
 
 <script>
 export default {
+    data() {
+        return {
+            loading: false,
+        }
+    },
     layout: 'cover',
-    mounted() {
-        const className = ['border-top', 'border-right', 'border-bottom', 'border-left']
-        const getElement = document.getElementById('border-animate')
-        getElement.addEventListener('mouseover', () => {
-            for (let i = 0; i < 4; i++) {
-                document.getElementsByClassName('border')[i].classList.add(className[i])
+    middleware: 'notAuthenticated',
+    async mounted() {
+        const fragmentString = window.location.search.replace('?', '')
+        // Parse query string to see if page request is coming from OAuth 2.0 server.
+        const params = {}
+        const regex = /([^&=]+)=([^&]*)/g
+        let m
+        while ((m = regex.exec(fragmentString))) {
+            if (decodeURIComponent(m[1]) === 'token') {
+                await this.$store.dispatch('login/loginapi', decodeURIComponent(m[2]))
+                this.$router.push('/subSync')
             }
-        })
-        getElement.addEventListener('mouseleave', () => {
-            for (let i = 0; i < 4; i++) {
-                document.getElementsByClassName('border')[i].classList.remove(className[i])
-            }
-        })
+        }
+        setTimeout(() => {
+            this.loading = true
+            const className = ['border-top', 'border-right', 'border-bottom', 'border-left']
+            const getElement = document.getElementById('border-animate')
+            getElement.addEventListener('mouseover', () => {
+                for (let i = 0; i < 4; i++) {
+                    document.getElementsByClassName('border')[i].classList.add(className[i])
+                }
+            })
+            getElement.addEventListener('mouseleave', () => {
+                for (let i = 0; i < 4; i++) {
+                    document.getElementsByClassName('border')[i].classList.remove(className[i])
+                }
+            })
+        }, 400)
+    },
+    methods: {
+        login() {
+            window.location.href = 'http://k02d1031.p.ssafy.io:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/login'
+        },
     },
 }
 </script>
@@ -41,7 +66,9 @@ export default {
     align-items: center;
     width: 100vw;
     height: 100vh;
+
     #login-page-modal {
+        transition: all 1s;
         width: 80%;
         max-width: 800px;
         height: 45%;
