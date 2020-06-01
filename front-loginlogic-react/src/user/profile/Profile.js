@@ -7,7 +7,8 @@ class Profile extends Component {
     state = {
         accessToken: 'test',
         channelId: 'channelId',
-        refreshToken: 'refresh'
+        refreshToken: 'refresh',
+        code: 'code'
     }
     constructor(props) {
         super(props);
@@ -52,7 +53,11 @@ class Profile extends Component {
                     </div>
                 </div>
                 <div>
-                    <button onClick={this.handlerTwitchCodeUrl}> twitch token </button>
+                    <button onClick={this.handlerTwitchCodeUrl}> twitch token </button>                    
+                </div>
+                <div>
+                    <input type="text" value={this.state.code}></input>
+                    <button>code</button>
                 </div>
                 <div>
                     <button onClick={this.handlerYoutubeCodeUrl}> youtube token </button>

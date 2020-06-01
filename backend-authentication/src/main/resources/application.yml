@@ -65,7 +65,7 @@ social:
       refreshing_access_token: https://accounts.google.com/o/oauth2/auth
   twitch:
     client_id: db8sw2xqe82gk1x78mkubkr5xh545p
-    client_secret: 1xpxsxoo0n0eiuj9kwvemdbtrf12l9
+    client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
     redirect: /v1/twitch/token-code
     code_redirect: /v1/twitch/token-code
     code_result_redirect: /social/login/twitch/code/result
@@ -158,7 +158,7 @@ social:
       refreshing_access_token: https://accounts.google.com/o/oauth2/auth
   twitch:
     client_id: db8sw2xqe82gk1x78mkubkr5xh545p
-    client_secret: 6ci34x9vzctu22s2gu1xw7bj0lcoab
+    client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
     redirect: /twitch/token/code
     code_redirect: /twitch/token/code
     code_result_redirect: /social/login/twitch/code/result

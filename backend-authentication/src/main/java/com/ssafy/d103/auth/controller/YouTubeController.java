@@ -70,7 +70,7 @@ public class YouTubeController {
     @Transactional
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
         RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
-        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
+        Member member = customUserDetailsService.loadMemberById(2L);
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
         auth.setAccess_token(retGoogleAuth.getAccess_token());

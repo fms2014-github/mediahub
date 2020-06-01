@@ -63,7 +63,7 @@ public class TwitchService {
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=code")
                 .append("&scope=").append(scope);
-//                .append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect);
+                //.append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect);
         return url.toString();
     }
 

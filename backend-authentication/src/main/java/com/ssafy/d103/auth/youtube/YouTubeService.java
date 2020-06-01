@@ -53,7 +53,7 @@ public class YouTubeService {
                 .append("&response_type=code")
                 .append("&approval_prompt=force")
                 .append("&client_id=").append(googleClientId);
-//                .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect);
+                //.append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect);
         //ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         //System.out.println(response);
         return url.toString();

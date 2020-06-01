@@ -58,9 +58,6 @@ public class TwitchController {
      * @return Http 상태
      */
     @ApiOperation(value = "Twitch 인증 코드로 토큰 발급받고 DB 저장 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "code", value = "Twitch Code", required = true)
-    })
     @GetMapping(value = "/token-code")
     @Transactional
     public ResponseEntity<?> redirectCodeTwitch(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
