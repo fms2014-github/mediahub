@@ -17,23 +17,23 @@ import java.util.Objects;
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "label_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(length = 50, nullable = false)
+    @Column(name = "name", length = 50, nullable = false)
     private String labelName;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "super_label_id")
+    @JoinColumn(name = "super_id")
     private Label superLabel;
 
     @OneToMany(mappedBy = "superLabel", cascade = CascadeType.ALL)
     private Collection<Label> subLabels = new ArrayList<Label>();
 
-    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @OneToMany(mappedBy = "id", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private Collection<Channel> channels = new ArrayList<Channel>();
 
     public Label() {}

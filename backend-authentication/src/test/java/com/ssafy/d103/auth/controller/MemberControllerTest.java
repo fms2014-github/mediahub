@@ -77,18 +77,24 @@ class MemberControllerTest {
     @Transactional
     void updateLabelLocation() {
         System.out.println("**************************updateLabelLocation Test***************************");
-        Label rootLabel = labelService.getLabelById(1L);
+//        Label rootLabel = labelService.getLabelById(1L);
         Label superLabel = labelRepository.findById(1L).orElseThrow(() -> new LabelNotFoundException(3L));
         Label subLabel = labelRepository.findById(3L).orElseThrow(() -> new LabelNotFoundException(1L));
 
         subLabel.setSuperLabel(superLabel);
         labelRepository.saveAndFlush(subLabel);
-
-        Label label = labelService.getLabelById(1L);
+//        labelService.updateLabelLocation(1L, 3L);
+        Label label = labelRepository.findById(1L).get();
+//        Label label = labelService.getLabelById(1L);
         System.out.println("**************************updateLabelLocation Test***************************");
     }
 //    @Test
 //    void updateLabelInformation() {
+//        System.out.println();
+//        Label label = labelService.getLabelById(3L);
+//        labelService.updateLabelInformation(3L, "수정된 라벨 이름");
+//
+//        Label rootLabel = labelService.getLabelById(1L);
 //    }
 //
 //    @Test

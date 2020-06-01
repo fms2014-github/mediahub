@@ -1,5 +1,6 @@
 package com.ssafy.d103.auth.controller;
 
+import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.commonService.MemberService;
 import com.ssafy.d103.auth.model.*;
@@ -33,6 +34,7 @@ public class TwitchController {
     private final CustomUserDetailsService customUserDetailsService;
     private final MemberService memberService;
     private final LabelService labelService;
+    private final ChannelService channelService;
 
     @ApiOperation(value = "Twitch 인증 주소 요청")
     @GetMapping(value = "/token-url")
@@ -96,32 +98,40 @@ public class TwitchController {
     @ApiOperation(value = "트위치 동기화 요청, 팔로우 리스트 DB 저장")
     @GetMapping(value = "/synchronization")
     @Transactional
-    public ResponseEntity<?> synchronizeWithTwitch(@CurrentUser UserPrincipal userPrincipal) {
-        long id = userPrincipal.getId();
-        Member member = customUserDetailsService.loadMemberById(id);
-        String twitchUserId = null;
+    public ResponseEntity<?> synchronizeWithTwitch(
+//            @CurrentUser UserPrincipal userPrincipal
+    ){
+//        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(1L);
+//        String twitchUserId = null;
+//
+//        for(Auth a : member.getAuth()){
+//            if(a.getAuth_provider().equals("twitch")){
+//                twitchUserId = Long.toString(a.getUserId());
+//            }
+//        }
 
-        for(Auth a : member.getAuth()){
-            if(a.getAuth_provider().equals("twitch")){
-                twitchUserId = Long.toString(a.getUserId());
-            }
-        }
+        String twitchUserId = "131655528";
+
 
         List<FollowsDto> channelList = twitchService.getTwitchAllChannelsByUser(twitchUserId);
-        Label rootLabel = labelService.getLabelById(member.getRootLabelId());
-        List<Channel> channels = channelList.stream()
+        Label rootLabel = labelService.getLabelById(/*member.getRootLabelId()*/ 3L);
+        channelList.stream()
                 .map(follow -> {
                     Channel channel = new Channel();
+                    channel.setLabel(rootLabel);
                     channel.setProvider(AuthProvider.twitch.toString());
                     channel.setChannelId(follow.getChannel().get_id());
+                    channel.setName(follow.getChannel().getName());
+                    channel.setDescription(follow.getChannel().getDisplay_name());
                     channel.setProfileImg(follow.getChannel().getLogo());
                     channel.setFollower(follow.getChannel().getFollowers());
                     channel.setSubscriber(follow.getChannel().getFollowers());
                     channel.setDescription(follow.getChannel().getDescription());
                     return channel;
-                }).collect(Collectors.toList());
+                }).forEach(channelService::saveChannel);
 
-        labelService.setChannelsRootLabel(rootLabel, channels);
+//        labelService.setChannelsRootLabel(rootLabel, channels);
         member.setFirstLogin(member.getFirstLogin()+1);
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);

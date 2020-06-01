@@ -2,11 +2,14 @@ package com.ssafy.d103.auth.controller;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.dto.AuthDto;
 import com.ssafy.d103.auth.dto.MemberDto;
+import com.ssafy.d103.auth.dto.UpdateLabelLocationDto;
 import com.ssafy.d103.auth.exception.ResourceNotFoundException;
 import com.ssafy.d103.auth.model.Auth;
+import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.CurrentUser;
@@ -37,6 +40,7 @@ public class MemberController {
 
     private final CustomUserDetailsService memberService;
     private final LabelService labelService;
+    private final ChannelService channelService;
     /**
      * 기본 멤버 정보, 라벨
      *
@@ -71,44 +75,59 @@ public class MemberController {
     }
 
     @ApiOperation(value = "라벨 위치 변경 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "superLabelId", value = "상위 라벨 id", required = true),
-            @ApiImplicitParam(name = "subLabelId", value = "하위 라벨 id", required = true)
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "superLabelId", value = "상위 라벨 id", required = true),
+//            @ApiImplicitParam(name = "subLabelId", value = "하위 라벨 id", required = true)
+//    })
     @PutMapping("/label/location")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity updateLabelLocation(@RequestParam String superLabelId, @RequestParam String subLabelId, @CurrentUser UserPrincipal userPrincipal){
-        labelService.updateLabelLocation(Long.parseLong(superLabelId), Long.parseLong(subLabelId));
+//    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity updateLabelLocation(@RequestBody UpdateLabelLocationDto labelId){
+        labelService.updateLabelLocation(Long.parseLong(labelId.getSuperLabelId()), Long.parseLong(labelId.getSubLabelId()));
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "라벨 정보 변경 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true),
-            @ApiImplicitParam(name = "labelName", value = "라벨 이름", required = true)
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true),
+//            @ApiImplicitParam(name = "labelName", value = "라벨 이름", required = true)
+//    })
     @PutMapping("/label")
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName){
         labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "라벨 삭제 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true)
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true)
+//    })
     @DeleteMapping("/label")
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteLabel(@RequestParam String labelId){
         labelService.deleteLabel(Long.parseLong(labelId));
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "라벨 생성")
+    @PostMapping("/label")
+    public ResponseEntity createLabel(@RequestParam String labelId, @RequestParam String labelName){
+        labelService.createLabel(Long.parseLong(labelId), labelName);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
-    //라벨 삭제
-    //라벨 생성
-    //채널 추가
-    //채널 삭제
+    @ApiOperation(value = "채널 생성")
+    @PostMapping("/channel")
+    public ResponseEntity createChannel(@RequestBody Channel channel, @RequestParam String labelId){
+        channelService.createNewChannel(Long.parseLong(labelId), channel);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "채널 삭제")
+    @DeleteMapping("/channel")
+    public ResponseEntity deleteChannel(@RequestParam String channelId){
+        channelService.deleteChannel(Long.parseLong(channelId));
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }

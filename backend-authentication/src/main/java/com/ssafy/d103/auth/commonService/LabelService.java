@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +28,6 @@ public class LabelService {
         labelRepository.save(root);
     }
 
-    @Transactional
     public void updateLabelLocation(long superId, long subId){
         Label subLabel = labelRepository.findById(subId).orElseThrow(() -> new LabelNotFoundException(subId));
         Label superLabel = labelRepository.findById(superId).orElseThrow(() -> new LabelNotFoundException(superId));
@@ -48,16 +49,26 @@ public class LabelService {
         Label targetLabel = labelRepository.findById(labelId).orElseThrow(()->new LabelNotFoundException(labelId));
         if(targetLabel != null && targetLabel.getMemberId() == null){
             Label superLabel = targetLabel.getSuperLabel();
-            targetLabel.getSubLabels().stream()
-                    .map(label -> {
-                        label.setSuperLabel(superLabel);
-                        return label;
-                    })
-                    .forEach((Label label) -> superLabel.getSubLabels().add(label));
-            targetLabel.getChannels().stream()
-                    .forEach((Channel channel) -> superLabel.getChannels().add(channel));
-            labelRepository.save(superLabel);
+
+            Iterator<Label> it = targetLabel.getSubLabels().iterator();
+            while(it.hasNext()){
+                Label label = it.next();
+                label.setSuperLabel(superLabel);
+                superLabel.getSubLabels().add(label);
+            }
+            superLabel.getChannels().addAll(targetLabel.getChannels());
+            targetLabel.setSuperLabel(null);
+            targetLabel.setSubLabels(null);
             labelRepository.delete(targetLabel);
+            labelRepository.saveAndFlush(superLabel);
         }
+    }
+
+    public void createLabel(long labelId, String labelName){
+        Label superLabel = labelRepository.findById(labelId).orElseThrow(()-> new LabelNotFoundException(labelId));
+        Label label = new Label();
+        label.setLabelName(labelName);
+        label.setSuperLabel(superLabel);
+        labelRepository.save(label);
     }
 }
