@@ -49,6 +49,7 @@ spring:
 
 social:
   base_url: http://localhost:8080
+  front_base_url : http://localhost:3000
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj

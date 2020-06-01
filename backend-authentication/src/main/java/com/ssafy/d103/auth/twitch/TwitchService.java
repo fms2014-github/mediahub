@@ -43,10 +43,8 @@ public class TwitchService {
     private String twitchRedirect;
     @Value("${social.twitch.code_redirect}")
     private String twitchCodeRedirect;
-    @Value("${social.twitch.code_redirect}")
+    @Value("${social.twitch.token_redirect}")
     private String twitchTokenRedirect;
-    @Value("${social.twitch.code_result_redirect}")
-    private String twitchCodeResultRedirect;
     @Value("${social.twitch.twitch_api_v5_scope}")
     private String scope;
     @Value("${social.twitch.url.accept}")
@@ -107,7 +105,7 @@ public class TwitchService {
         params.add("client_secret", twitchClientSecret);
         params.add("code", code);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", baseUrl);
+        params.add("redirect_uri", baseUrl+twitchTokenRedirect);
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
