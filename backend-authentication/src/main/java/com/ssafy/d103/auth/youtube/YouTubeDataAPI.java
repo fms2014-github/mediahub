@@ -54,7 +54,6 @@ public class YouTubeDataAPI {
             System.exit(1);
         }
     }
-
     public static Credential createCredentialWithAccessTokenOnlyTest(String refreshToken) throws IOException {
         TokenResponse tokenResponse = new GoogleRefreshTokenRequest(HTTP_TRANSPORT,
                                                                     JSON_FACTORY,
@@ -65,6 +64,7 @@ public class YouTubeDataAPI {
     }
 
     public static Credential createCredentialWithAccessTokenOnly(TokenResponse tokenResponse){
+        Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod());
         return new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(tokenResponse);
     }
 
