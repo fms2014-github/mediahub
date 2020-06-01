@@ -70,10 +70,10 @@ public class YouTubeService {
         params.add("client_id", googleClientId);
         params.add("client_secret", googleClientSecret);
         params.add("code", code);
-        params.add("redirect_uri", baseUrl + googleTokenRedirect);
         params.add("access_type", "offline");
-        params.add("prompt","consent");
-        params.add("approval_prompt","force");
+//        params.add("prompt","consent");
+//        params.add("approval_prompt","force");
+        params.add("redirect_uri", baseUrl + googleTokenRedirect);
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
