@@ -55,7 +55,8 @@ social:
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
     api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
     redirect: /v1/youtube/token-code
-    code_redirect: /v1/youtube/token-code
+    code_redirect: /youtube/code
+    token_redirect : /v1/youtube/token-code
     code_result_redirect: /social/login/google/code/result
     google_api_v2_scope: https://www.googleapis.com/auth/youtube
     accept: application/x-www-form-urlencoded
@@ -150,7 +151,8 @@ social:
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
     api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
     redirect: /v1/youtube/token-code
-    code_redirect: /v1/youtube/token-code
+    code_redirect: /youtube/code
+    token_redirect : /v1/youtube/token-code
     code_result_redirect: /social/login/google/code/result
     google_api_v2_scope: https://www.googleapis.com/auth/youtube
     accept: application/x-www-form-urlencoded
@@ -163,7 +165,7 @@ social:
     client_id: db8sw2xqe82gk1x78mkubkr5xh545p
     client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
     redirect: /twitch/token/code
-    code_redirect: /get
+    code_redirect: /twitch/code
     token_redirect : /v1/twitch/token-code
     code_result_redirect: /social/login/twitch/code/result
     twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email

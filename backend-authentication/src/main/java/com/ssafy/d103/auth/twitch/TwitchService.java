@@ -34,7 +34,7 @@ public class TwitchService {
     @Value("${social.base_url}")
     private String baseUrl;
     @Value("${social.front_base_url}")
-    private String fontBaseUrl;
+    private String frontBaseUrl;
     @Value("${social.twitch.client_id}")
     private String twitchClientId;
     @Value("${social.twitch.client_secret}")
@@ -67,7 +67,7 @@ public class TwitchService {
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=code")
                 .append("&scope=").append(scope)
-                .append("&redirect_uri=").append(fontBaseUrl).append(twitchCodeRedirect);
+                .append("&redirect_uri=").append(frontBaseUrl).append(twitchCodeRedirect);
         return url.toString();
     }
 
