@@ -86,8 +86,8 @@ app:
     tokenExpirationMsec: 83600000
   oauth2:
     authorizedRedirectUris:
-      - http://K02D1031.p.ssafy.io/oauth2/redirect
-      - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
+      - http://k02d1031.p.ssafy.io/oauth2/redirect
+      - http://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
 
 --- # 구분
@@ -144,7 +144,7 @@ spring:
 #            tokenUri: https://id.twitch.tv/validate
 #            userInfoUri: https://id.twitch.tv/
 social:
-  base_url: http://K02D1031.p.ssafy.io:8081
+  base_url: http://k02d1031.p.ssafy.io:8081
   front_base_url : http://127.0.0.1:3000
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
@@ -183,8 +183,8 @@ app:
     tokenExpirationMsec: 3600000
   oauth2:
     authorizedRedirectUris:
-      - http://K02D1031.p.ssafy.io/oauth2/redirect
-      - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
+      - http://k02d1031.p.ssafy.io/oauth2/redirect
+      - http://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
 
 --- # Live
