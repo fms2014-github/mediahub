@@ -204,7 +204,7 @@ public class TwitchService {
      */
     public TwitchUser getTwitchUserInfo(String accessToken){
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", env.getProperty("social.twitch.url.accept"));
+        headers.add("Accept", accept);
         headers.add("Client-ID", twitchClientId);
         headers.set("Authorization", "OAuth ".concat(accessToken));
 
