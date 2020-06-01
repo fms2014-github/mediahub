@@ -48,8 +48,8 @@ spring:
             userInfoUri: https://graph.facebook.com/v7.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 
 social:
-  base_url: http://localhost:8080
-  front_base_url : http://localhost:3000
+  base_url: http://127.0.0.1:8080
+  front_base_url : http://127.0.0.1:3000
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
@@ -88,7 +88,7 @@ app:
     authorizedRedirectUris:
       - http://K02D1031.p.ssafy.io/oauth2/redirect
       - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
-      - http://localhost:3000/oauth2/redirect
+      - http://127.0.0.1:3000/oauth2/redirect
 
 --- # 구분
 
@@ -145,7 +145,7 @@ spring:
 #            userInfoUri: https://id.twitch.tv/
 social:
   base_url: http://K02D1031.p.ssafy.io:8081
-  front_base_url : http://localhost:3000
+  front_base_url : http://127.0.0.1:3000
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
@@ -185,6 +185,6 @@ app:
     authorizedRedirectUris:
       - http://K02D1031.p.ssafy.io/oauth2/redirect
       - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
-      - http://localhost:3000/oauth2/redirect
+      - http://127.0.0.1:3000/oauth2/redirect
 
 --- # Live
