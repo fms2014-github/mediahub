@@ -89,6 +89,7 @@ app:
       - http://k02d1031.p.ssafy.io/oauth2/redirect
       - http://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
+      - http://localhost:3000/login
 
 --- # 구분
 
@@ -186,5 +187,6 @@ app:
       - http://k02d1031.p.ssafy.io/oauth2/redirect
       - http://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
+      - http://localhost:3000/login
 
 --- # Live
