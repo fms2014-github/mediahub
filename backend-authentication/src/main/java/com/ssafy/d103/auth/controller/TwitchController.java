@@ -75,7 +75,7 @@ public class TwitchController {
         auth.setAccess_token(retTwitchAuth.getAccess_token());
         auth.setRefresh_token(retTwitchAuth.getRefresh_token());
         auth.setToken_type(retTwitchAuth.getToken_type());
-        auth.setUserId(Integer.parseInt(twitchUser.getId()));
+        auth.setUserId(Integer.parseInt(twitchUser.get_id()));
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);

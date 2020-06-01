@@ -51,6 +51,8 @@ public class TwitchService {
     private String accept;
     @Value("${social.twitch.url.twitch_api_v5_user}")
     private String twitchUserRequestUrl;
+    @Value("${social.twitch.url.twitch_api_v5_users}")
+    private String twitchUserFollowRequestUrl;
     @Value("${social.twitch.url.authorize}")
     private String authorize;
 
@@ -133,7 +135,7 @@ public class TwitchService {
         headers.add("Client-ID", twitchClientId);
 
         StringBuilder url = new StringBuilder()
-                .append(twitchUserRequestUrl)
+                .append(twitchUserFollowRequestUrl)
                 .append("/")
                 .append(twitchUserId)
                 .append("/follows/channels");
