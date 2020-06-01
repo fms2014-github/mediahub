@@ -1,35 +1,24 @@
 package com.ssafy.d103.auth.controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.dto.AuthDto;
 import com.ssafy.d103.auth.dto.MemberDto;
 import com.ssafy.d103.auth.dto.UpdateLabelLocationDto;
-import com.ssafy.d103.auth.exception.ResourceNotFoundException;
-import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Channel;
+import com.ssafy.d103.auth.model.Label;
 import com.ssafy.d103.auth.model.Member;
-import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Api(tags = {"user"})
@@ -47,7 +36,7 @@ public class MemberController {
      * @param userPrincipal
      * @return
      */
-//    @Api()
+    @ApiOperation(value = "유저 정보 요청")
     @GetMapping("/information")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<MemberDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
@@ -75,35 +64,24 @@ public class MemberController {
     }
 
     @ApiOperation(value = "라벨 위치 변경 요청")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "superLabelId", value = "상위 라벨 id", required = true),
-//            @ApiImplicitParam(name = "subLabelId", value = "하위 라벨 id", required = true)
-//    })
     @PutMapping("/label/location")
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelLocation(@RequestBody UpdateLabelLocationDto labelId){
         labelService.updateLabelLocation(Long.parseLong(labelId.getSuperLabelId()), Long.parseLong(labelId.getSubLabelId()));
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "라벨 정보 변경 요청")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true),
-//            @ApiImplicitParam(name = "labelName", value = "라벨 이름", required = true)
-//    })
     @PutMapping("/label")
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName){
         labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "라벨 삭제 요청")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "labelId", value = "라벨 id", required = true)
-//    })
     @DeleteMapping("/label")
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteLabel(@RequestParam String labelId){
         labelService.deleteLabel(Long.parseLong(labelId));
         return new ResponseEntity(HttpStatus.OK);
@@ -111,6 +89,7 @@ public class MemberController {
 
     @ApiOperation(value = "라벨 생성")
     @PostMapping("/label")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity createLabel(@RequestParam String labelId, @RequestParam String labelName){
         labelService.createLabel(Long.parseLong(labelId), labelName);
         return new ResponseEntity(HttpStatus.OK);
@@ -118,15 +97,27 @@ public class MemberController {
 
     @ApiOperation(value = "채널 생성")
     @PostMapping("/channel")
-    public ResponseEntity createChannel(@RequestBody Channel channel, @RequestParam String labelId){
-        channelService.createNewChannel(Long.parseLong(labelId), channel);
-        return new ResponseEntity(HttpStatus.OK);
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Channel> createChannel(@RequestBody Channel channel, @RequestParam String labelId){
+        return new ResponseEntity(channelService.createNewChannel(Long.parseLong(labelId), channel), HttpStatus.OK);
     }
 
     @ApiOperation(value = "채널 삭제")
     @DeleteMapping("/channel")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteChannel(@RequestParam String channelId){
         channelService.deleteChannel(Long.parseLong(channelId));
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "채널 카테고리 변경")
+    @PutMapping("/channel")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity changeLabel(@RequestParam String channelId, @RequestParam String labelId){
+        Label label = labelService.getLabelById(Long.parseLong(labelId));
+        Channel channel = channelService.findById(Long.parseLong(channelId));
+        channel.setLabel(label);
+        channelService.saveChannel(channel);
         return new ResponseEntity(HttpStatus.OK);
     }
 

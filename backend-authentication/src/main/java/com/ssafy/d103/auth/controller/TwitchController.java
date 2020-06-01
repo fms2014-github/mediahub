@@ -98,25 +98,20 @@ public class TwitchController {
     @ApiOperation(value = "트위치 동기화 요청, 팔로우 리스트 DB 저장")
     @GetMapping(value = "/synchronization")
     @Transactional
-    public ResponseEntity<?> synchronizeWithTwitch(
-//            @CurrentUser UserPrincipal userPrincipal
-    ){
-//        long id = userPrincipal.getId();
-        Member member = customUserDetailsService.loadMemberById(1L);
-//        String twitchUserId = null;
-//
-//        for(Auth a : member.getAuth()){
-//            if(a.getAuth_provider().equals("twitch")){
-//                twitchUserId = Long.toString(a.getUserId());
-//            }
-//        }
+    public ResponseEntity<?> synchronizeWithTwitch(@CurrentUser UserPrincipal userPrincipal){
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
+        String twitchUserId = null;
 
-        String twitchUserId = "131655528";
-
+        for(Auth a : member.getAuth()){
+            if(a.getAuth_provider().equals("twitch")){
+                twitchUserId = Long.toString(a.getUserId());
+            }
+        }
 
         List<FollowsDto> channelList = twitchService.getTwitchAllChannelsByUser(twitchUserId);
-        Label rootLabel = labelService.getLabelById(/*member.getRootLabelId()*/ 3L);
-        channelList.stream()
+        Label rootLabel = labelService.getLabelById(member.getRootLabelId());
+        List<Channel> channels = channelList.stream()
                 .map(follow -> {
                     Channel channel = new Channel();
                     channel.setLabel(rootLabel);
@@ -129,9 +124,9 @@ public class TwitchController {
                     channel.setSubscriber(follow.getChannel().getFollowers());
                     channel.setDescription(follow.getChannel().getDescription());
                     return channel;
-                }).forEach(channelService::saveChannel);
+                }).collect(Collectors.toList());
 
-//        labelService.setChannelsRootLabel(rootLabel, channels);
+        channelService.saveAll(channels);
         member.setFirstLogin(member.getFirstLogin()+1);
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);

@@ -5,6 +5,7 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Subscription;
 import com.google.api.services.youtube.model.SubscriptionListResponse;
 import com.google.gson.Gson;
+import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
@@ -36,6 +37,7 @@ public class YouTubeController {
     private final YouTubeService youTubeService;
     private final CustomUserDetailsService customUserDetailsService;
     private final LabelService labelService;
+    private final ChannelService channelService;
 
     //code 가져오기
     @GetMapping(value = "/token-url")
@@ -84,14 +86,13 @@ public class YouTubeController {
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
 
-        Auth[] auths = null;
-        member.getAuth().toArray(auths);
         String refreshToken = null;
-        for(Auth a : auths){
+        for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("google")){
                 refreshToken = a.getRefresh_token();
             }
         }
+
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
         SubscriptionListResponse subscriptionListResponse = null;
         try{
@@ -106,13 +107,16 @@ public class YouTubeController {
         List<Channel> channels = subscriptionListResponse.getItems().stream()
                 .map(item -> {
                     Channel channel = new Channel();
+                    channel.setLabel((rootLabel));
                     channel.setProvider(AuthProvider.google.toString());
                     channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
                     channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
                     channel.setDescription(item.getSnippet().getDescription());
                     return channel;
                 }).collect(Collectors.toList());
-        labelService.setChannelsRootLabel(rootLabel, channels);
+        channelService.saveAll(channels);
+        member.setFirstLogin(member.getFirstLogin()+1);
+        customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
     @GetMapping(value = "/search/{channelId}/{accessToken}")

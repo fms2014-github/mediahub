@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@Table(name = "labels")
+@Table(name = "label")
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +33,7 @@ public class Label {
     @OneToMany(mappedBy = "superLabel", cascade = CascadeType.ALL)
     private Collection<Label> subLabels = new ArrayList<Label>();
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @OneToMany(mappedBy = "label")
     private Collection<Channel> channels = new ArrayList<Channel>();
 
     public Label() {}

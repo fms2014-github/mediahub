@@ -15,10 +15,10 @@ import javax.persistence.*;
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "label_id")
     private Label label;
 
     @Column(length = 100, nullable = false)
