@@ -3,7 +3,6 @@
         <client-only placeholder="loading...">
             <live-video-slide-bar />
         </client-only>
-
         <video-form />
     </div>
 </template>

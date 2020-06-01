@@ -6,7 +6,7 @@
             </div>
             <div id="video-wrap">
                 <div id="back-blind" class="back-slide"></div>
-                <youtube id="youtube-video" class="back-slide" :player-vars="{ autoplay: 0 }" :video-id="play" @ready="ready" />
+                <youtube id="youtube-video" class="back-slide" :player-vars="{ autoplay: 0 }" :video-id="videoId" @ready="ready" />
                 <div id="twitch-video" class="front-slide"></div>
                 <live-chat></live-chat>
             </div>
@@ -21,9 +21,14 @@ export default {
     components: {
         liveChat,
     },
+    props: {
+        videoId: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
-            play: 'P6blDnXcXaY',
             videoEvent: {
                 paused: 0,
             },
@@ -61,8 +66,7 @@ export default {
         // function onConnectedHandler(addr, port) {
         //     console.log(`* Connected to ${addr}:${port}`)
         // }
-        await this.getLiveChatIdApi('VykycecFVoc')
-        console.log(await this.getliveChatId())
+        console.log((await this.$youtubeApi.youtubeVideosApi('VykycecFVoc')).data)
     },
     methods: {
         init() {
@@ -108,8 +112,6 @@ export default {
                 this.twitchPlayer.pause()
             }
         },
-        ...mapActions({ getLiveChatIdApi: 'youtube/getLiveChatIdApi' }),
-        ...mapGetters({ getliveChatId: 'youtube/getliveChatId' }),
     },
 }
 </script>

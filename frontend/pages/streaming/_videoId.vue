@@ -2,7 +2,7 @@
     <div id="streaming">
         <div id="live-component">
             <client-only placeholder="loading...">
-                <live-video></live-video>
+                <live-video :video-id="videoId"></live-video>
             </client-only>
         </div>
         <hr />
@@ -13,13 +13,16 @@
 
 <script>
 import liveVideo from '@/components/liveVideo.vue'
-
 import videoForm from '@/components/main/videoForm.vue'
 
 export default {
     components: {
         liveVideo,
         videoForm,
+    },
+    asyncData({ params }) {
+        const videoId = params.videoId
+        return { videoId }
     },
 }
 </script>

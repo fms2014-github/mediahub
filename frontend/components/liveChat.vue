@@ -2,21 +2,21 @@
     <div id="live-chat">
         <div id="streamer-name">스트리머 A채팅방 입니다.</div>
         <div id="message-list">
-            <div v-for="item in testlist" :key="item.id" class="receive-message-list">
-                <div v-if="!item.me" class="receive-message">
+            <div v-for="item in messageList" :key="item.id" class="receive-message-list">
+                <div class="receive-message">
                     <div class="profile">
                         <img class="profile-image" src="https://via.placeholder.com/24" />
                         <span>{{ item.nickname }}</span>
                     </div>
                     <span>채팅 기록{{ item.message }} 입니다.</span>
                 </div>
-                <div v-if="item.me" class="receive-message my-message">
+                <!-- <div v-if="item.me" class="receive-message my-message">
                     <div class="profile">
                         <img class="profile-image" src="https://via.placeholder.com/24" />
                         <span>{{ item.nickname }}</span>
                     </div>
                     <span>채팅 기록{{ item.message }} 입니다.</span>
-                </div>
+                </div>-->
             </div>
         </div>
         <div id="send-message">
@@ -31,29 +31,38 @@
 
 <script>
 export default {
+    props: {
+        liveChatId: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
-            testlist: [
-                { nickname: '상대방', me: false, message: 1 },
-                { nickname: '상대방', me: false, message: 2 },
-                { nickname: '상대방', me: false, message: 3 },
-                { nickname: '상대방', me: false, message: 4 },
-                { nickname: '상대방', me: false, message: 5 },
-                { nickname: '상대방', me: false, message: 6 },
-                { nickname: '나', me: true, message: 7 },
-                { nickname: '상대방', me: false, message: 8 },
-                { nickname: '상대방', me: false, message: 9 },
-                { nickname: '상대방', me: false, message: 10 },
-                { nickname: '상대방', me: false, message: 11 },
-                { nickname: '상대방', me: false, message: 12 },
-                { nickname: '상대방', me: false, message: 13 },
-                { nickname: '나', me: true, message: 14 },
-                { nickname: '상대방', me: false, message: 15 },
-                { nickname: '상대방', me: false, message: 16 },
-                { nickname: '상대방', me: false, message: 17 },
-                { nickname: '상대방', me: false, message: 18 },
+            messageList: [
+                { nickname: '상대방', message: 1 },
+                { nickname: '상대방', message: 2 },
+                { nickname: '상대방', message: 3 },
+                { nickname: '상대방', message: 4 },
+                { nickname: '상대방', message: 5 },
+                { nickname: '상대방', message: 6 },
+                { nickname: '나', message: 7 },
+                { nickname: '상대방', message: 8 },
+                { nickname: '상대방', message: 9 },
+                { nickname: '상대방', message: 10 },
+                { nickname: '상대방', message: 11 },
+                { nickname: '상대방', message: 12 },
+                { nickname: '상대방', message: 13 },
+                { nickname: '나', message: 14 },
+                { nickname: '상대방', message: 15 },
+                { nickname: '상대방', message: 16 },
+                { nickname: '상대방', message: 17 },
+                { nickname: '상대방', message: 18 },
             ],
         }
+    },
+    mounted() {
+        // this.$youtubeApi.youtubeliveChatApi(this.liveChatId)
     },
     methods: {
         selectPlatform() {

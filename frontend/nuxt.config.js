@@ -21,11 +21,7 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
         ],
-        script: [
-            { src: 'https://player.twitch.tv/js/embed/v1.js' },
-            { type: 'module', src: 'https://unpkg.com/x-frame-bypass' },
-            { src: 'https://unpkg.com/@ungap/custom-elements-builtin' },
-        ],
+        script: [{ src: 'https://player.twitch.tv/js/embed/v1.js' }],
     },
     /*
      ** Customize the progress-bar color
