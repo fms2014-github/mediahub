@@ -1,6 +1,8 @@
 spring:
+  profiles:
+  active: dev
   datasource:
-    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/auth_test?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/server_test?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: 02d103
   jpa:
@@ -44,10 +46,7 @@ spring:
             authorizationUri: https://www.facebook.com/v7.0/dialog/oauth
             tokenUri: https://graph.facebook.com/v7.0/oauth/access_token
             userInfoUri: https://graph.facebook.com/v7.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
-#          twitch:
-#            authorizationUri: https://id.twitch.tv/oauth2
-#            tokenUri: https://id.twitch.tv/validate
-#            userInfoUri: https://id.twitch.tv/
+
 social:
   base_url: http://localhost:8080
   google:
@@ -81,7 +80,104 @@ social:
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 864000000
+    tokenExpirationMsec: 6000
   oauth2:
     authorizedRedirectUris:
+      - http://K02D1031.p.ssafy.io/oauth2/redirect
+      - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
       - http://localhost:3000/oauth2/redirect
+
+--- # 구분
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/media_platform?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 02d103
+  jpa:
+    show-sql: true
+    format_sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 946584424079-ip6hfgdki7hurq57p5trelm95ph8aa4h.apps.googleusercontent.com
+            clientSecret: JBBHYyVNKtepjZLDhRZwqjgM
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          #              - "https://www.googleapis.com/auth/youtube"
+          facebook:
+            clientId: 250967889352419
+            clientSecret: 921b243471998d35132e143b7068c429
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+          github:
+            clientId: Iv1.8c7c26c45dc6a8fb
+            clientSecret: e0106936012ad904567205a6e793efb0acdbff4c
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v7.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v7.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v7.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+#          twitch:
+#            authorizationUri: https://id.twitch.tv/oauth2
+#            tokenUri: https://id.twitch.tv/validate
+#            userInfoUri: https://id.twitch.tv/
+social:
+  base_url: http://K02D1031.p.ssafy.io:8081
+  google:
+    client_id: 946584424079-ip6hfgdki7hurq57p5trelm95ph8aa4h.apps.googleusercontent.com
+    client_secret: JBBHYyVNKtepjZLDhRZwqjgM
+    api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
+    redirect: /v1/youtube/token-code
+    code_redirect: /v1/youtube/token-code
+    code_result_redirect: /social/login/google/code/result
+    google_api_v2_scope: https://www.googleapis.com/auth/youtube
+    accept: application/x-www-form-urlencoded
+    youtube_data_api_v3: https://www.googleapis.com/youtube/v3/
+    url:
+      authorize: https://accounts.google.com/o/oauth2/v2/auth
+      token: https://oauth2.googleapis.com/token
+      refreshing_access_token: https://accounts.google.com/o/oauth2/auth
+  twitch:
+    client_id: db8sw2xqe82gk1x78mkubkr5xh545p
+    client_secret: 6ci34x9vzctu22s2gu1xw7bj0lcoab
+    redirect: /twitch/token/code
+    code_redirect: /twitch/token/code
+    code_result_redirect: /social/login/twitch/code/result
+    twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read
+    new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
+    url:
+      accept: application/vnd.twitchtv.v5+json
+      authorize: https://id.twitch.tv/oauth2/authorize
+      token: https://id.twitch.tv/oauth2/token
+      twitch_api_v5_user: https://api.twitch.tv/kraken/users
+
+app:
+  auth:
+    tokenSecret: C45FF95D3AE216CC621748587CE42
+    tokenExpirationMsec: 3600000
+  oauth2:
+    authorizedRedirectUris:
+      - http://K02D1031.p.ssafy.io/oauth2/redirect
+      - http://K02D1031.p.ssafy.io:3000/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
+
+--- # Live

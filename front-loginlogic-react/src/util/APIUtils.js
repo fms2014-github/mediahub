@@ -139,3 +139,14 @@ export function getLiveMessage(channelId){
         method:'GET',
     })
 }
+
+
+export function youtubeSync(){
+    if(!localStorage.getItem(ACCESS_TOKEN)) {
+        return Promise.reject("No access token set.");
+    }
+    return request({
+        url: API_BASE_URL + "/v1/youtube/synchronization/",
+        method:'GET',
+    })
+}

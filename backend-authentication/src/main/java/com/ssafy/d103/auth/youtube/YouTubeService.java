@@ -25,7 +25,8 @@ public class YouTubeService {
     private RestTemplate restTemplate;
     private final Gson gson;
     private final Environment env;
-    private String baseUrl = "http://localhost:8080";
+    @Value("${social.base_url}")
+    private String baseUrl;
     @Value("${social.google.client_id}")
     private String googleClientId;
     @Value("${social.google.redirect}")

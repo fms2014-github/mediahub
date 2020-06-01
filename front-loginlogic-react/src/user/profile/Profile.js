@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Profile.css';
-import { youtubeAPI, twitchAPI, youtubeGetSubscriptions, youtubeGetVideoId,getLiveMessage, youtubeTest, googleRefreshingAccessToken } from '../../util/APIUtils';
+import { youtubeAPI, twitchAPI, youtubeGetSubscriptions,youtubeSync, youtubeGetVideoId,getLiveMessage, youtubeTest, googleRefreshingAccessToken } from '../../util/APIUtils';
 import Alert from 'react-s-alert';
 
 class Profile extends Component {
@@ -97,6 +97,15 @@ class Profile extends Component {
             Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
         })
     }
+    handleSubscriptionTest(){
+        youtubeSync()
+        .then(response =>{
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+        })
+    }
     render() {
         return (
             <div className="profile-container">
@@ -152,6 +161,11 @@ class Profile extends Component {
                 <div>
                     <button onClick={this.handleChannelIdtoLiveMessage.bind(this)}>
                         channel to live
+                    </button>
+                </div>
+                <div>
+                    <button onClick={this.handleSubscriptionTest.bind(this)}>
+                        subscription Testing......
                     </button>
                 </div>
             </div>
