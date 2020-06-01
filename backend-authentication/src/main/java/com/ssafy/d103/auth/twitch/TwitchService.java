@@ -33,6 +33,8 @@ public class TwitchService {
     private final Gson gson;
     @Value("${social.base_url}")
     private String baseUrl;
+    @Value("${social.front_base_url}")
+    private String fontBaseUrl;
     @Value("${social.twitch.client_id}")
     private String twitchClientId;
     @Value("${social.twitch.client_secret}")
@@ -64,8 +66,8 @@ public class TwitchService {
                 .append(authorize)
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=code")
-                .append("&scope=").append(scope);
-                //.append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect);
+                .append("&scope=").append(scope)
+                .append("&redirect_uri=").append(fontBaseUrl).append(twitchCodeRedirect);
         return url.toString();
     }
 
@@ -99,14 +101,13 @@ public class TwitchService {
     public RetTwitchAuth getTwitchTokenInfo(String code) {
         // Set header : Content-type: application/x-www-form-urlencoded
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // Set parameter
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
         params.add("client_id", twitchClientId);
         params.add("client_secret", twitchClientSecret);
         params.add("code", code);
-        params.add("redirect_uri", baseUrl + twitchTokenRedirect);
+        params.add("grant_type", "authorization_code");
+        params.add("redirect_uri", baseUrl);
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);

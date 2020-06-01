@@ -67,8 +67,8 @@ social:
     client_id: db8sw2xqe82gk1x78mkubkr5xh545p
     client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
     redirect: /v1/twitch/token-code
-    code_redirect: /v1/twitch/token-code
-    code_result_redirect: /social/login/twitch/code/result
+    code_redirect: /get
+    token_redirect: /v1/twitch/token-code
     twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read
     new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
     url:
@@ -142,6 +142,7 @@ spring:
 #            userInfoUri: https://id.twitch.tv/
 social:
   base_url: http://K02D1031.p.ssafy.io:8081
+  front_base_url : http://localhost:3000
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
@@ -163,7 +164,7 @@ social:
     code_redirect: /get
     token_redirect : /v1/twitch/token-code
     code_result_redirect: /social/login/twitch/code/result
-    twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read
+    twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
     new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
     url:
       accept: application/vnd.twitchtv.v5+json
