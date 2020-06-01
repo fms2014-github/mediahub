@@ -63,14 +63,11 @@ public class YouTubeController {
      */
     //code로 access token 및 refreshtoken 가져오기
     @ApiOperation(value = "Google 인증 코드로 토큰 발급받고 DB 저장 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "code", value = "Google Code", required = true)
-    })
     @GetMapping(value = "/token-code")
     @Transactional
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
         RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
-        Member member = customUserDetailsService.loadMemberById(2L);
+        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
         auth.setAccess_token(retGoogleAuth.getAccess_token());
