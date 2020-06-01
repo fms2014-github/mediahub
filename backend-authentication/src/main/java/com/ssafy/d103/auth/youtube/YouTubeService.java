@@ -74,7 +74,7 @@ public class YouTubeService {
 //        params.add("prompt","consent");
 //        params.add("approval_prompt","force");
         params.add("redirect_uri", baseUrl + googleTokenRedirect);
-
+        System.out.println("params : " + params);
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.google.url.token"), request, String.class);
