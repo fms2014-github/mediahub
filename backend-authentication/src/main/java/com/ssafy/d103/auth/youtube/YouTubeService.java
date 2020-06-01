@@ -49,11 +49,11 @@ public class YouTubeService {
                 .append(env.getProperty("social.google.url.authorize"))
                 .append("?scope=").append(scope)
                 .append("&state=state_parameter_passthrough_value")
-                .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect)
                 .append("&access_type=offline")
                 .append("&response_type=code")
                 .append("&approval_prompt=force")
                 .append("&client_id=").append(googleClientId);
+//                .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect);
         //ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         //System.out.println(response);
         return url.toString();

@@ -39,7 +39,7 @@ public class TwitchController {
     @ApiOperation(value = "Twitch 인증 주소 요청")
     @GetMapping(value = "/token-url")
     public ResponseEntity<?> redirectTwitch() {
-        return new ResponseEntity(twitchService.getImplicitCodeFlowUrl(), HttpStatus.OK);
+        return new ResponseEntity("\""+twitchService.getImplicitCodeFlowUrl()+"\"", HttpStatus.OK);
     }
 
     /**

@@ -15,6 +15,8 @@ import com.ssafy.d103.auth.youtube.RetGoogleAuth;
 import com.ssafy.d103.auth.youtube.YouTubeDataAPI;
 import com.ssafy.d103.auth.youtube.YouTubeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(tags = {"youtube"})
+@Api(tags = {"2. youtube"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/youtube")
@@ -39,17 +41,36 @@ public class YouTubeController {
     private final LabelService labelService;
     private final ChannelService channelService;
 
-    //code 가져오기
+    @ApiOperation(value = "Google 인증 주소 요청")
     @GetMapping(value = "/token-url")
-    public ResponseEntity<?> getCode(@CurrentUser UserPrincipal userPrincipal){
+    public ResponseEntity<?> getCode(){
         return ResponseEntity.ok("\""+youTubeService.getImplicitCodeFlowUrl()+"\"");
     }
-
+    /**
+     *
+     * Code로 토큰 발급받고, 발급 받은 토큰을 DB에 저장해주는 메소드
+     * 메소드 플로우
+     * 1. code로 유튜브 토큰 정보 요청
+     * 2. 토큰으로 유튜브 유저 정보 받아오기
+     * 3. Member 조회
+     * 4. RetGoogleAuth로 Auth 객체 생성
+     * 5. Member에 Auth 추가
+     * 6. customUserDetailService 호출해서 멤버 저장
+     *
+     * @param code Twitch 인증 코드
+     * @param userPrincipal 유저 시큐리티 정보
+     * @return Http 상태
+     */
     //code로 access token 및 refreshtoken 가져오기
+    @ApiOperation(value = "Google 인증 코드로 토큰 발급받고 DB 저장 요청")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "code", value = "Google Code", required = true)
+    })
     @GetMapping(value = "/token-code")
-    public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code) {
+    @Transactional
+    public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
         RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
-        Member member = customUserDetailsService.loadMemberById(3L);
+        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
         auth.setAccess_token(retGoogleAuth.getAccess_token());
@@ -58,7 +79,7 @@ public class YouTubeController {
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);
-        return ResponseEntity.ok("{}");
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     //refreshtoken으로 access token 갱신
@@ -75,7 +96,11 @@ public class YouTubeController {
     }
 
     /***
-     *
+     * 유튜브 구독 동기화 메소드
+     * 1. 동기화 할 유저 조회
+     * 2. 구독 리스트 받아오기
+     * 3. 회워닝 가지고 있는 루트 라벨에 유튜브 목록을 추가
+     * 4. 동기화 이후 first 로그인 값을 올려줌
      * @param userPrincipal
      * @return
      */
@@ -107,7 +132,7 @@ public class YouTubeController {
         List<Channel> channels = subscriptionListResponse.getItems().stream()
                 .map(item -> {
                     Channel channel = new Channel();
-                    channel.setLabel((rootLabel));
+                    channel.setLabel(rootLabel);
                     channel.setProvider(AuthProvider.google.toString());
                     channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
                     channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
@@ -134,18 +159,13 @@ public class YouTubeController {
         Long maxResult = 25L;
         System.out.println(channelId);
         YouTube youtube = YouTubeDataAPI.getYouTubeService("1//0eQl_D7lsBlB-CgYIARAAGA4SNwF-L9IrLBrFg45fli-5IVkShXDzW1fXU3GWeKeEJAqcCnvHGoeyaPz8jb_J1ezOK5dbUNN1iTU");
-        //
+
         SubscriptionListResponse result = youtube
                 .subscriptions()
                 .list("id, snippet, contentDetails")
                 .setMine(true)
                 .setMaxResults(maxResult)
                 .execute();
-//        SearchListResponse search = youtube.search()
-//                .list("snippet")
-//                .setChannelId("UCX4sShAQf01LYjYQhG2ZgKg")
-//                .setType("video")
-//                .execute();
         return result;
     }
 }

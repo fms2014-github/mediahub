@@ -62,8 +62,8 @@ public class TwitchService {
                 .append(authorize)
                 .append("?client_id=").append(twitchClientId)
                 .append("&response_type=code")
-                .append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect)
                 .append("&scope=").append(scope);
+//                .append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect);
         return url.toString();
     }
 
