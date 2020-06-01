@@ -94,6 +94,7 @@ app:
 --- # 구분
 
 spring:
+  address: 0.0.0.0
   profiles: local
   datasource:
     url: jdbc:mysql://K02D1031.p.ssafy.io:3306/media_platform?serverTimezone=UTC&characterEncoding=UTF-8
