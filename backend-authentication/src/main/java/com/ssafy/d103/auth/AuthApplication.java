@@ -15,7 +15,7 @@ public class AuthApplication {
 
     public static void main(String[] args) {
         // 배포 local 개발 및 테스트 dev
-        System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "local");
+        System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "dev");
         SpringApplication.run(AuthApplication.class, args);
     }
 }

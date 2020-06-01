@@ -9,7 +9,7 @@ spring:
     show-sql: true
     format_sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     properties:
       hibernate:
@@ -80,7 +80,7 @@ social:
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 864000000
+    tokenExpirationMsec: 6000
   oauth2:
     authorizedRedirectUris:
       - http://K02D1031.p.ssafy.io/oauth2/redirect
@@ -173,7 +173,7 @@ social:
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 864000000
+    tokenExpirationMsec: 3600000
   oauth2:
     authorizedRedirectUris:
       - http://K02D1031.p.ssafy.io/oauth2/redirect

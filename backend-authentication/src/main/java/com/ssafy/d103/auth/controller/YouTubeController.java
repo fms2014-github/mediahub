@@ -39,6 +39,7 @@ public class YouTubeController {
 
     //code 가져오기
     @GetMapping(value = "/token-url")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getCode(@CurrentUser UserPrincipal userPrincipal){
         return ResponseEntity.ok("\""+youTubeService.getImplicitCodeFlowUrl()+"\"");
     }
