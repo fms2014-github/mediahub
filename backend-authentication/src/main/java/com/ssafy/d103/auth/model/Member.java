@@ -51,6 +51,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Auth> auth = new ArrayList<Auth>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<StreamChannel> streamChannel = new ArrayList<StreamChannel>();
+
     @Column
     private Long rootLabelId;
 
