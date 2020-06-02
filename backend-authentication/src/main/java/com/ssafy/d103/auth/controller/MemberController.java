@@ -40,26 +40,48 @@ public class MemberController {
     @GetMapping("/information")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<MemberDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        System.out.println("CurrentUser");
         Member member = memberService.loadMemberById(userPrincipal.getId());
-        MemberDto memberDto = new MemberDto().builder()
-                .name(member.getName())
-                .email(member.getEmail())
-                .provider(member.getProvider())
-                .profileUrl(member.getProfileUrl())
-                .providerId(member.getProviderId())
-                .firstLogin(member.getFirstLogin())
-                .roles(member.getRole())
-                .auth(
-                        member.getAuth().stream()
-                        .map(auth ->
-                             new AuthDto().builder()
-                                    .access_token(auth.getAccess_token())
-                                    .provider(auth.getAuth_provider())
-                                    .build()
-                        ).collect(Collectors.toList())
-                )
-                .label(labelService.getLabelById(member.getRootLabelId()))
-                .build();
+//        MemberDto memberDto = new MemberDto().builder()
+//                .name(member.getName())
+//                .email(member.getEmail())
+//                .provider(member.getProvider())
+//                .profileUrl(member.getProfileUrl())
+//                .providerId(member.getProviderId())
+//                .firstLogin(member.getFirstLogin())
+//                .roles(member.getRole())
+//                .auth(
+//                        member.getAuth().stream()
+//                        .map(auth ->
+//                             new AuthDto().builder()
+//                                    .access_token(auth.getAccess_token())
+//                                    .provider(auth.getAuth_provider())
+//                                    .build()
+//                        ).collect(Collectors.toList())
+//                )
+//                .label(labelService.getLabelById(member.getRootLabelId()))
+//
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName(member.getName());
+        memberDto.setEmail(member.getEmail());
+        memberDto.setProvider(member.getProvider());
+        memberDto.setProfileUrl(member.getProfileUrl());
+        memberDto.setProviderId(member.getProviderId());
+        memberDto.setFirstLogin(member.getFirstLogin());
+        memberDto.setRoles(member.getRole());
+        memberDto.setAuth(
+            member.getAuth().stream()
+                .map(auth ->
+                     new AuthDto().builder()
+                            .access_token(auth.getAccess_token())
+                            .provider(auth.getAuth_provider())
+                            .build()
+                ).collect(Collectors.toList())
+        );
+        memberDto.setLabel(labelService.getLabelById(member.getRootLabelId()));
+
+
+
         return new ResponseEntity(memberDto, HttpStatus.OK);
     }
 
