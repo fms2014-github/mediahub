@@ -53,7 +53,10 @@ export default {
     },
     methods: {
         login() {
-            window.location.href = 'http://k02d1031.p.ssafy.io:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/login'
+            window.location.href =
+                'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=' +
+                location.origin +
+                '/youtube/code&response_type=code&client_id=787158256857-9p3q41kl6ceo1e57tbmbmjtvq8q4nrq4.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.channel-memberships.creator+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.upload+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit&access_type=offline'
         },
     },
 }

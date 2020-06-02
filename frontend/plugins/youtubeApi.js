@@ -4,7 +4,7 @@ export default function({ $axios }, inject) {
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
 
-    const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
+    const apiKey = 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE'
 
     const youtubeVideosApi = (videoId) => {
         return youtubeApi.get('videos', {
@@ -28,12 +28,26 @@ export default function({ $axios }, inject) {
         })
     }
 
-    const youtubeliveChatApi = (liveChatId) => {
+    const youtubeliveChatApi = ({ liveChatId, nextPageToken, pollingIntervalMillis }) => {
+        console.log(liveChatId)
+        const query = {
+            params: {
+                key: apiKey,
+                part: 'id,snippet,authorDetails',
+                liveChatId,
+                nextPageToken,
+                pollingIntervalMillis,
+            },
+        }
+        console.log(query)
         return youtubeApi.get('liveChat/messages', {
             params: {
                 key: apiKey,
                 part: 'id,snippet,authorDetails',
                 liveChatId,
+                nextPageToken,
+                pollingIntervalMillis,
+                maxResults: 5,
             },
         })
     }

@@ -2,13 +2,20 @@
     <div id="live-video">
         <div id="live-slider">
             <div id="button-wrap">
-                <button id="changeVideo" @click="nextSlide"></button>
+                <button v-if="!(twitchId === '' || youtubeId === '')" id="changeVideo" @click="nextSlide"></button>
             </div>
             <div id="video-wrap">
-                <div id="back-blind" class="back-slide"></div>
-                <youtube id="youtube-video" class="back-slide" :player-vars="{ autoplay: 0 }" :video-id="videoId" @ready="ready" />
-                <div id="twitch-video" class="front-slide"></div>
-                <live-chat></live-chat>
+                <div v-if="!(twitchId === '' || youtubeId === '')" id="back-blind" class="back-slide"></div>
+                <youtube
+                    v-if="youtubeId !== ''"
+                    id="youtube-video"
+                    class="back-slide"
+                    :player-vars="{ autoplay: 1 }"
+                    :video-id="youtubeId"
+                    @ready="ready"
+                />
+                <div v-if="twitchId !== ''" id="twitch-video" class="front-slide"></div>
+                <live-chat v-if="liveChatId !== null" :live-chat-id="liveChatId"></live-chat>
             </div>
         </div>
     </div>
@@ -16,7 +23,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import liveChat from '@/components/livechat.vue'
+import liveChat from '@/components/liveChat.vue'
 export default {
     components: {
         liveChat,
@@ -29,59 +36,46 @@ export default {
     },
     data() {
         return {
+            twitchId: '',
+            youtubeId: '',
+            liveChatId: null,
             videoEvent: {
                 paused: 0,
             },
         }
     },
-    async mounted() {
+    mounted() {
         this.init()
-        // const tmi = require('tmi.js')
-        // // Define configuration options
-        // const opts = {
-        //     identity: {
-        //         username: 'test_bot',
-        //         password: 'oauth:c33fp5wsu5auevg8in2b02wb26n1qw',
-        //     },
-        //     channels: ['lol_ambition'],
-        // }
-        // // Create a client with our options
-        // const client = new tmi.Client(opts)
-        // // Register our event handlers (defined below)
-        // client.on('message', onMessageHandler)
-        // client.on('connected', onConnectedHandler)
-        // // Connect to Twitch:
-        // client.connect()
-        // // Called every time a message comes in
-        // function onMessageHandler(target, context, msg, self) {
-        //     if (self) {
-        //         return
-        //     } // Ignore messages from the bot
-        //     // Remove whitespace from chat message
-        //     console.log(context, msg)
-        //     const commandName = msg.trim()
-        //     console.log(commandName)
-        // }
-        // // Called every time the bot connects to Twitch chat
-        // function onConnectedHandler(addr, port) {
-        //     console.log(`* Connected to ${addr}:${port}`)
-        // }
-        console.log((await this.$youtubeApi.youtubeVideosApi('VykycecFVoc')).data)
+
+        console.log(this.videoId.split(',').length)
     },
     methods: {
-        init() {
-            const options = {
-                width: 0,
-                height: 0,
-                channel: 'silphtv',
+        async init() {
+            if (this.videoId.split(',')[0] === 't') {
+                this.twitchId = this.videoId.split(',')[1]
+                const options = {
+                    width: 0,
+                    height: 0,
+                    channel: this.twitchId,
+                }
+                // eslint-disable-next-line no-undef,no-var
+                this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                // eslint-disable-next-line no-undef
+                this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                    document.querySelector('#twitch-video iframe').style.width = '100%'
+                    document.querySelector('#twitch-video iframe').style.height = '100%'
+                })
             }
-            // eslint-disable-next-line no-undef,no-var
-            this.twitchPlayer = new Twitch.Player('twitch-video', options)
-            // eslint-disable-next-line no-undef
-            this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
-                document.querySelector('#twitch-video iframe').style.width = '100%'
-                document.querySelector('#twitch-video iframe').style.height = '100%'
-            })
+            if (this.videoId.split(',')[0] === 'y') {
+                this.youtubeId = this.videoId.split(',')[1]
+                this.liveChatId = (
+                    await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
+                ).data.items[0].liveStreamingDetails.activeLiveChatId
+                console.log(this.liveChatId)
+            }
+            if (this.videoId.split(',')[2] === 't') {
+                // asd
+            }
         },
         ready(e) {
             this.player = e.target
@@ -126,6 +120,8 @@ export default {
         flex-basis: 100%;
         #button-wrap {
             margin: 0 20px;
+            width: 60px;
+            height: 90px;
             #changeVideo {
                 display: inline-block;
                 position: relative;

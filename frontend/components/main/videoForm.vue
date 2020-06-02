@@ -4,7 +4,7 @@
             <div class="videoList">
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <nuxt-link to="/streaming/VykycecFVoc"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
+                        <nuxt-link to="/streaming/y,VykycecFVoc"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
