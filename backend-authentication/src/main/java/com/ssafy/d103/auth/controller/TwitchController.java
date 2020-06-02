@@ -99,10 +99,12 @@ public class TwitchController {
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
         String twitchUserId = null;
+        String accessToken = null;
 
         for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("twitch")){
                 twitchUserId = Long.toString(a.getUserId());
+                accessToken = a.getAccess_token();
             }
         }
 
@@ -125,7 +127,12 @@ public class TwitchController {
 
         channelService.saveAll(channels);
         member.setFirstLogin(member.getFirstLogin()+1);
+        TwitchUser twitchUser = twitchService.getTwitchUserInfo(accessToken);
+        StreamChannel streamChannel = new StreamChannel();
+        streamChannel.setId("Y".concat(twitchUser.getName()));
+        streamChannel.setMember(member);
         customUserDetailsService.saveMember(member);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 

@@ -2,7 +2,7 @@ spring:
   profiles:
   active: dev
   datasource:
-    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/server_test?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/auth_test?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: 02d103
   jpa:
