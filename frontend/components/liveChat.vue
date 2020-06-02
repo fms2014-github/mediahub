@@ -39,63 +39,77 @@ export default {
     },
     data() {
         return {
+            tmi: null,
+            client: null,
             messageList: [],
             chatRead: null,
             nextPageToken: ' ',
             pollingIntervalMillis: 5000,
         }
     },
-    mounted() {
-        const tmi = require('tmi.js')
+    async mounted() {
+        this.tmi = require('tmi.js')
+        const objDiv = document.getElementById('message-list')
         // Define configuration options
         const opts = {
             identity: {
                 username: 'test_bot',
                 password: 'oauth:c33fp5wsu5auevg8in2b02wb26n1qw',
             },
-            channels: ['what9honggildong'],
+            channels: ['obm1025'],
         }
         // Create a client with our options
-        const client = new tmi.Client(opts)
+        this.client = new tmi.Client(opts)
         // Register our event handlers (defined below)
-        client.on('message', onMessageHandler)
-        client.on('connected', onConnectedHandler)
-        // Connect to Twitch:
-        client.connect()
-        // Called every time a message comes in
-        function onMessageHandler(target, context, msg, self) {
+        // client.on('message', onMessageHandler)
+        this.client.on('message', (target, context, msg, self) => {
             if (self) {
                 return
             } // Ignore messages from the bot
             // Remove whitespace from chat message
-            console.log(context, msg)
+            // console.log('this scope', this.messageList)
+            // console.log(context, msg)
             this.messageList.push({
                 profileImage: 'https://via.placeholder.com/24',
                 textMessage: msg,
                 displayName: context['display-name'],
             })
+            objDiv.scrollTop = objDiv.scrollHeight + 1000
             // const commandName = msg.trim()
             // console.log(commandName)
-        }
+        })
+        this.client.on('connected', onConnectedHandler)
+        // Connect to Twitch:
+        this.client.connect()
+        // Called every time a message comes in
         // Called every time the bot connects to Twitch chat
         function onConnectedHandler(addr, port) {
             console.log(`* Connected to ${addr}:${port}`)
         }
 
-        // const firstData = (await this.$youtubeApi.youtubeliveChatApi(this)).data
-        // for (const i in firstData.items) {
-        //     this.messageList.push({
-        //         profileImage: firstData.items[i].authorDetails.profileImageUrl,
-        //         textMessage: firstData.items[i].snippet.displayMessage,
-        //         displayName: firstData.items[i].authorDetails.displayName,
-        //     })
-        // }
-        // this.nextPageToken = firstData.nextPageToken
-        // this.pollingIntervalMillis = firstData.pollingIntervalMillis
-        this.chatRead = setInterval(() => {
-            setTimeout(async () => {
-                const data = (await this.$youtubeApi.youtubeliveChatApi(this)).data
-                console.log('awefsef', data.items)
+        const firstData = (await this.$youtubeApi.youtubeliveChatApi(this)).data
+        for (const i in firstData.items) {
+            this.messageList.push({
+                profileImage: firstData.items[i].authorDetails.profileImageUrl,
+                textMessage: firstData.items[i].snippet.displayMessage,
+                displayName: firstData.items[i].authorDetails.displayName,
+            })
+        }
+        this.nextPageToken = firstData.nextPageToken
+        this.pollingIntervalMillis = firstData.pollingIntervalMillis
+
+        setTimeout(() => {
+            objDiv.scrollTop = objDiv.scrollHeight + 1000
+        }, 100)
+        this.chatRead = setInterval(async () => {
+            objDiv.scrollTop = objDiv.scrollHeight
+            const { data } = await this.$youtubeApi.youtubeliveChatApi({
+                liveChatId: this.liveChatId,
+                pageToken: this.nextPageToken,
+                pollingIntervalMillis: this.pollingIntervalMillis,
+            })
+            console.log(data)
+            if (data.pageInfo.totalResults > 0) {
                 for (const i in data.items) {
                     this.messageList.push({
                         profileImage: data.items[i].authorDetails.profileImageUrl,
@@ -103,15 +117,19 @@ export default {
                         displayName: data.items[i].authorDetails.displayName,
                     })
                 }
-                console.log('messageList.push', this.messageList)
-                this.nextPageToken = data.nextPageToken
-                this.pollingIntervalMillis = data.pollingIntervalMillis
-            }, 1000)
+            }
+            this.nextPageToken = data.nextPageToken
+            this.pollingIntervalMillis = data.pollingIntervalMillis - 2000
+            setTimeout(() => {
+                objDiv.scrollTop = objDiv.scrollHeight + 1000
+            }, 100)
         }, this.pollingIntervalMillis)
     },
     destroyed() {
         console.log('aefwefwefdddgggg')
         clearInterval(this.chatRead)
+        this.client.removeAllListeners('message')
+        this.client.removeAllListeners('connected')
     },
     methods: {
         selectPlatform() {
