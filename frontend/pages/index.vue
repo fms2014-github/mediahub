@@ -3,7 +3,7 @@
         <client-only placeholder="loading...">
             <live-video-slide-bar />
         </client-only>
-        <video-form />
+        <!-- <video-form /> -->
     </div>
 </template>
 
@@ -13,7 +13,7 @@ import videoForm from '~/components/main/videoForm.vue'
 export default {
     components: {
         liveVideoSlideBar,
-        videoForm,
+        // videoForm,
     },
 }
 </script>
