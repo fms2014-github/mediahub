@@ -79,6 +79,19 @@ public class YouTubeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PostMapping(value = "/setToken")
+    public ResponseEntity<?> redirectCodeGoogle(@RequestParam RetGoogleAuth retGoogleAuth, @CurrentUser UserPrincipal userPrincipal) {
+        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
+        Auth auth = new Auth();
+        auth.setAuth_provider(AuthProvider.google.toString());
+        auth.setAccess_token(retGoogleAuth.getAccess_token());
+        auth.setRefresh_token(retGoogleAuth.getRefresh_token());
+        auth.setToken_type(retGoogleAuth.getToken_type());
+        auth.setMember(member);
+        member.getAuth().add(auth);
+        customUserDetailsService.saveMember(member);
+        return new ResponseEntity(HttpStatus.OK);
+    }
     //refreshtoken으로 access token 갱신
     @PostMapping(value = "/google/refreshing")
     public ResponseEntity<?> refreshingGoogleAccessToken(@RequestBody String refreshToken) {

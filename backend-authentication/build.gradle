@@ -32,6 +32,8 @@ dependencies {
     compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.30.6'
     compile group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev222-1.25.0'
     compile group: 'com.google.api-client', name: 'google-api-client', version: '1.30.9'
+    compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.80'
+    compile group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '0.20.0'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
