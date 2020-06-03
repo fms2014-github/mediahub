@@ -82,20 +82,19 @@ public class YouTubeController {
     }
 
     @PostMapping(value = "/setToken")
-    public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth
-                                               ){// @CurrentUser UserPrincipal userPrincipal {
+    public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth,
+                                                @CurrentUser UserPrincipal userPrincipal) {
         System.out.println("===================setToken=======================");
+        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         System.out.println(retGoogleAuth.getAccessToken());
-//        Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
-//        System.out.println(retGoogleAuth.getAccessToken());
-//        Auth auth = new Auth();
-//        auth.setAuth_provider(AuthProvider.google.toString());
-//        auth.setAccess_token(retGoogleAuth.getAccessToken());
-//        auth.setRefresh_token(retGoogleAuth.getRefreshToken());
-//        auth.setToken_type(retGoogleAuth.getTokenType());
-//        auth.setMember(member);
-//        member.getAuth().add(auth);
-//        customUserDetailsService.saveMember(member);
+        Auth auth = new Auth();
+        auth.setAuth_provider(AuthProvider.google.toString());
+        auth.setAccess_token(retGoogleAuth.getAccessToken());
+        auth.setRefresh_token(retGoogleAuth.getRefreshToken());
+        auth.setToken_type(retGoogleAuth.getTokenType());
+        auth.setMember(member);
+        member.getAuth().add(auth);
+        customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
     //refreshtoken으로 access token 갱신

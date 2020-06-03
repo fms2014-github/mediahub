@@ -83,7 +83,7 @@ social:
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 83600000
+    tokenExpirationMsec: 836000000
   oauth2:
     authorizedRedirectUris:
       - http://k02d1031.p.ssafy.io/oauth2/redirect
@@ -182,7 +182,7 @@ social:
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 3600000
+    tokenExpirationMsec: 836000000
   oauth2:
     authorizedRedirectUris:
       - http://k02d1031.p.ssafy.io/oauth2/redirect
