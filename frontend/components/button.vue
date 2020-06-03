@@ -1,9 +1,14 @@
 <template>
     <div id="button">
         <div id="button-container">
-            <div v-if="playInfo.kind === 'y'">
+            <div v-if="playInfo.kind === 'youtube'">
                 <div class="flex-container">
-                    <div id="yt-button-container-render"></div>
+                    <div
+                        v-if="!subscribeInfo.isSubscribe"
+                        class="youtube-red button"
+                        @click="insertSubscribe"
+                    >구독</div>
+                    <divs v-else class="youtube-gray button" @click="deleteSubscribe">구독중</divs>
                 </div>
             </div>
             <div v-else>
@@ -20,17 +25,34 @@
 <script>
 export default {
     props: { playInfo: { type: Object, default: null } },
-    created() {},
-    mounted() {
-        const container = document.getElementById('yt-button-container-render')
-        const options = {
-            channel: this.playInfo.channelName,
-            layout: 'default',
-            count: 'hidden',
+    data: () => {
+        return {
+            subscribeInfo: {
+                isSubscribe: false,
+                subscribeId: '',
+            },
         }
-        gapi.ytsubscribe.render(container, options)
     },
-    methods: {},
+    async created() {
+        const data = (await this.$youtubeTokenApi.isSubscribeApi(this.playInfo.channelId)).data
+        if (data.items.length === 1) {
+            this.subscribeInfo.isSubscribe = true
+            this.subscribeInfo.subscribeId = data.items[0].id
+        }
+    },
+    mounted() {},
+    methods: {
+        async insertSubscribe() {
+            const data = (await this.$youtubeTokenApi.insertSubscribeApi(this.playInfo.channelId)).data
+            this.subscribeInfo.isSubscribe = true
+            this.subscribeInfo.subscribeId = data.id
+        },
+        async deleteSubscribe() {
+            const data = (await this.$youtubeTokenApi.deleteSubscribeApi(this.subscribeInfo.subscribeId)).data
+            this.subscribeInfo.isSubscribe = false
+            this.subscribeInfo.subscribeId = ''
+        },
+    },
 }
 </script>
 
@@ -65,6 +87,11 @@ export default {
                 background-color: #e24821;
                 border: 1px solid red;
                 color: white;
+            }
+            .youtube-gray {
+                background-color: #ddd;
+                border: 1px solid #ddd;
+                color: gray;
             }
             .twitch {
                 background-color: #d6c7ff;
