@@ -8,10 +8,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RetGoogleAuth {
-    private String access_token;
-    private String expires_in;
+    private String accessToken;
+    private String expiresIn;
     private String scope;
-    private String token_type;
-    private String id_token;
-    private String refresh_token;
+    private String tokenType;
+    private String idToken;
+    private String refreshToken;
 }

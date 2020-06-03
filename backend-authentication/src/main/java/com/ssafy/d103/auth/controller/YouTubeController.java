@@ -72,9 +72,9 @@ public class YouTubeController {
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
-        auth.setAccess_token(retGoogleAuth.getAccess_token());
-        auth.setRefresh_token(retGoogleAuth.getRefresh_token());
-        auth.setToken_type(retGoogleAuth.getToken_type());
+        auth.setAccess_token(retGoogleAuth.getAccessToken());
+        auth.setRefresh_token(retGoogleAuth.getRefreshToken());
+        auth.setToken_type(retGoogleAuth.getTokenType());
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);
@@ -84,8 +84,9 @@ public class YouTubeController {
     @PostMapping(value = "/setToken")
     public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth,
                                                 @CurrentUser UserPrincipal userPrincipal) {
+        System.out.println("==========================================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
-        System.out.println(retGoogleAuth.getAccess_token());
+        System.out.println(retGoogleAuth.getAccessToken());
 //        Auth auth = new Auth();
 //        auth.setAuth_provider(AuthProvider.google.toString());
 //        auth.setAccess_token(access_token);
