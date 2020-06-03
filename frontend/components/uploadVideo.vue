@@ -2,7 +2,8 @@
     <div id="upload-video">
         <div id="upload-vcontainer">
             <div id="inline-block">
-                <div v-if="playInfo.kind === 'y'">
+                <div id="loading"></div>
+                <div v-if="playInfo.kind === 'youtube'">
                     <youtube
                         id="youtube-video"
                         class="back-slide video"
@@ -46,6 +47,9 @@ export default {
 
             // eslint-disable-next-line no-undef
             this.Info = new Twitch.Player('twitch-video', options)
+            this.Info.addEventListener(Twitch.Player.READY, () => {
+                this.loaded()
+            })
         }
 
         window.onkeydown = () => {
@@ -60,6 +64,7 @@ export default {
     },
     methods: {
         ready(event) {
+            this.loaded()
             // console.log(event)
         },
         playing(event) {
@@ -68,6 +73,10 @@ export default {
         },
         pause(event) {
             this.isPlay = false
+        },
+        loaded() {
+            const loading = document.getElementById('loading')
+            loading.style.display = 'none'
         },
     },
 }
@@ -85,6 +94,18 @@ export default {
             display: inline-block;
             width: 100%;
             height: 600px;
+
+            #loading {
+                background-color: #e6e6ea;
+                display: inline-block;
+                position: absolute;
+                width: 100%;
+                height: 500px;
+                top: 50%;
+                transform: translateY(-50%);
+                box-shadow: 1px 1px 10px black;
+                z-index: 10;
+            }
 
             .video {
                 position: absolute;

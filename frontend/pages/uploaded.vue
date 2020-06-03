@@ -26,9 +26,9 @@ export default {
     data: () => {
         return {
             playInfo: {
-                kind: 'y',
+                kind: 'youtube',
                 play: 'fvjpE_wFL5A',
-                channelName: 'Lauv',
+                channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
                 // play: '624698735',
                 // kind: 't',
             },
