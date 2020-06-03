@@ -1,3 +1,6 @@
+import bodyParser from 'body-parser'
+import session from 'express-session'
+
 export default {
     mode: 'universal',
     /*
@@ -35,7 +38,7 @@ export default {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }, '~/plugins/youtubeApi.js'],
+    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }, '~/plugins/loginAxios.js', '~/plugins/testaxios.js', '~/plugins/youtubeApi.js'],
     /*
      ** Nuxt.js dev-modules
      */
@@ -65,4 +68,18 @@ export default {
          */
         extend(config, ctx) {},
     },
+    serverMiddleware: [
+        // body-parser middleware
+        bodyParser.json(),
+        // session middleware
+        session({
+            secret: 'super-secret-key',
+            resave: false,
+            saveUninitialized: false,
+            cookie: { maxAge: 600000 },
+        }),
+        // Api middleware
+        // We add /api/login & /api/logout routes
+        '~/api',
+    ],
 }

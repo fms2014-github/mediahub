@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import liveChat from '@/components/livechat.vue'
+import { mapActions, mapGetters } from 'vuex'
+import liveChat from '@/components/liveChat.vue'
 export default {
     components: {
         liveChat,
@@ -28,8 +29,40 @@ export default {
             },
         }
     },
-    mounted() {
+    async mounted() {
         this.init()
+        // const tmi = require('tmi.js')
+        // // Define configuration options
+        // const opts = {
+        //     identity: {
+        //         username: 'test_bot',
+        //         password: 'oauth:c33fp5wsu5auevg8in2b02wb26n1qw',
+        //     },
+        //     channels: ['lol_ambition'],
+        // }
+        // // Create a client with our options
+        // const client = new tmi.Client(opts)
+        // // Register our event handlers (defined below)
+        // client.on('message', onMessageHandler)
+        // client.on('connected', onConnectedHandler)
+        // // Connect to Twitch:
+        // client.connect()
+        // // Called every time a message comes in
+        // function onMessageHandler(target, context, msg, self) {
+        //     if (self) {
+        //         return
+        //     } // Ignore messages from the bot
+        //     // Remove whitespace from chat message
+        //     console.log(context, msg)
+        //     const commandName = msg.trim()
+        //     console.log(commandName)
+        // }
+        // // Called every time the bot connects to Twitch chat
+        // function onConnectedHandler(addr, port) {
+        //     console.log(`* Connected to ${addr}:${port}`)
+        // }
+        await this.getLiveChatIdApi('VykycecFVoc')
+        console.log(await this.getliveChatId())
     },
     methods: {
         init() {
@@ -44,18 +77,12 @@ export default {
             this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
                 document.querySelector('#twitch-video iframe').style.width = '100%'
                 document.querySelector('#twitch-video iframe').style.height = '100%'
-                // document.querySelector('#twitch-video iframe').style.position = 'absolute'
-                // document.querySelector('#twitch-video iframe').style.top = '0px'
-                // document.querySelector('#twitch-video iframe').style.left = '0px'
             })
         },
         ready(e) {
             this.player = e.target
             document.querySelector('#youtube-video iframe').style.width = '100%'
             document.querySelector('#youtube-video iframe').style.height = '100%'
-            // document.querySelector('#youtube-video iframe').style.position = 'absolute'
-            // document.querySelector('#youtube-video iframe').style.top = '0px'
-            // document.querySelector('#youtube-video iframe').style.left = '0px'
         },
         youtubePlay() {
             this.player.playVideo()
@@ -81,6 +108,8 @@ export default {
                 this.twitchPlayer.pause()
             }
         },
+        ...mapActions({ getLiveChatIdApi: 'youtube/getLiveChatIdApi' }),
+        ...mapGetters({ getliveChatId: 'youtube/getliveChatId' }),
     },
 }
 </script>
