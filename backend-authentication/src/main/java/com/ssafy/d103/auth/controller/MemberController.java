@@ -118,4 +118,21 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "FirstLogin 증가")
+    @PutMapping("/addFirstLogin")
+    public ResponseEntity addFirst(@CurrentUser UserPrincipal userPrincipal){
+        Member member = memberService.loadMemberById(userPrincipal.getId());
+        member.setFirstLogin(member.getFirstLogin()+1);
+        memberService.saveMember(member);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FirstLogin 감소")
+    @PutMapping("/addFirstLogin")
+    public ResponseEntity subFirst(@CurrentUser UserPrincipal userPrincipal){
+        Member member = memberService.loadMemberById(userPrincipal.getId());
+        member.setFirstLogin(member.getFirstLogin()-1);
+        memberService.saveMember(member);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

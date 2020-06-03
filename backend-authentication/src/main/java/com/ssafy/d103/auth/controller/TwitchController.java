@@ -126,7 +126,7 @@ public class TwitchController {
                 }).collect(Collectors.toList());
 
         channelService.saveAll(channels);
-        member.setFirstLogin(member.getFirstLogin()+1);
+        //member.setFirstLogin(member.getFirstLogin()+1);
         TwitchUser twitchUser = twitchService.getTwitchUserInfo(accessToken);
         StreamChannel streamChannel = new StreamChannel();
         streamChannel.setId("Y".concat(twitchUser.getName()));
