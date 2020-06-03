@@ -89,9 +89,9 @@ public class YouTubeController {
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
-        auth.setAccess_token(retGoogleAuth.getAccess_token());
-        auth.setRefresh_token(retGoogleAuth.getRefresh_token());
-        auth.setToken_type(retGoogleAuth.getToken_type());
+        auth.setAccess_token(access_token);
+        auth.setRefresh_token(refresh_token);
+        auth.setToken_type(token_type);
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);
