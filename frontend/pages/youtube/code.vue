@@ -19,8 +19,8 @@ export default {
         testaxios
             .post('https://oauth2.googleapis.com/token', {
                 code: params.code,
-                client_id: '25608544222-lfe7jdkikoef92jgt45mvhe83ts98n80.apps.googleusercontent.com',
-                client_secret: 'MjwjwsVlExjXdivmhrIq-CiU',
+                client_id: '412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com',
+                client_secret: 'XHhA4GlqOVJZkVmhHHuP1uxj',
                 redirect_uri: location.origin + '/youtube/code',
                 grant_type: 'authorization_code',
             })

@@ -3,7 +3,10 @@ export default function({ $axios }, inject) {
         'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
 
     // Create a custom axios instance
-    const youtubeApi = $axios.create({
+    const youtubeApiKey = $axios.create({
+        baseURL: 'https://www.googleapis.com/youtube/v3/',
+    })
+    const youtubeApiToken = $axios.create({
         headers: { Authorization: `Bearer ${accessToken}` },
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
@@ -11,7 +14,7 @@ export default function({ $axios }, inject) {
     const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
 
     const youtubeVideosApi = (videoId) => {
-        return youtubeApi.get('videos', {
+        return youtubeApiKey.get('videos', {
             params: {
                 key: apiKey,
                 part: 'snippet,liveStreamingDetails,statistics',
@@ -21,7 +24,7 @@ export default function({ $axios }, inject) {
     }
 
     const isSubscribeApi = (channelId) => {
-        return youtubeApi.get('subscriptions', {
+        return youtubeApiToken.get('subscriptions', {
             params: {
                 part: 'snippet',
                 forChannelId: channelId,
@@ -31,7 +34,7 @@ export default function({ $axios }, inject) {
     }
 
     const youtubeSearchApi = ({ channelId, eventType, type }) => {
-        return youtubeApi.get('search', {
+        return youtubeApiKey.get('search', {
             params: {
                 key: apiKey,
                 part: 'id,snippet',
@@ -54,7 +57,7 @@ export default function({ $axios }, inject) {
             },
         }
         console.log(query)
-        return youtubeApi.get('liveChat/messages', {
+        return youtubeApiKey.get('liveChat/messages', {
             params: {
                 key: apiKey,
                 part: 'id,snippet,authorDetails',
@@ -65,7 +68,7 @@ export default function({ $axios }, inject) {
         })
     }
     const insertSubscribeApi = (cId) => {
-        return youtubeApi.post(
+        return youtubeApiToken.post(
             'subscriptions',
             {
                 snippet: {
@@ -83,7 +86,7 @@ export default function({ $axios }, inject) {
         )
     }
     const deleteSubscribeApi = (channelId) => {
-        return youtubeApi.delete('subscriptions', {
+        return youtubeApiToken.delete('subscriptions', {
             params: {
                 id: channelId,
             },
