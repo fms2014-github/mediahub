@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -19,13 +20,15 @@ public class LabelDto {
     private Long memberId;
     private String labelName;
     private Long superId;
-    private Collection<Channel> channels = new ArrayList<Channel>();
+    private Collection<ChannelDto> channels;
 
     public LabelDto(Label label){
         this.id = label.getId();
         this.memberId = label.getMemberId();
         this.labelName = label.getLabelName();
         this.superId = label.getSuperLabel().getId();
-        this.channels = label.getChannels();
+        this.channels = label.getChannels().stream()
+                .map(channel -> new ChannelDto(channel))
+                .collect(Collectors.toList());
     }
 }
