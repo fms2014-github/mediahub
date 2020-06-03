@@ -30,6 +30,7 @@ export default {
             subscribeInfo: {
                 isSubscribe: false,
                 subscribeId: '',
+                labelId: 0,
             },
         }
     },
@@ -44,13 +45,24 @@ export default {
     methods: {
         async insertSubscribe() {
             const data = (await this.$youtubeApi.insertSubscribeApi(this.playInfo.channelId)).data
+            const snippet = data.snippet
+            const params = {
+                channelId: snippet.channelId,
+                name: snippet.title,
+            }
+            const res = (await this.$backendAxios.insertChannel(params)).data
+            console.log(res)
+            console.log(JSON.parse(String(res)))
+            // res 데이터의 id를 받아서 labelId에 넣어야 삭제가능
             this.subscribeInfo.isSubscribe = true
             this.subscribeInfo.subscribeId = data.id
         },
         async deleteSubscribe() {
             const data = (await this.$youtubeApi.deleteSubscribeApi(this.subscribeInfo.subscribeId)).data
+            console.log(this.$backendAxios.deleteChannel(this.subscribeInfo.labelId))
             this.subscribeInfo.isSubscribe = false
             this.subscribeInfo.subscribeId = ''
+            this.subscribeInfo.labelId = 0
         },
     },
 }
