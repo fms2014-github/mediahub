@@ -31,7 +31,7 @@ export default {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }],
+    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }, '~/plugins/youtubeApi.js'],
     /*
      ** Nuxt.js dev-modules
      */
