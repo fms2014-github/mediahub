@@ -108,7 +108,7 @@ public class YouTubeDataAPI {
 
     public static YouTube getYouTubeService(String refreshToken){
         try {
-            Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(getCredential2().getTokenValue());
+            Credential credential = YouTubeDataAPI.createCredentialWithAccessTokenOnlyTest(refreshToken);
             return new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                     .setApplicationName("")
                     .build();

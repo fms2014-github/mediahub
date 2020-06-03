@@ -159,6 +159,8 @@ public class YouTubeController {
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
     @GetMapping(value = "/search/{channelId}/{accessToken}")
     public ResponseEntity<?> getYouTubeVideoId(@PathVariable String channelId, @PathVariable String accessToken){
         System.out.println(channelId);
@@ -169,18 +171,37 @@ public class YouTubeController {
     * youtube api test codes
     * 사용자 채팅을 들고올수 있습니다.
     * */
-    @GetMapping(value = "/channelLive/{channelId}")
-    public SubscriptionListResponse getSubscriptions(@PathVariable String channelId) throws IOException{
-        Long maxResult = 25L;
-        System.out.println(channelId);
-        YouTube youtube = YouTubeDataAPI.getYouTubeService("1//0eQl_D7lsBlB-CgYIARAAGA4SNwF-L9IrLBrFg45fli-5IVkShXDzW1fXU3GWeKeEJAqcCnvHGoeyaPz8jb_J1ezOK5dbUNN1iTU");
+    @ApiOperation(value = "channelId 요청할시 insert")
+    @GetMapping(value = "/subscription/insert/{channelId}")
+    public SubscriptionListResponse insertSubscription(@PathVariable String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
 
-        SubscriptionListResponse result = youtube
-                .subscriptions()
-                .list("id, snippet, contentDetails")
-                .setMine(true)
-                .setMaxResults(maxResult)
-                .execute();
-        return result;
+        String refreshToken = null;
+        for(Auth a : member.getAuth()){
+            if(a.getAuth_provider().equals("google")){
+                refreshToken = a.getRefresh_token();
+            }
+        }
+        YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
+//        youTube.subscriptions().insert()
+        return null;
+    }
+
+    @ApiOperation(value = "channel table의 pk로 요청할시 delete")
+    @GetMapping(value = "/subscription/delete/{cid}")
+    public SubscriptionListResponse deleteSubscriptions(@PathVariable String cid, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
+
+        String refreshToken = null;
+        for(Auth a : member.getAuth()){
+            if(a.getAuth_provider().equals("google")){
+                refreshToken = a.getRefresh_token();
+            }
+        }
+        YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
+        //youTube.subscriptions().delete()
+        return null;
     }
 }
