@@ -2,10 +2,7 @@ package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
-import com.ssafy.d103.auth.dto.AuthDto;
-import com.ssafy.d103.auth.dto.LabelDto;
-import com.ssafy.d103.auth.dto.MemberDto;
-import com.ssafy.d103.auth.dto.UpdateLabelLocationDto;
+import com.ssafy.d103.auth.dto.*;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Label;
@@ -45,7 +42,7 @@ public class MemberController {
     @ApiOperation(value = "유저 정보 요청")
     @GetMapping("/information")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<MemberDto> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         Member member = memberService.loadMemberById(userPrincipal.getId());
         List<LabelDto> label = new LinkedList<>();
         LinkedList<Label> queue = new LinkedList<>();
@@ -98,8 +95,8 @@ public class MemberController {
     @ApiOperation(value = "채널 생성")
     @PostMapping("/channel")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Channel> createChannel(@RequestBody Channel channel, @RequestParam String labelId){
-        return new ResponseEntity(channelService.createNewChannel(Long.parseLong(labelId), channel), HttpStatus.OK);
+    public ResponseEntity<ChannelDto> createChannel(@RequestBody Channel channel, @RequestParam String labelId){
+        return new ResponseEntity(new ChannelDto(channelService.createNewChannel(Long.parseLong(labelId), channel)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "채널 삭제")
