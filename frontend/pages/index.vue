@@ -12,6 +12,7 @@ import { mapGetters } from 'vuex'
 import liveVideoSlideBar from '~/components/liveVideoSlideBar.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
+    middleware: 'authenticated',
     components: {
         liveVideoSlideBar,
         videoForm,
