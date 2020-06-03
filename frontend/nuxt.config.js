@@ -23,8 +23,8 @@ export default {
         ],
         script: [
             { src: 'https://player.twitch.tv/js/embed/v1.js' },
-            { type: 'module', src: 'https://unpkg.com/x-frame-bypass' },
-            { src: 'https://unpkg.com/@ungap/custom-elements-builtin' },
+            { src: 'https://apis.google.com/js/platform.js' },
+            { src: 'https://www.youtube.com/iframe_api' },
         ],
     },
     /*

@@ -15,7 +15,7 @@ import videoForm from '~/components/main/videoForm.vue'
 export default {
     components: {
         liveVideoSlideBar,
-        videoForm,
+        // videoForm,
     },
     mounted() {
         console.log('index', this.jwt())

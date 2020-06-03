@@ -5,21 +5,33 @@
                 <img class="image" src="@/assets/images/arrow_left_icon.png" @click="move(1)" />
             </div>
             <div id="inline-block">
-                <div v-for="n in 5" :key="n" :class="'loading d' + n"></div>
-                <div v-for="(item, index) in plays" :id="'v' + index" :key="item" :class="'video v' + index">
-                    <youtube
-                        v-if="index % 2 == 0"
-                        :id="'youtube-video' + index"
-                        class="back-slide"
-                        :player-vars="{ autoplay: 0, rel: 0 }"
-                        :player-width="'100%'"
-                        :player-height="330"
-                        :video-id="item"
-                        @ready="ready(index, $event)"
-                        @playing="playing"
-                        @paused="pause"
-                    />
-                    <div v-else :id="'v' + index"></div>
+                <div id="loading" class="loading">
+                    <div class="vertical-center">
+                        <img id="loading-img" class="text-image" src="@/assets/images/loading.png" />
+                        <h1 id="loading-text" class="text">구독중인 채널의 라이브 방송을 검색중입니다.</h1>
+                    </div>
+                </div>
+                <div v-if="liveList.length > 0">
+                    <div
+                        v-for="(item, index) in liveList"
+                        :id="'v' + index"
+                        :key="item"
+                        :class="'video v' + index"
+                    >
+                        <youtube
+                            v-if="item.kind === 'youtube'"
+                            :id="'youtube-video' + index"
+                            class="back-slide"
+                            :player-vars="{ autoplay: 0, rel: 0 }"
+                            :player-width="'100%'"
+                            :player-height="330"
+                            :video-id="item.id"
+                            @ready="ready(index, $event)"
+                            @playing="playing"
+                            @paused="pausing"
+                        />
+                        <div v-else :id="'twitch-video' + index"></div>
+                    </div>
                 </div>
             </div>
             <div class="right move-button">
@@ -34,81 +46,125 @@ export default {
     data: () => {
         return {
             loadingCnt: 0,
-            curIdx: 2,
-            plays: [
-                'fvjpE_wFL5A',
-                'BcqxLCWn-CE',
-                'Xzuy9C9Y9P4',
-                'VBWGwLrC8yY',
-                'Mcnu-jrpwS4',
-                'Vsj54gbwcbQ',
-                'ky7EbHBmwwo',
-                'NqwgNCPzCTg',
-                'FbxO4R8137Q',
-                'Nt8Ec7sS6Oc',
-            ],
-            twitchs: ['dancingshana', 'ch1ckenkun', 'wpckor', 'tmxk319', 'rosebari', 'silphtv', 'yugyungwoo', 'h0270', 'poongkotv', 'bamgasi87'],
-            liveList: new Array(10),
+            curIdx: 0,
+            liveListInfo: new Array(10),
             isPlay: false,
+            liveList: [],
+            test: [
+                { kind: 'youtube', id: 'qhuJpbqXxDo' },
+                { kind: 'twitch', id: 'ch1ckenkun' },
+                { kind: 'youtube', id: 'uK_sfFXZ3W0' },
+                { kind: 'twitch', id: 'tmxk319' },
+            ],
         }
     },
     watch: {
         loadingCnt(newValue, oldValue) {
-            if (newValue === 10) {
-                const d = document.getElementsByClassName('loading')
-                for (let i = 0; i < d.length; i++) {
-                    d[i].style.display = 'none'
+            const N = this.liveList.length
+            if (newValue === N) {
+                if (N > 4) {
+                    this.curIdx = 2
+                } else if (N > 1 && N <= 4) {
+                    for (let i = 0; i < N; i++) {
+                        document.getElementById('v' + i).className = 'video v' + (i + 1)
+                    }
+                    if (N === 4) {
+                        document.getElementById('v3').className = 'video v5'
+                    }
+                    this.curIdx = 1
+                } else if (N === 1) {
+                    document.getElementById('v0').className = 'video v2'
                 }
-                this.liveList[this.curIdx].playVideo()
+
+                this.loaded()
             }
         },
     },
     created() {},
-    mounted() {
-        for (let i = 1; i < this.twitchs.length; i += 2) {
-            const options = {
-                width: '100%',
-                height: 330,
-                channel: this.twitchs[i],
-            }
-            // eslint-disable-next-line no-undef
-            const video = new Twitch.Player('v' + i, options)
-            this.liveList.splice(i, 1, video)
-            // eslint-disable-next-line no-undef
-            this.liveList[i].addEventListener(Twitch.Player.READY, () => {
-                this.liveList[i].pause()
-                this.loadingCnt++
-            })
+    async mounted() {
+        const testData = [
+            { id: 'UCAl4HWznMn7KhKBRFO5eiFA', name: '배틀그라운드 이스포츠' },
+            { id: 'UCs0LzOveQMLImmmTrMmP2sg', name: '채널 명예훈장' },
+            { id: 'UC-aMc9rzifR_0LoCLyLWEgg', name: 'MakNooN 막눈' },
+            { id: 'UCsOW9TPy2TKkqCchUHL04Fg', name: '맛있는 녀석들 (Tasty Guys)' },
+            { id: 'UC2NFRq9s2neD_Ml0tPhNC2Q', name: '우주하마' },
+        ]
+
+        for (const item of testData) {
+            const data = await this.$youtubeApi.youtubuLiveVideoApi(item.id, item.name)
+            if (data.items.length === 0) continue
+            const videoId = data.items[0].id.videoId
+            this.liveList.push({ kind: 'youtube', id: videoId })
+            if (this.liveList.length === 5) break
         }
+
+        setTimeout(() => {
+            if (this.liveList.length === 0) {
+                this.loaded()
+            } else {
+                for (let i = 0; i < this.liveList.length; i++) {
+                    if (this.liveList[i].kind === 'twitch') {
+                        const options = {
+                            width: '100%',
+                            height: 330,
+                            channel: this.liveList[i].id,
+                        }
+                        // eslint-disable-next-line no-undef
+                        const video = new Twitch.Player('twitch-video' + i, options)
+                        this.liveListInfo.splice(i, 1, video)
+                        // eslint-disable-next-line no-undef
+                        this.liveListInfo[i].addEventListener(Twitch.Player.READY, () => {
+                            this.liveListInfo[i].pause()
+                            this.loadingCnt++
+                        })
+                    }
+                }
+            }
+        }, 1000)
 
         window.onkeydown = () => {
             if (event.keyCode !== 32) return
-            if (this.curIdx % 2 === 0) {
-                if (this.isPlay) this.liveList[this.curIdx].pauseVideo()
-                else this.liveList[this.curIdx].playVideo()
-            } else if (this.liveList[this.curIdx].isPaused()) {
-                this.liveList[this.curIdx].play()
-            } else this.liveList[this.curIdx].pause()
+            if (this.liveListInfo[this.curIdx] === 'youtube') {
+                if (this.isPlay) this.liveListInfo[this.curIdx].pauseVideo()
+                else this.liveListInfo[this.curIdx].playVideo()
+            } else if (this.liveListInfo[this.curIdx].isPaused()) {
+                this.liveListInfo[this.curIdx].play()
+            } else this.liveListInfo[this.curIdx].pause()
         }
     },
     methods: {
         move(dir) {
-            if (!this.liveList[this.curIdx]) return
-            const videos = document.getElementsByClassName('video')
-            const N = videos.length
-            let idx
+            const N = this.liveList.length
+            if (this.loadingCnt !== N || N === 1) return
+            const idx = []
+            let name
             for (let i = 0; i < N; i++) {
-                idx = this.cal(Number(document.getElementById('v' + i).className.substring(7, 8)), dir, N)
-                document.getElementById('v' + i).className = 'video v' + idx
+                name = document.getElementById('v' + i).className
+                idx.push(Number(name.substring(name.length - 1, name.length)))
             }
-            if (this.curIdx % 2 === 0) {
-                this.liveList[this.curIdx].stopVideo()
-                this.curIdx = this.cal(this.curIdx, -dir, N)
-                this.liveList[this.curIdx].play()
+            if (dir === 1) idx.push(idx.shift())
+            else idx.unshift(idx.pop())
+
+            for (let i = 0; i < N; i++) {
+                document.getElementById('v' + i).className = 'change video v' + idx[i]
+            }
+
+            this.pause(this.curIdx)
+            this.curIdx = this.cal(this.curIdx, -dir, N)
+            this.play(this.curIdx)
+        },
+        pause(idx) {
+            if (this.liveList[idx].kind === 'youtube') {
+                this.liveListInfo[idx].stopVideo()
             } else {
-                this.liveList[this.curIdx].pause()
-                this.curIdx = this.cal(this.curIdx, -dir, N)
-                this.liveList[this.curIdx].playVideo()
+                this.liveListInfo[idx].pause()
+            }
+        },
+        play(idx) {
+            if (this.liveList[idx].kind === 'youtube') {
+                this.liveListInfo[idx].playVideo()
+            } else {
+                this.liveListInfo[idx].play()
             }
         },
         cal(idx, dir, N) {
@@ -117,14 +173,26 @@ export default {
             return next % N
         },
         ready(index, event) {
+            this.liveListInfo.splice(index, 1, event.target)
             this.loadingCnt++
-            this.liveList.splice(index, 1, event.target)
         },
         playing(event) {
             this.isPlay = true
         },
-        pause(event) {
+        pausing(event) {
             this.isPlay = false
+        },
+        loaded() {
+            if (this.liveList.length !== 0) {
+                const loading = document.getElementById('loading')
+                loading.style.display = 'none'
+                this.play(this.curIdx)
+            } else {
+                const img = document.getElementById('loading-img')
+                img.setAttribute('src', require('~/assets/images/no-live.png'))
+                const text = document.getElementById('loading-text')
+                text.textContent = '현재 진행중인 라이브 방송이 없습니다.'
+            }
         },
     },
 }
@@ -142,50 +210,44 @@ export default {
             position: absolute;
             display: inline-block;
 
-            // background-color: red;
             width: 80%;
             height: 400px;
             left: 50%;
             transform: translateX(-50%);
-
             .loading {
-                background-color: #e6e6ea;
+                width: 100%;
+                background-color: white;
                 display: inline-block;
+                text-align: center;
+                justify-content: middle;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                height: 330;
-                box-shadow: 1px 1px 10px black;
-            }
-            .d1 {
-                left: 5%;
-                width: 30%;
-                height: 210px;
-                z-index: 1;
-            }
-            .d2 {
-                left: 12%;
-                width: 40%;
-                height: 270px;
-                z-index: 2;
-            }
-            .d3 {
-                left: 20%;
-                width: 60%;
                 height: 330px;
-                z-index: 3;
+                box-shadow: 1px 1px 10px black;
+                z-index: 10;
+
+                .vertical-center {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+
+                    .text-image {
+                    }
+                    .text {
+                        font-size: 32px;
+                        font-weight: bold;
+                        text-align: center;
+                        vertical-align: middle;
+                        margin-top: 20px;
+                    }
+                }
             }
-            .d4 {
-                right: 12%;
-                width: 40%;
-                height: 270px;
-                z-index: 2;
-            }
-            .d5 {
-                right: 5%;
-                width: 30%;
-                height: 210px;
-                z-index: 1;
+
+            .change {
+                transition: all 0.2s;
             }
             .video {
                 display: inline-block;
@@ -193,7 +255,6 @@ export default {
                 top: 50%;
                 transform: translateY(-50%);
                 overflow: hidden;
-                transition: all 0.2s;
             }
             .v0 {
                 left: 5%;
