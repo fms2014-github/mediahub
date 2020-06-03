@@ -138,8 +138,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Transactional
     void updateYoutubeSubscriptions(String accessToken,Member member){
-        if(member.getFirstLogin()>0)
-            return;
+//        if(member.getFirstLogin()>0)
+//            return;
         GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
         YouTube youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName("media")
@@ -168,7 +168,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     return channel;
                 }).collect(Collectors.toList());
         channelService.saveAll(channels);
-        member.setFirstLogin(member.getFirstLogin()+1);
-        memberRepository.save(member);
+//        member.setFirstLogin(member.getFirstLogin()+1);
+//        memberRepository.save(member);
     }
 }
