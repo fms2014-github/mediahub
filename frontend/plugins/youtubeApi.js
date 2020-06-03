@@ -11,7 +11,26 @@ export default function({ $axios }, inject) {
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
 
-    const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
+    const apiKey = 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE'
+
+    const youtubuLiveVideoApi = async (channel, channelName) => {
+        let data = null
+        await youtubeApiKey
+            .get('search', {
+                params: {
+                    part: 'id',
+                    channelId: channel,
+                    eventType: 'live',
+                    q: channelName,
+                    type: 'video',
+                    key: apiKey,
+                },
+            })
+            .then((res) => {
+                data = res.data
+            })
+        return data
+    }
 
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
@@ -100,6 +119,7 @@ export default function({ $axios }, inject) {
         isSubscribeApi: (channelId) => isSubscribeApi(channelId),
         insertSubscribeApi: (cId) => insertSubscribeApi(cId),
         deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
+        youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)

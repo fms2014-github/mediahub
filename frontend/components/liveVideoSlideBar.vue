@@ -12,12 +12,7 @@
                     </div>
                 </div>
                 <div v-if="liveList.length > 0">
-                    <div
-                        v-for="(item, index) in liveList"
-                        :id="'v' + index"
-                        :key="item"
-                        :class="'video v' + index"
-                    >
+                    <div v-for="(item, index) in liveList" :id="'v' + index" :key="item" :class="'video v' + index">
                         <youtube
                             v-if="item.kind === 'youtube'"
                             :id="'youtube-video' + index"
@@ -80,7 +75,6 @@ export default {
             }
         },
     },
-    created() {},
     async mounted() {
         const testData = [
             { id: 'UCAl4HWznMn7KhKBRFO5eiFA', name: '배틀그라운드 이스포츠' },

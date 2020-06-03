@@ -16,7 +16,6 @@ router.use((req, res, next) => {
 
 // Add POST - /api/login
 router.post('/setSession', (req, res) => {
-    console.log('req.body', req.body)
     if (req.body.jwt !== null) {
         req.session.jwt = req.body
         return res.json(req.body)

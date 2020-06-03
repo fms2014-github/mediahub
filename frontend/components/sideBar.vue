@@ -1,12 +1,13 @@
 <template>
     <div id="side-bar">
         <liveBroadcast></liveBroadcast>
-        <h4>카테고리</h4>
-        <div id="category"></div>
+        <div v-if="rootTest !== null" id="tree"></div>
     </div>
 </template>
 
 <script>
+import '../assets/label.scss'
+import { mapGetters } from 'vuex'
 import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
 export default {
     components: {
@@ -14,27 +15,104 @@ export default {
     },
     data() {
         return {
-            catList: {
-                list1: [{ subList11: ['s1', 's2', 's3', 's4'] }, '12', '13', '14'],
-                list2: [{ subList21: ['s1', 's2', 's3', 's4'] }, '22', '23', '24'],
-                list3: [{ subList31: ['s1', 's2', { ssList: ['ss1', 'ss2', 'ss3'] }, 's4'] }, '32', '33', '34'],
-            },
+            labels: null,
         }
     },
-    mounted() {
-        const category = document.getElementById('category')
-        // console.log(this.catList)
-        function subList(parentNode, data) {
-            for (const list in data) {
-                if (data[list].constructor === Array) {
-                    // console.log(list)
-                    subList(parentNode, data[list])
+    async mounted() {
+        console.log('jwt', this.getJwt())
+        this.labels = (
+            await this.$axios.get('http://k02d1031.p.ssafy.io:8081/v1/member/information', {
+                headers: { Authorization: 'Bearer ' + this.getJwt() },
+            })
+        ).data.label
+        const data = this.labels
+        for (const i in data) {
+            // console.log('id', data[i].id)
+            // console.log('memberId', data[i].memberId)
+            // console.log('labelName', data[i].labelName)
+            // console.log('superId', data[i].superId)
+            const tree = document.getElementById('tree')
+            const node = document.createElement('div')
+            node.setAttribute('data-label-id', data[i].id)
+            node.setAttribute('data-super-id', data[i].superId)
+            node.setAttribute('data-member-id', data[i].memberId)
+
+            if (data[i].superId === -1) {
+                node.setAttribute('id', 'label-wrap')
+                const span = document.createElement('span')
+                span.appendChild(document.createTextNode('카테고리'))
+                span.setAttribute('id', 'root-label')
+                node.appendChild(span)
+                tree.appendChild(node)
+            } else {
+                const parentLabel = document.querySelector(`div[data-label-id='${data[i].superId}']`)
+                if (data[i].superId === 1) {
+                    const span = document.createElement('span')
+                    const wrap = document.createElement('div')
+                    const hr = document.createElement('hr')
+                    wrap.setAttribute('class', 'drop-cap-wrap')
+                    span.setAttribute('class', 'drop-cap')
+                    span.appendChild(document.createTextNode(data[i].labelName[0]))
+                    wrap.appendChild(span)
+                    wrap.appendChild(node)
+                    node.appendChild(document.createTextNode(data[i].labelName))
+                    node.appendChild(hr)
+                    node.setAttribute('class', 'child-label')
+                    parentLabel.insertBefore(wrap, document.querySelector('.channel'))
                 } else {
-                    // console.log(data[list])
+                    const hr = document.createElement('hr')
+                    node.appendChild(document.createTextNode(data[i].labelName))
+                    node.appendChild(hr)
+                    node.setAttribute('class', 'child-label')
+                    parentLabel.insertBefore(node, document.querySelector('.channel'))
                 }
             }
+            for (const k in data[i].channels) {
+                // console.log(k, data[i].channels[k])
+                const channel = document.createElement('div')
+                const parentLabel = document.querySelector(`div[data-label-id='${data[i].channels[k].labelId}']`)
+                channel.setAttribute('class', 'channel')
+                channel.setAttribute('data-channel-channel-id', data[i].channels[k].channelId)
+                channel.setAttribute('data-channel-description', data[i].channels[k].description)
+                channel.setAttribute('data-channel-display-name', data[i].channels[k].displayName)
+                channel.setAttribute('data-channel-follower', data[i].channels[k].follower)
+                channel.setAttribute('data-channel-label-id', data[i].channels[k].labelId)
+                channel.setAttribute('data-channel-id', data[i].channels[k].id)
+                channel.setAttribute('data-channel-name', data[i].channels[k].name)
+                channel.setAttribute('data-channel-profileImg', data[i].channels[k].profileImg)
+                channel.setAttribute('data-channel-provider', data[i].channels[k].provider)
+                channel.setAttribute('data-channel-subscriber', data[i].channels[k].subscriber)
+                const img = document.createElement('img')
+
+                img.setAttribute('src', data[i].channels[k].profileImg)
+                img.style.width = '34px'
+                img.style.borderRadius = '17px'
+                channel.appendChild(img)
+                // channel.appendChild(
+                //     document.createTextNode(
+                //         `${data[i].channels[k].channelId}, ${data[i].channels[k].provider}`
+                //     )
+                // )
+                parentLabel.appendChild(channel)
+            }
         }
-        subList(category, this.catList)
+        const childElement = document.getElementsByClassName('child-label')
+        childElement[0].style.paddingRight = '8px'
+        for (let i = 0; i < childElement.length; i++) {
+            childElement[i].style.paddingLeft = Number(childElement[i].dataset.superId) * 12 + 'px'
+        }
+        const dropCapElement = document.getElementsByClassName('drop-cap-wrap')
+        dropCapElement[0].addEventListener('mouseover', () => {
+            dropCapElement[0].classList.add('expand-list')
+            dropCapElement[0].children[1].classList.add('add-border')
+        })
+        dropCapElement[0].addEventListener('mouseleave', () => {
+            dropCapElement[0].classList.remove('expand-list')
+            dropCapElement[0].children[1].classList.remove('add-border')
+        })
+    },
+    methods: {
+        ...mapGetters({ getJwt: 'login/getJwt' }),
     },
 }
 </script>

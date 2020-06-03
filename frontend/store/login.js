@@ -29,8 +29,9 @@ export const actions = {
         }
     },
 
-    async logout({ commit }) {
+    async logoutapi({ commit }) {
         await this.$loginAxios.post('/auth/deleteSession')
         commit('SET_USER', { jwt: '' })
+        this.$router.push('/login')
     },
 }
