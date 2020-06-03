@@ -20,11 +20,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -80,21 +82,18 @@ public class YouTubeController {
     }
 
     @PostMapping(value = "/setToken")
-    public ResponseEntity<?> redirectCodeGoogle(@RequestBody String access_token,
-                                                @RequestBody String expires_in,
-                                                @RequestBody String scope,
-                                                @RequestBody String token_type,
-                                                @RequestBody String refresh_token,
+    public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth,
                                                 @CurrentUser UserPrincipal userPrincipal) {
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
-        Auth auth = new Auth();
-        auth.setAuth_provider(AuthProvider.google.toString());
-        auth.setAccess_token(access_token);
-        auth.setRefresh_token(refresh_token);
-        auth.setToken_type(token_type);
-        auth.setMember(member);
-        member.getAuth().add(auth);
-        customUserDetailsService.saveMember(member);
+        System.out.println(retGoogleAuth.getAccess_token());
+//        Auth auth = new Auth();
+//        auth.setAuth_provider(AuthProvider.google.toString());
+//        auth.setAccess_token(access_token);
+//        auth.setRefresh_token(refresh_token);
+//        auth.setToken_type(token_type);
+//        auth.setMember(member);
+//        member.getAuth().add(auth);
+//        customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
     //refreshtoken으로 access token 갱신

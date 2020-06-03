@@ -26,7 +26,7 @@ public class LabelDto {
         this.id = label.getId();
         this.memberId = label.getMemberId();
         this.labelName = label.getLabelName();
-        this.superId = label.getSuperLabel().getId();
+        this.superId = label.getSuperLabel()==null? -1 : label.getSuperLabel().getId();
         this.channels = label.getChannels().stream()
                 .map(channel -> new ChannelDto(channel))
                 .collect(Collectors.toList());
