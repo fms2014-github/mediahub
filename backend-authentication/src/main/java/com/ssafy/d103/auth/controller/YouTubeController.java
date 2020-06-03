@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -80,13 +81,18 @@ public class YouTubeController {
     }
 
     @PostMapping(value = "/setToken")
-    public ResponseEntity<?> redirectCodeGoogle(@RequestParam RetGoogleAuth retGoogleAuth, @CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<?> redirectCodeGoogle(@RequestParam String access_token,
+                                                @RequestParam String expires_in,
+                                                @RequestParam String scope,
+                                                @RequestParam String token_type,
+                                                @RequestParam String refresh_token,
+                                                @CurrentUser UserPrincipal userPrincipal) {
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
-        auth.setAccess_token(retGoogleAuth.getAccess_token());
-        auth.setRefresh_token(retGoogleAuth.getRefresh_token());
-        auth.setToken_type(retGoogleAuth.getToken_type());
+        auth.setAccess_token(access_token);
+        auth.setRefresh_token(refresh_token);
+        auth.setToken_type(token_type);
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);
