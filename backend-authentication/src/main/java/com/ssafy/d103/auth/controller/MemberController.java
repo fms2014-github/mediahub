@@ -44,9 +44,10 @@ public class MemberController {
     @GetMapping("/information")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        System.out.println("information");
         Member member = memberService.loadMemberById(userPrincipal.getId());
         StringBuilder sb = new StringBuilder();
-        sb.append("{");
+        sb.append("\"{");
         sb.append(" \"member\" :  {");
         sb.append(" \"name\" : \""); sb.append(member.getName()); sb.append("\",");
         sb.append(" \"email\" : \""); sb.append(member.getEmail()); sb.append("\",");
@@ -70,7 +71,7 @@ public class MemberController {
         LinkedList<Label> queue = new LinkedList<>();
         Label rootLabel = labelService.getLabelById(member.getRootLabelId());
         queue.add(rootLabel);
-        while(queue.isEmpty()){
+        while(!queue.isEmpty()){
 
             int size = queue.size();
 
@@ -83,7 +84,6 @@ public class MemberController {
                 sb.append(" \"id\" : \""); sb.append(temp.getId()); sb.append("\",");
                 sb.append(" \"memberId\" : \""); sb.append(temp.getMemberId()); sb.append("\",");
                 sb.append(" \"labelName\" : \""); sb.append(temp.getLabelName()); sb.append("\",");
-
                 sb.append(" \"superLabel\" : \"");
                 if(temp.getSuperLabel() != null) sb.append(temp.getSuperLabel().getId());
                 sb.append("\",");
@@ -98,11 +98,6 @@ public class MemberController {
                     sb.append(" \"provider\" : \""); sb.append(channel.getProvider()); sb.append("\",");
                     sb.append(" \"channelId\" : \""); sb.append(channel.getChannelId()); sb.append("\",");
                     sb.append(" \"name\" : \""); sb.append(channel.getName()); sb.append("\",");
-                    sb.append(" \"displayName\" : \""); sb.append(channel.getDisplayName()); sb.append("\",");
-                    sb.append(" \"profileImg\" : \""); sb.append(channel.getProfileImg()); sb.append("\",");
-                    sb.append(" \"follower\" : \""); sb.append(channel.getFollower()); sb.append("\",");
-                    sb.append(" \"subscriber\" : \""); sb.append(channel.getSubscriber()); sb.append("\",");
-                    sb.append(" \"description\" : \""); sb.append(channel.getDescription()); sb.append("\"");
                     sb.append("}");
                     if(channels.hasNext()){
                         sb.append(",");
@@ -116,8 +111,8 @@ public class MemberController {
         }
         sb.append("]");
         sb.append("}");
-        sb.append("}");
-
+        sb.append("}\"");
+        System.out.println(sb.toString());
         return new ResponseEntity(sb.toString(), HttpStatus.OK);
     }
 
