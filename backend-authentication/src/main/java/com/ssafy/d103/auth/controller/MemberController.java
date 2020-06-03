@@ -48,7 +48,7 @@ public class MemberController {
         LinkedList<Label> queue = new LinkedList<>();
         Label rootLabel = labelService.getLabelById(member.getRootLabelId());
         queue.add(rootLabel);
-        while(queue.isEmpty()){
+        while(!queue.isEmpty()){
             int size = queue.size();
             for(int i=0; i<size; i++){
                 Label temp = queue.poll();
