@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.rest.api.advice.exception.CustomMemberExistException;
 import com.rest.api.advice.exception.CustomMemberNotFoundException;
 import com.rest.api.dto.MemberDto;
+import com.rest.api.model.AuthProvider;
 import com.rest.api.model.MemberEntity;
 import com.rest.api.model.Role;
 import com.rest.api.model.response.CommonResult;
@@ -55,9 +56,9 @@ public class MemberService implements UserDetailsService {
      * 3. 회원가입할때 인증에 따라서 목록 받아와주기.
      */
     @Transactional
-    public void joinSocialJoin(String email, String provider){
+    public void joinSocialJoin(String email, AuthProvider provider){
 
-        Optional<MemberEntity> member = memberRepository.findByEmailAndProvider(email, provider);
+        Optional<MemberEntity> member = memberRepository.findByEmailAndProvider(email, provider.toString());
 
         if(member.isPresent())
             throw  new CustomMemberExistException();
@@ -80,20 +81,6 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(CustomMemberNotFoundException::new);
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-//        MemberEntity userEntity = memberRepository.findByEmail(userEmail).orElseThrow(CustomMemberNotFoundException::new);
-//
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        System.out.println("this mail is logging :: "+userEmail);
-//        if (("admin@example.com").equals(userEmail)) {
-//            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
-//        } else {
-//            authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
-//        }
-//
-//        return new User(userEntity.getEmail(), userEntity.getPassword(), authorities);
-//    }
     public UserDetails loadUserByUsername(String userPk) {
         return memberRepository.findById(Long.valueOf(userPk)).orElseThrow(CustomMemberNotFoundException::new);
     }

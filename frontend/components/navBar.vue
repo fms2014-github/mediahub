@@ -1,21 +1,20 @@
 <template>
     <div id="nav-bar">
-        <router-link id="logo" to="#">로고</router-link>
-        <router-link to="#"><login-icon></login-icon></router-link>
-        <!-- <router-link to="#"
-            ><span class="material-icons">
+        <button id="logo" @click="logo">로고</button>
+        <button @click="login"><login-icon></login-icon></button>
+        <button @click="alarmCheck = !alarmCheck">
+            <span id="alarm-icon" class="material-icons">
                 notifications
-            </span></router-link
-        > -->
-        <span class="material-icons" @click="show">
-            notifications
-        </span>
-        <router-link to="#"
-            ><span class="material-icons">
+            </span>
+        </button>
+        <button @click="help">
+            <span id="help-icon" class="material-icons">
                 help
-            </span></router-link
-        >
-        <!-- <alarm></alarm> -->
+            </span>
+        </button>
+        <div v-if="alarmCheck" class="alarm-div">
+            <alarm></alarm>
+        </div>
     </div>
 </template>
 
@@ -27,49 +26,75 @@ import alarm from '~/components/main/alarm.vue'
 export default {
     components: {
         loginIcon,
-        // alarm,
+        alarm,
         // logoutIcon,
+    },
+
+    data: () => {
+        return {
+            alarmCheck: false,
+        }
     },
     mounted() {},
     methods: {
-        show() {
-            alert('dd')
+        logo() {
+            this.$router.push('/')
+        },
+        login() {
+            this.$router.push('/login')
+        },
+        help() {
+            alert('서비스 준비 중 입니다.\n저희 서비스에 관심을 가져주셔서 감사합니다.')
         },
     },
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/commonMixin';
 #nav-bar {
     display: flex;
+    position: fixed;
+    top: 0px;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
-    height: 56px;
-    border: {
-        style: solid;
-        width: 0 0 2px 0;
-        color: rgb(196, 196, 196);
-    }
+    height: $nav-bar-height;
+    background-color: white;
+    z-index: 9999;
     #logo {
         position: absolute;
         left: 0px;
     }
-    a,
-    a:active,
-    a:visited,
-    a:link {
+    button,
+    button:active,
+    button:visited,
+    button:focus,
+    button:link {
         color: black;
         text-decoration: none;
         margin: 0px 20px;
+        background-color: rgba(0, 0, 0, 0);
+        outline: none;
+        border-width: 0px;
+        cursor: pointer;
     }
-    a:last-child {
+    #alarm-icon {
+        margin: 0px 20px;
+    }
+    #help-icon {
         margin-right: 40px;
     }
-    a {
+    button {
         span {
             font-size: 32px;
         }
+    }
+    .alarm-div {
+        position: absolute;
+        top: 58px;
+        right: 110px;
+        z-index: 10;
     }
 }
 svg {

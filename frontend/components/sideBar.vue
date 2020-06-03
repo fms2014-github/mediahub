@@ -27,10 +27,10 @@ export default {
         function subList(parentNode, data) {
             for (const list in data) {
                 if (data[list].constructor === Array) {
-                    console.log(list)
+                    // console.log(list)
                     subList(parentNode, data[list])
                 } else {
-                    console.log(data[list])
+                    // console.log(data[list])
                 }
             }
         }
@@ -40,18 +40,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/commonMixin';
 #side-bar {
     display: flex;
+    position: fixed;
+    top: 58px;
+    height: 100%;
     flex-direction: column;
-    min-width: 72px;
-    border: {
-        width: 0 2px 0 0;
-        color: rgb(180, 180, 180);
-        style: solid;
-    }
+    min-width: $side-bar-width;
+    background-color: white;
+    align-self: stretch;
+    z-index: 9999;
     svg {
         width: 42px;
     }
-    vertical-align: top;
 }
 </style>

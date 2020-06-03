@@ -1,25 +1,33 @@
 <template>
     <div id="main-page">
         <client-only placeholder="loading...">
-            <slide-bar />
+            <live-video-slide-bar />
         </client-only>
         <video-form />
     </div>
 </template>
 
 <script>
-import slideBar from '~/components/slideBar.vue'
+import { mapGetters } from 'vuex'
+import liveVideoSlideBar from '~/components/liveVideoSlideBar.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
+    middleware: 'authenticated',
     components: {
-        slideBar,
-        videoForm,
+        liveVideoSlideBar,
+        // videoForm,
+    },
+    mounted() {
+        console.log('index', this.jwt())
+    },
+    methods: {
+        ...mapGetters({ jwt: 'login/getJwt' }),
     },
 }
 </script>
 
 <style lang="scss" scoped>
-#main-page {
+#router-view {
     display: block;
     width: calc(100% - 72px);
     height: 100%;

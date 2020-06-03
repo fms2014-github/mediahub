@@ -45,14 +45,17 @@ public class TwitchService {
     private String twitchUserRequestUrl;
     @Value("${spring.social.twitch.accept}")
     private String accept;
-
-
+//https://id.twitch.tv/oauth2/authorize
+// ?client_id=oqnfm929440pohis4h4xd1rfr4cd2u
+// &redirect_uri=http://localhost:8080/social/login/twitch/code
+// &response_type=code
+// &scope=channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
     public String getImplicitCodeFlowUrl() {
         StringBuilder url = new StringBuilder()
-                .append(env.getProperty("spring.social.twitch.url.token"))
+                .append(env.getProperty("spring.social.twitch.url.authorize"))
                 .append("?client_id=").append(twitchClientId)
-                .append("&response_type=token")
-                .append("&redirect_uri=").append(baseUrl).append(twitchRedirect)
+                .append("&response_type=code")
+                .append("&redirect_uri=").append(baseUrl).append(twitchCodeRedirect)
                 .append("&scope=").append(scope);
         return url.toString();
     }
@@ -111,33 +114,26 @@ public class TwitchService {
      * -X GET 'https://api.twitch.tv/kraken/users/{twitch_user_id}/follows/channels'
      *
      * @param twitchUserId twitch 개인 고유 id 필요
-     * @return 아직 못정함.
+     * @return String 채널 json data 반환
      */
-    public ListResult<ChannelEntity> getTwitchAllChannelsByUser(String twitchUserId){
+    public String getTwitchAllChannelsByUser(String twitchUserId){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/vnd.twitchtv.v5+json");
         headers.add("Client-ID", twitchClientId);
-        // Set parameter
 
         StringBuilder url = new StringBuilder()
                 .append(twitchUserRequestUrl)
                 .append("/")
                 .append(twitchUserId)
                 .append("/follows/channels");
-//                .append("https://api.twitch.tv/kraken/users/131655528/follows/channels"); //테스트 URL
 
-        // Set http entity
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.GET, entity, String.class);
-//                restTemplate.getForEntity(url.toString(), String.class, request);
+        String result = null;
         if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("Twitch Follow List ***************************");
-            System.out.println(response.getBody());
-            System.out.println("Twitch Follow List **********endend***********");
-//            return gson.fromJson(response.getBody(), ListResult<ChannelEntity.class);
+            result = response.getBody();
         }
-
-        return null;
+        return result;
     }
 
 

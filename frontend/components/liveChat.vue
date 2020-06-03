@@ -1,22 +1,22 @@
 <template>
     <div id="live-chat">
         <div id="streamer-name">스트리머 A채팅방 입니다.</div>
-        <div id="message-list">
-            <div v-for="item in testlist" :key="item.id" class="receive-message-list">
-                <div v-if="!item.me" class="receive-message">
+        <div v-if="messageList !== null" id="message-list">
+            <div v-for="item in messageList" :key="item.id" class="receive-message-list">
+                <div class="receive-message">
+                    <div class="profile">
+                        <img class="profile-image" :src="item.profileImage" />
+                        <span>{{ item.displayName }}</span>
+                    </div>
+                    <span>{{ item.textMessage }}</span>
+                </div>
+                <!-- <div v-if="item.me" class="receive-message my-message">
                     <div class="profile">
                         <img class="profile-image" src="https://via.placeholder.com/24" />
                         <span>{{ item.nickname }}</span>
                     </div>
                     <span>채팅 기록{{ item.message }} 입니다.</span>
-                </div>
-                <div v-if="item.me" class="receive-message my-message">
-                    <div class="profile">
-                        <img class="profile-image" src="https://via.placeholder.com/24" />
-                        <span>{{ item.nickname }}</span>
-                    </div>
-                    <span>채팅 기록{{ item.message }} 입니다.</span>
-                </div>
+                </div>-->
             </div>
         </div>
         <div id="send-message">
@@ -31,29 +31,105 @@
 
 <script>
 export default {
+    props: {
+        liveChatId: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
-            testlist: [
-                { nickname: '상대방', me: false, message: 1 },
-                { nickname: '상대방', me: false, message: 2 },
-                { nickname: '상대방', me: false, message: 3 },
-                { nickname: '상대방', me: false, message: 4 },
-                { nickname: '상대방', me: false, message: 5 },
-                { nickname: '상대방', me: false, message: 6 },
-                { nickname: '나', me: true, message: 7 },
-                { nickname: '상대방', me: false, message: 8 },
-                { nickname: '상대방', me: false, message: 9 },
-                { nickname: '상대방', me: false, message: 10 },
-                { nickname: '상대방', me: false, message: 11 },
-                { nickname: '상대방', me: false, message: 12 },
-                { nickname: '상대방', me: false, message: 13 },
-                { nickname: '나', me: true, message: 14 },
-                { nickname: '상대방', me: false, message: 15 },
-                { nickname: '상대방', me: false, message: 16 },
-                { nickname: '상대방', me: false, message: 17 },
-                { nickname: '상대방', me: false, message: 18 },
-            ],
+            tmi: null,
+            client: null,
+            messageList: [],
+            chatRead: null,
+            nextPageToken: ' ',
+            pollingIntervalMillis: 5000,
         }
+    },
+    async mounted() {
+        this.tmi = require('tmi.js')
+        const objDiv = document.getElementById('message-list')
+        // Define configuration options
+        const opts = {
+            identity: {
+                username: 'test_bot',
+                password: 'oauth:c33fp5wsu5auevg8in2b02wb26n1qw',
+            },
+            channels: ['obm1025'],
+        }
+        // Create a client with our options
+        this.client = new tmi.Client(opts)
+        // Register our event handlers (defined below)
+        // client.on('message', onMessageHandler)
+        this.client.on('message', (target, context, msg, self) => {
+            if (self) {
+                return
+            } // Ignore messages from the bot
+            // Remove whitespace from chat message
+            // console.log('this scope', this.messageList)
+            // console.log(context, msg)
+            this.messageList.push({
+                profileImage: 'https://via.placeholder.com/24',
+                textMessage: msg,
+                displayName: context['display-name'],
+            })
+            objDiv.scrollTop = objDiv.scrollHeight + 1000
+            // const commandName = msg.trim()
+            // console.log(commandName)
+        })
+        this.client.on('connected', onConnectedHandler)
+        // Connect to Twitch:
+        this.client.connect()
+        // Called every time a message comes in
+        // Called every time the bot connects to Twitch chat
+        function onConnectedHandler(addr, port) {
+            console.log(`* Connected to ${addr}:${port}`)
+        }
+
+        const firstData = (await this.$youtubeApi.youtubeliveChatApi(this)).data
+        for (const i in firstData.items) {
+            this.messageList.push({
+                profileImage: firstData.items[i].authorDetails.profileImageUrl,
+                textMessage: firstData.items[i].snippet.displayMessage,
+                displayName: firstData.items[i].authorDetails.displayName,
+            })
+        }
+        this.nextPageToken = firstData.nextPageToken
+        this.pollingIntervalMillis = firstData.pollingIntervalMillis
+
+        setTimeout(() => {
+            objDiv.scrollTop = objDiv.scrollHeight + 1000
+        }, 100)
+        this.chatRead = setInterval(async () => {
+            objDiv.scrollTop = objDiv.scrollHeight
+            const { data } = await this.$youtubeApi.youtubeliveChatApi({
+                liveChatId: this.liveChatId,
+                pageToken: this.nextPageToken,
+                pollingIntervalMillis: this.pollingIntervalMillis,
+            })
+            console.log(data)
+            if (data.pageInfo.totalResults > 0) {
+                for (const i in data.items) {
+                    this.messageList.push({
+                        profileImage: data.items[i].authorDetails.profileImageUrl,
+                        textMessage: data.items[i].snippet.displayMessage,
+                        displayName: data.items[i].authorDetails.displayName,
+                    })
+                }
+            }
+            this.nextPageToken = data.nextPageToken
+            this.pollingIntervalMillis = data.pollingIntervalMillis - 2000
+            setTimeout(() => {
+                objDiv.scrollTop = objDiv.scrollHeight + 1000
+            }, 100)
+        }, this.pollingIntervalMillis)
+    },
+    destroyed() {
+        console.log('aefwefwefdddgggg')
+        clearInterval(this.chatRead)
+        this.client.removeAllListeners('message')
+        this.client.removeAllListeners('connected')
     },
     methods: {
         selectPlatform() {
@@ -71,7 +147,6 @@ export default {
 #live-chat {
     display: inline-block;
     min-width: 300px;
-    height: 90%;
     border: {
         width: 1px;
         color: rgb(150, 150, 150);
@@ -92,13 +167,15 @@ export default {
     }
     #message-list {
         padding: 0 8px;
-        height: calc(100% - 98px);
+        height: calc(100% - 94px);
         overflow: auto;
         @include scrollbar('&');
         border-bottom-width: 1px;
         border-bottom-color: #cdcdcd;
         border-bottom-style: solid;
         img {
+            width: 24px;
+            height: 24px;
             vertical-align: middle;
             border-radius: 100%;
         }
@@ -107,14 +184,14 @@ export default {
         }
         .receive-message {
             margin: 12px 0px;
-            width: 75%;
-            margin-right: calc(25% - 16px);
+            width: 70%;
+            margin-right: calc(30% - 16px);
             padding: 8px;
             background-color: gray;
             border-radius: 8px;
         }
         .my-message {
-            margin-left: calc(25% - 16px);
+            margin-left: calc(30% - 16px);
             background-color: rgb(255, 205, 0);
             text-align: right;
         }
@@ -152,7 +229,7 @@ export default {
         }
         input[name='message'] {
             vertical-align: top;
-            width: calc(100% - 10% - 22px);
+            width: calc(100% - 10% - 25px);
             margin: 2px 0;
             padding: 10px 5px;
         }

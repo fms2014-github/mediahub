@@ -3,11 +3,11 @@
         <div id="content-wrap">
             <h2>환영합니다.</h2>
             <h2>구독 정보를 동기화하시려면 아래 버튼을 눌러주세요.</h2>
-            <button id="youtube-sync">
+            <button id="youtube-sync" @click="syncYoutube">
                 <img src="../assets/icon/YouTube.png" />
                 <span>YouTube</span>
             </button>
-            <button id="twitch-sync">
+            <button id="twitch-sync" @click="syncTwitch">
                 <img src="../assets/icon/Twitch.png" />
                 <span>Twitch</span>
             </button>
@@ -16,8 +16,24 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-    layout: 'sync',
+    layout: 'cover',
+    middleware: 'authenticated',
+    mounted() {
+        console.log('subsync', this.getJwt())
+    },
+    methods: {
+        ...mapGetters({ getJwt: 'login/getJwt' }),
+        syncYoutube() {
+            window.location.href =
+                'https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/youtube&state=statparameter_passthrough_value&access_type=offline&response_type=code&approval_prompt=force&client_id=412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com&redirect_uri=http://localhost:3000/youtube/code'
+        },
+        syncTwitch() {
+            window.location.href =
+                'https://id.twitch.tv/oauth2/authorize?client_id=db8sw2xqe82gk1x78mkubkr5xh545p&response_type=code&scope=channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read&redirect_uri=http://localhost:3000/twitch/code'
+        },
+    },
 }
 </script>
 

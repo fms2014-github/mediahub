@@ -3,7 +3,7 @@
         <nav-bar />
         <div id="content">
             <side-bar />
-            <nuxt />
+            <nuxt id="router-view" />
         </div>
     </div>
 </template>
@@ -21,8 +21,11 @@ export default {
 
 <style lang="scss" scoped>
 #app {
-    #content {
-        display: flex;
+    width: 100%;
+    min-width: calc(1280px + 74px);
+    background-color: rgb(240, 240, 240);
+    #router-view {
+        margin: 58px 0 0 74px;
     }
 }
 </style>
