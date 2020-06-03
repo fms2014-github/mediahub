@@ -25,8 +25,17 @@ export default {
                 grant_type: 'authorization_code',
             })
             .then(async (res) => {
-                console.log(res.data)
-                console.log(await testaxios.post('http://k02d1031.p.ssafy.io:8081/v1/youtube/setToken', res.data))
+                console.log(res)
+                const { status } = await testaxios.post('http://k02d1031.p.ssafy.io:8081/v1/youtube/setToken', {
+                    accessToken: res.data.access_token,
+                    expiresIn: res.data.expires_in,
+                    refreshToken: res.data.refresh_token,
+                    scope: res.data.scope,
+                    tokenType: res.data.token_type,
+                })
+                if (status === 200) {
+                    this.$router.push('/')
+                }
             })
         // const testaxios = this.$axios.create({
         //     headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },

@@ -85,7 +85,6 @@ export default {
         ]
 
         for (const item of testData) {
-            console.log(this.$youtubeApi)
             const data = await this.$youtubeApi.youtubuLiveVideoApi(item.id, item.name)
             if (data.items.length === 0) continue
             const videoId = data.items[0].id.videoId

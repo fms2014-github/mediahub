@@ -1,7 +1,7 @@
 <template>
     <div id="nav-bar">
         <button id="logo" @click="logo">로고</button>
-        <button @click="login"><login-icon></login-icon></button>
+        <button @click="logout"><img src="../assets/icon/logout.png" /></button>
         <button @click="alarmCheck = !alarmCheck">
             <span id="alarm-icon" class="material-icons">
                 notifications
@@ -19,13 +19,14 @@
 </template>
 
 <script>
-import loginIcon from '~/assets/icon/sign-in.svg?inline'
+// import loginIcon from '~/assets/icon/sign-in.svg?inline'
+import { mapActions } from 'vuex'
 import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
 export default {
     components: {
-        loginIcon,
+        // loginIcon,
         alarm,
         // logoutIcon,
     },
@@ -37,10 +38,12 @@ export default {
     },
     mounted() {},
     methods: {
+        ...mapActions({ logoutapi: 'login/logoutapi' }),
         logo() {
             this.$router.push('/')
         },
-        login() {
+        logout() {
+            this.logoutapi()
             this.$router.push('/login')
         },
         help() {
@@ -97,7 +100,7 @@ export default {
         z-index: 10;
     }
 }
-svg {
+img {
     width: 32px;
 }
 </style>
