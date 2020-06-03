@@ -16,7 +16,11 @@ export default {
         const testaxios = this.$axios.create({
             headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },
         })
-        // console.log('code', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/token-code?code=' + params.code))
+        testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/token-code?code=' + params.code).then(async (res) => {
+            console.log('code', res.data)
+            const { data } = await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization')
+            console.log('twitch code', data)
+        })
         // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization'))
     },
 }

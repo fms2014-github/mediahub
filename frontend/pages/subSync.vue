@@ -16,18 +16,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
     layout: 'cover',
-    middleware: 'authenticated',
-    mounted() {
-        console.log('subsync', this.getJwt())
-    },
+    middleware: 'firstLogin',
     methods: {
-        ...mapGetters({ getJwt: 'login/getJwt' }),
         syncYoutube() {
             window.location.href =
-                'https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/youtube&state=statparameter_passthrough_value&access_type=offline&response_type=code&approval_prompt=force&client_id=412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com&redirect_uri=http://localhost:3000/youtube/code'
+                'https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/youtube&state=statparameter_passthrough_value&access_type=offline&response_type=code&client_id=412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com&redirect_uri=http://localhost:3000/youtube/code&prompt=consent'
         },
         syncTwitch() {
             window.location.href =
