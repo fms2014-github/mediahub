@@ -96,11 +96,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             System.out.println(label.getId()+", "+ label.getMemberId()+", "+label.getLabelName());
             member = setMemberRootLabel(member, label.getId());
             System.out.println(member.getId()+", "+member.getEmail()+", "+member.getRootLabelId());
-
+            updateYoutubeSubscriptions(oAuth2UserRequest.getAccessToken().getTokenValue(), member);
+            System.out.println("*********************채널 정보 업데이트*********************");
             System.out.println("===========멤버 저장, 루트 라벨 설정========");
 
         }
-        updateYoutubeSubscriptions(oAuth2UserRequest.getAccessToken().getTokenValue(), member);
+
         return UserPrincipal.create(member, oAuth2User.getAttributes());
     }
 
@@ -163,6 +164,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
                     channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
                     channel.setDescription(item.getSnippet().getDescription());
+                    channel.setSubscriptionId(item.getId());
                     return channel;
                 }).collect(Collectors.toList());
         channelService.saveAll(channels);

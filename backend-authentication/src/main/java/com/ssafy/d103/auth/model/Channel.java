@@ -39,6 +39,9 @@ public class Channel {
     private Long follower;
 
     @Column
+    private String subscriptionId;
+
+    @Column
     private Long subscriber;
 
     @Column(columnDefinition = "TEXT")

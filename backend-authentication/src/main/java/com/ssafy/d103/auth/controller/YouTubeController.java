@@ -2,8 +2,10 @@ package com.ssafy.d103.auth.controller;
 
 import com.google.api.services.youtube.YouTube;
 
+import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.Subscription;
 import com.google.api.services.youtube.model.SubscriptionListResponse;
+import com.google.api.services.youtube.model.SubscriptionSnippet;
 import com.google.gson.Gson;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
@@ -167,16 +169,20 @@ public class YouTubeController {
         return ResponseEntity.ok("\""+youTubeService.getYouTubeVideoId(channelId, accessToken,"search")+"\"");
     }
 
-    /*
-    * youtube api test codes
-    * 사용자 채팅을 들고올수 있습니다.
-    * */
+    /***
+     * 1. channel id로 subscription 추가
+     * 2. channel id로 사용자 채널정보 추가
+     * @param channelId
+     * @param userPrincipal
+     * @return
+     * @throws IOException
+     */
     @ApiOperation(value = "channelId 요청할시 insert")
     @GetMapping(value = "/subscription/insert/{channelId}")
-    public SubscriptionListResponse insertSubscription(@PathVariable String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    public ResponseEntity<?> insertSubscription(@PathVariable String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
-
+        //youtube
         String refreshToken = null;
         for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("google")){
@@ -184,15 +190,26 @@ public class YouTubeController {
             }
         }
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
-//        youTube.subscriptions().insert()
-        return null;
+        ResourceId resourceId = new ResourceId();
+        resourceId.setChannelId(channelId);
+        resourceId.setKind("youtube#channel");
+        SubscriptionSnippet snippet = new SubscriptionSnippet();
+        snippet.setResourceId(resourceId);
+        Subscription subscription = new Subscription();
+        subscription.setSnippet(snippet);
+        YouTube.Subscriptions.Insert subscriptionInsert =
+                youTube.subscriptions().insert("snippet,contentDetails", subscription);
+        Subscription returnedSubscription = subscriptionInsert.execute();
+        // 채널 추가 로직
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
-    @GetMapping(value = "/subscription/delete/{cid}")
-    public SubscriptionListResponse deleteSubscriptions(@PathVariable String cid, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    @GetMapping(value = "/subscription/delete/{channelPrimaryKey}")
+    public SubscriptionListResponse deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
+        Channel channel = channelService.findById(channelPrimaryKey);
 
         String refreshToken = null;
         for(Auth a : member.getAuth()){
@@ -201,7 +218,7 @@ public class YouTubeController {
             }
         }
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
-        //youTube.subscriptions().delete()
+        youTube.subscriptions().delete(channel.getSubscriptionId());
         return null;
     }
 }
