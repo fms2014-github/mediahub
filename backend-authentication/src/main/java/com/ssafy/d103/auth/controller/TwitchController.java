@@ -39,7 +39,7 @@ public class TwitchController {
     @ApiOperation(value = "Twitch 인증 주소 요청")
     @GetMapping(value = "/token-url")
     public ResponseEntity<?> redirectTwitch() {
-        return new ResponseEntity(twitchService.getImplicitCodeFlowUrl(), HttpStatus.OK);
+        return new ResponseEntity("\""+twitchService.getImplicitCodeFlowUrl()+"\"", HttpStatus.OK);
     }
 
     /**
@@ -58,9 +58,6 @@ public class TwitchController {
      * @return Http 상태
      */
     @ApiOperation(value = "Twitch 인증 코드로 토큰 발급받고 DB 저장 요청")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "code", value = "Twitch Code", required = true)
-    })
     @GetMapping(value = "/token-code")
     @Transactional
     public ResponseEntity<?> redirectCodeTwitch(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
@@ -78,7 +75,7 @@ public class TwitchController {
         auth.setAccess_token(retTwitchAuth.getAccess_token());
         auth.setRefresh_token(retTwitchAuth.getRefresh_token());
         auth.setToken_type(retTwitchAuth.getToken_type());
-        auth.setUserId(Integer.parseInt(twitchUser.getId()));
+        auth.setUserId(Integer.parseInt(twitchUser.get_id()));
         auth.setMember(member);
         member.getAuth().add(auth);
         customUserDetailsService.saveMember(member);

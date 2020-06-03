@@ -42,5 +42,7 @@ public class ChannelService {
     public Channel findById(long id){
         return channelRepository.findById(id).orElseThrow(()-> new ChannelNotFoundException(id));
     }
-
+    public Channel findByChannelId(String channelId){
+        return channelRepository.findAllByChannelId(channelId);
+    }
 }

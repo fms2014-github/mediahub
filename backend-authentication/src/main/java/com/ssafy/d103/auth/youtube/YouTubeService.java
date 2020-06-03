@@ -11,13 +11,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-
 @RequiredArgsConstructor
 @Service
 public class YouTubeService {
@@ -27,16 +20,16 @@ public class YouTubeService {
     private final Environment env;
     @Value("${social.base_url}")
     private String baseUrl;
+    @Value("${social.front_base_url}")
+    private String frontBaseUrl;
     @Value("${social.google.client_id}")
     private String googleClientId;
-    @Value("${social.google.redirect}")
-    private String googleRedirect;
     @Value("${social.google.code_redirect}")
     private String googleCodeRedirect;
     @Value("${social.google.client_secret}")
     private String googleClientSecret;
-    @Value("${social.google.code_result_redirect}")
-    private String googleCodeResultRedirect;
+    @Value("${social.google.token_redirect}")
+    private String googleTokenRedirect;
     @Value("${social.google.google_api_v2_scope}")
     private String scope;
     @Value("${social.google.accept}")
@@ -49,11 +42,11 @@ public class YouTubeService {
                 .append(env.getProperty("social.google.url.authorize"))
                 .append("?scope=").append(scope)
                 .append("&state=state_parameter_passthrough_value")
-                .append("&redirect_uri=").append(baseUrl).append(googleCodeRedirect)
                 .append("&access_type=offline")
                 .append("&response_type=code")
                 .append("&approval_prompt=force")
-                .append("&client_id=").append(googleClientId);
+                .append("&client_id=").append(googleClientId)
+                .append("&redirect_uri=").append(frontBaseUrl).append(googleCodeRedirect);
         //ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         //System.out.println(response);
         return url.toString();
@@ -70,11 +63,11 @@ public class YouTubeService {
         params.add("client_id", googleClientId);
         params.add("client_secret", googleClientSecret);
         params.add("code", code);
-        params.add("redirect_uri", baseUrl + googleCodeRedirect);
         params.add("access_type", "offline");
         params.add("prompt","consent");
-        params.add("approval_prompt","force");
-
+//        params.add("approval_prompt","force");
+        params.add("redirect_uri", frontBaseUrl + googleCodeRedirect);
+        System.out.println("params : " + params);
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.google.url.token"), request, String.class);

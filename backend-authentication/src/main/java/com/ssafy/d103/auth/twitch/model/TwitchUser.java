@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TwitchUser {
-    private String id;
+    private String _id;
     private String bio;
     private String create_at;
     private String display_name;
