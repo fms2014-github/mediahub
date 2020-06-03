@@ -84,7 +84,7 @@ public class YouTubeController {
     @PostMapping(value = "/setToken")
     public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth,
                                                 @CurrentUser UserPrincipal userPrincipal) {
-        System.out.println("==========================================");
+        System.out.println("===================setToken=======================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         System.out.println(retGoogleAuth.getAccessToken());
 //        Auth auth = new Auth();

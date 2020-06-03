@@ -14,4 +14,16 @@ public class RetGoogleAuth {
     private String tokenType;
     private String idToken;
     private String refreshToken;
+
+    public RetGoogleAuth() {
+    }
+
+    public RetGoogleAuth(String accessToken, String expiresIn, String scope, String tokenType, String idToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.scope = scope;
+        this.tokenType = tokenType;
+        this.idToken = idToken;
+        this.refreshToken = refreshToken;
+    }
 }
