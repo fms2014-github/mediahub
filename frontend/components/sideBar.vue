@@ -47,13 +47,15 @@ export default {
     },
     async mounted() {
         console.log('jwt', this.getJwt())
-        const data1 = (
+        const Info = (
             await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
                 headers: { Authorization: 'Bearer ' + this.getJwt() },
             })
         ).data
-        console.log(data1)
-        this.labels = data1.label
+
+        localStorage.setItem('auth', JSON.stringify(Info.auth))
+        localStorage.setItem('labels', JSON.stringify(Info.label))
+        this.labels = Info.label
         const data = this.labels
         for (const i in data) {
             // console.log('id', data[i].id)

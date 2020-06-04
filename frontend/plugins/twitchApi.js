@@ -1,24 +1,44 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
+        'ya29.a0AfH6SMAdIq5QvIa_VNT8KxO3WhHa7LwjjDinDPmUEgvpbKZpxDNHQkvWJSiF2ivMTzq4ilTUUsy6UGFTTRswHjc4PXr5NWkavTxKfWuPZLvNL7IMb0KCMrOrQ6Js-rKzV_TDGeNoOipMximUfL9omys4sh1aQvsdFbPC'
 
-    const twitchTokenApi = $axios.create({
+    const clientId = 'db8sw2xqe82gk1x78mkubkr5xh545p'
+    const twitchApi = $axios.create({
         headers: {
             Accept: 'application/vnd.twitchtv.v5+json',
             Authorization: `OAuth ${accessToken}`,
-            'Client-ID': client_id,
+            'Client-ID': clientId,
         },
+        baseURL: 'https://api.twitch.tv/kraken/',
     })
 
-    const client_id = 'oqnfm929440pohis4h4xd1rfr4cd2u'
-
-    const twitchFollowApi = (userId, channelId) => {
-        return twitchTokenApi.put(`https://api.twitch.tv/kraken/users/${userId}/follows/channels/${channelId}`)
+    const twitchClipsByChannelApi = (channelName) => {
+        return twitchApi.get('clips/top', {
+            params: {
+                channel: channelName,
+                period: month,
+                trending: true,
+                limit: 100,
+            },
+        })
+    }
+    const twitchVideosApi = (channelId) => {
+        return twitchApi.get(`channels/${channelId}/videos`)
     }
 
-    const youtubeScript = {
-        youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
+    const twitchStreamsApi = (token) => {
+        return twitchApi.get(`streams/followed`, {
+            headers: {
+                Authorization: `OAuth ${token}`,
+            },
+        })
+    }
+
+    const twitchScript = {
+        twitchClipsByChannelApi: (channelName) => twitchClipsByChannelApi(channelName),
+        twitchVideosApi: (channelId) => twitchVideosApi(channelId),
+        twitchStreamsApi: (token) => twitchStreamsApi(token),
     }
     // Inject to context as $api
-    inject('youtubeApi', youtubeScript)
+    inject('twitchApi', twitchScript)
 }

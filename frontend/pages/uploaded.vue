@@ -26,25 +26,16 @@ export default {
     data: () => {
         return {
             playInfo: {
-                kind: 'youtube',
-                play: 'fvjpE_wFL5A',
-                channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
-                // play: '624698735',
-                // kind: 't',
+                // kind: 'google',
+                // play: 'fvjpE_wFL5A',
+                // channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
+                kind: 'twitch',
+                play: '638991439',
+                channelId: '140639269',
             },
-            test: '',
-            channelId: 'UC2wKfjlioOCLP4xQMOWNcgg',
-            channelName: 'Typical Gamer',
-            apiKey: 'AIzaSyCLWyPMXyLEexJJoeFheVXQsDsSvHvuRiQ',
         }
     },
-    async created() {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=id&channelId=${this.channelId}&eventType=live&q=${this.channelName}&type=video&key=${this.apiKey}`
-        console.log(url)
-        this.test = (await axios.get(url)).data.items
-        console.log(this.test.length)
-        console.log(this.test)
-    },
+    async created() {},
 }
 </script>
 

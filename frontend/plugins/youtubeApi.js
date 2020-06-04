@@ -1,8 +1,15 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
+        'ya29.a0AfH6SMD3GS4ZKHXuHN0L5wBXgYJjcDgPhV8yX2oGeg_kCbBMtFfV_StD6MTZFXflE8uXiyn8bbyfyajZbwPQETlzNJmEP25scu7tGH97v9iJR_L8-iLW2O45PC8SFVCH5HpLjiwNwMGo7a5D-wDix_gIjRBnX6JRI5n4'
 
+    const jwtToken =
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJmaXJzdExvZ2luIjowLCJpYXQiOjE1OTEyNDgyNDIsImV4cCI6MTU5MjA4NDI0Mn0.e88bwRLkvO_w_QzncRL_jMY5dWUxT3duRYB6K-AqbLCRxadO7r_q9nWjdxbughZC8yXIb0HM9fRa2y-qiZTivQ'
     // Create a custom axios instance
+    const backendAxios = $axios.create({
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        baseURL: 'https://k02d1031.p.ssafy.io:8081/',
+    })
+
     const youtubeApiKey = $axios.create({
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
@@ -112,6 +119,40 @@ export default function({ $axios }, inject) {
         })
     }
 
+    const insertChannel = (cId) => {
+        return backendAxios.post('/v1/youtube/subscription', {
+            channelId: cId,
+        })
+    }
+
+    // const insertChannel = (params) => {
+    //     return backendAxios.post(
+    //         `/v1/youtube/subscription/insert/${params.channelId}`,
+    //         {
+    //             channelId: params.channelId,
+    //             provider: params.kind,
+    //         },
+    //         {
+    //             params: {
+    //                 labelId: '2',
+    //             },
+    //         },
+    //     )
+    // }
+
+    const deleteChannel = (sId) => {
+        return backendAxios.delete('/v1/youtube/subscription', {
+            params: {
+                subscribeId: sId,
+            },
+        })
+    }
+
+    const backendScript = {
+        insertChannel: (params) => insertChannel(params),
+        deleteChannel: (cId) => deleteChannel(cId),
+    }
+
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
@@ -123,4 +164,5 @@ export default function({ $axios }, inject) {
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)
+    inject('backendAxios', backendScript)
 }
