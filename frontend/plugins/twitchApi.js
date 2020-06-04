@@ -13,15 +13,24 @@ export default function({ $axios }, inject) {
 
     const client_id = 'oqnfm929440pohis4h4xd1rfr4cd2u'
 
-    const twitchFollowApi = (userId, channelId) => {
-        return twitchTokenApi.put(`https://api.twitch.tv/kraken/users/${userId}/follows/channels/${channelId}`)
+    const twitchClipsApi = (limit) => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/clips/followed?trending=true&limit=${limit}`)
+    }
+
+    const twitchVideosApi = (channelId) => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/channels/${channelId}/videos`)
+    }
+    
+    const twitchStreamsApi = () => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/streams/followed`)
     }
 
 
-    const youtubeScript = {
-        youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
-        
+    const twitchScript = {
+        twitchClipsApi: (limit) => twitchClipsApi(limit),
+        twitchVideosApi: (channelId) => twitchVideosApi(channelId),
+        twitchStreamsApi: () => twitchStreamsApi(),
     }
     // Inject to context as $api
-    inject('youtubeApi', youtubeScript)
+    inject('twitchApi', twitchScript)
 }
