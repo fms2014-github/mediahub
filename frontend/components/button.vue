@@ -4,14 +4,13 @@
             <div v-if="playInfo.kind === 'google'">
                 <div class="flex-container">
                     <div v-if="!isSubscribe" class="youtube-red button" @click="youtubeInsert">구독</div>
-                    <divs v-else class="youtube-gray button" @click="youtubeDelete">구독중</divs>
+                    <divs v-else class="gray button" @click="youtubeDelete">구독중</divs>
                 </div>
             </div>
             <div v-else>
                 <div class="flex-container">
-                    <div class="twitch button">팔로우</div>
-                    <div class="twitch button">구독</div>
-                    <div class="twitch button">후원</div>
+                    <div v-if="!isSubscribe" class="twitch button" @click="twitchInsert">팔로우</div>
+                    <divs v-else class="gray button" @click="twitchDelete">팔로잉</divs>
                 </div>
             </div>
         </div>
@@ -25,53 +24,97 @@ export default {
     data: () => {
         return {
             isSubscribe: false,
-            youtube: {
-                subscribeId: '',
+            subscribeId: 0,
+            twitch: {
+                accessToken: '',
+                userId: '',
+                rootLabelId: '',
+                channelPk: 0,
             },
+            data: null,
             labels: null,
         }
     },
-    created() {
-        // back에서 구독리스트 받아오면 그거 hashmap해서 구독 여부 확인 -> sideBar로 빠지고 local로 찾기
-    },
-    async mounted() {
-        this.labels = (
-            await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
-                headers: { Authorization: 'Bearer ' + this.getJwt() },
-            })
-        ).data.label
-        const data = this.labels
-        for (const d of data) {
-            console.log(d)
-            console.log()
+    created() {},
+    mounted() {
+        this.data = JSON.parse(localStorage.getItem('auth'))
+        this.labels = JSON.parse(localStorage.getItem('labels'))
+        if (this.playInfo.kind === 'twitch') {
+            // 나중에 access token 한번만 받는 로직 성공하면 youtube, twitch구분해서 찾아와야함.
+            const auth = this.data[this.data.length - 1]
+            this.twitch.accessToken = auth.access_token
+            this.twitch.userId = auth.userId
+        }
+
+        // const test = await this.$twitchApi.twitchStreamsApi(this.twitch.accessToken)
+        // console.log(test)
+        this.twitch.rootLabelId = this.labels[0].id
+        for (const d of this.labels) {
             const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
             if (i >= 0) {
                 this.isSubscribe = true
-                this.youtube.subscribeId = d.channels[i].id
+                this.subscribeId = d.channels[i].id
+                break
             }
-            console.log(i)
         }
-        // console.log(JSON.parse(localStorage.getItem('labels')))
-        // const data = JSON.parse(localStorage.getItem('labels'))
-        // console.log(data)
-        // var index = data[0].channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
-        // console.log(index)
-        // console.log(data[0].channels[index])
     },
     methods: {
-        ...mapGetters({ getJwt: 'login/getJwt' }),
         async youtubeInsert() {
             // 백에서 받아서 localStorage에 저장 or 카테고리 동기화
-            const res = await this.$backendAxios.insertChannel(this.playInfo.channelId)
+            const res = await this.$backendAxios.insertYoutubeChannel(this.playInfo.channelId)
             console.log(res)
             this.isSubscribe = true
             // this.youtube.subscribeId =
         },
         youtubeDelete() {
-            // this.$youtubeApi.deleteSubscribeApi(this.subscribeInfo.subscribeId)
-            this.$backendAxios.deleteChannel(this.youtube.subscribeId)
+            this.$backendAxios.deleteYoutubeChannel(this.subscribeId)
             this.isSubscribe = false
-            this.youtube.subscribeId = ''
+            this.subscribeId = ''
+        },
+        async twitchInsert() {
+            const params = {
+                channelId: this.playInfo.channelId,
+                accessToken: this.twitch.accessToken,
+                userId: this.twitch.userId,
+                rootLabelId: this.twitch.rootLabelId,
+            }
+            const res = await this.$backendAxios.insertTwitchChannel(params)
+            console.log(res)
+            this.isSubscribe = true
+        },
+        twitchDelete() {
+            const params = {
+                channelId: this.playInfo.channelId,
+                accessToken: this.twitch.accessToken,
+                userId: this.twitch.userId,
+                channelPk: this.subscribeId,
+            }
+            this.$backendAxios.deleteTwitchChannel(params)
+            this.isSubscribe = false
+            this.subscribeId = ''
+        },
+        insertInit(res) {
+            const labels = JSON.parse(localStorage.getItem('labels'))
+            console.log(labels)
+            labels[0].channels.push(res)
+            this.labels = labels
+            localStorage.setItem('labels', JSON.stringify(labels))
+            console.log(this.labels)
+        },
+        deleteInit() {
+            const labels = JSON.parse(localStorage.getItem('labels'))
+            for (const d of labels) {
+                const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
+                if (i >= 0) {
+                    this.isSubscribe = true
+                    this.subscribeId = d.channels[i].id
+                    labels.splice(i, 1)
+                    break
+                }
+            }
+            this.labels = labels
+            localStorage.setItem('labels', JSON.stringify(labels))
+            console.log(this.labels)
         },
     },
 }
@@ -100,16 +143,12 @@ export default {
                 cursor: pointer;
                 font-size: 1rem;
             }
-            .youtube-white {
-                background-color: white;
-                border: 1px solid black;
-            }
             .youtube-red {
                 background-color: #e24821;
                 border: 1px solid red;
                 color: white;
             }
-            .youtube-gray {
+            .gray {
                 background-color: #ddd;
                 border: 1px solid #ddd;
                 color: gray;

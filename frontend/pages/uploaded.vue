@@ -26,12 +26,12 @@ export default {
     data: () => {
         return {
             playInfo: {
-                kind: 'google',
-                play: 'fvjpE_wFL5A',
-                channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
-                // kind: 'twitch',
-                // play: '624698735',
-                // channelId: ,
+                // kind: 'google',
+                // play: 'fvjpE_wFL5A',
+                // channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
+                kind: 'twitch',
+                play: '638991439',
+                channelId: '140639269',
             },
         }
     },

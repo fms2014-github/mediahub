@@ -1,35 +1,43 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
+        'ya29.a0AfH6SMAdIq5QvIa_VNT8KxO3WhHa7LwjjDinDPmUEgvpbKZpxDNHQkvWJSiF2ivMTzq4ilTUUsy6UGFTTRswHjc4PXr5NWkavTxKfWuPZLvNL7IMb0KCMrOrQ6Js-rKzV_TDGeNoOipMximUfL9omys4sh1aQvsdFbPC'
 
-    const twitchTokenApi = $axios.create({
-        headers: { 
-            Accept : 'application/vnd.twitchtv.v5+json',
+    const clientId = 'db8sw2xqe82gk1x78mkubkr5xh545p'
+    const twitchApi = $axios.create({
+        headers: {
+            Accept: 'application/vnd.twitchtv.v5+json',
             Authorization: `OAuth ${accessToken}`,
-            'Client-ID': client_id,
+            'Client-ID': clientId,
         },
-        
+        baseURL: 'https://api.twitch.tv/kraken/',
     })
 
-    const client_id = 'oqnfm929440pohis4h4xd1rfr4cd2u'
-
-    const twitchClipsApi = (limit) => {
-        return twitchTokenApi.get(`https://api.twitch.tv/kraken/clips/followed?trending=true&limit=${limit}`)
+    const twitchClipsByChannelApi = (channelName) => {
+        return twitchApi.get('clips/top', {
+            params: {
+                channel: channelName,
+                period: month,
+                trending: true,
+                limit: 100,
+            },
+        })
     }
-
     const twitchVideosApi = (channelId) => {
-        return twitchTokenApi.get(`https://api.twitch.tv/kraken/channels/${channelId}/videos`)
-    }
-    
-    const twitchStreamsApi = () => {
-        return twitchTokenApi.get(`https://api.twitch.tv/kraken/streams/followed`)
+        return twitchApi.get(`channels/${channelId}/videos`)
     }
 
+    const twitchStreamsApi = (token) => {
+        return twitchApi.get(`streams/followed`, {
+            headers: {
+                Authorization: `OAuth ${token}`,
+            },
+        })
+    }
 
     const twitchScript = {
-        twitchClipsApi: (limit) => twitchClipsApi(limit),
+        twitchClipsByChannelApi: (channelName) => twitchClipsByChannelApi(channelName),
         twitchVideosApi: (channelId) => twitchVideosApi(channelId),
-        twitchStreamsApi: () => twitchStreamsApi(),
+        twitchStreamsApi: (token) => twitchStreamsApi(token),
     }
     // Inject to context as $api
     inject('twitchApi', twitchScript)
