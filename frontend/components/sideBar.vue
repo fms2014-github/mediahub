@@ -93,17 +93,15 @@ export default {
             button2.appendChild(document.createTextNode('-'))
             button2.onclick = () => {
                 const labelId = button2.parentNode.parentNode.dataset.labelId
-                if (name !== null) {
-                    this.$axios
-                        .delete(
-                            'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + labelId + '&labelName=' + name,
-                            {},
-                            { headers: { Authorization: 'Bearer ' + this.getJwt() } },
-                        )
-                        .then((res) => {
-                            console.log(res.status)
-                        })
-                }
+                console.log(labelId)
+                this.$axios
+                    .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
+                        headers: { Authorization: 'Bearer ' + this.getJwt() },
+                        params: { labelId },
+                    })
+                    .then((res) => {
+                        console.log(res.status)
+                    })
             }
             if (data[i].superId === -1) {
                 node.setAttribute('id', 'label-wrap')
