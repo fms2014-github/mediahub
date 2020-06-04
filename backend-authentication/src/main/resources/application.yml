@@ -1,4 +1,5 @@
 server:
+  port:8081
   ssl:
     enabled: true
     key-alias: media-platform
@@ -99,8 +100,9 @@ app:
       - http://127.0.0.1:3000/oauth2/redirect
       - http://localhost:3000/login
 
---- # 구분
+--- # --------------------------------- 구분 ===================================
 server:
+  port:8081
   ssl:
     enabled: true
     key-alias: media-platform
