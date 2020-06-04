@@ -177,8 +177,8 @@ public class YouTubeController {
      * @throws IOException
      */
     @ApiOperation(value = "channelId 요청할시 insert")
-    @PostMapping(value = "/subscription/insert")
-    public ResponseEntity<?> insertSubscription(@RequestParam String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    @PostMapping(value = "/subscription")
+    public ResponseEntity<?> insertSubscription(@RequestBody String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
         //youtube
@@ -220,7 +220,7 @@ public class YouTubeController {
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
-    @DeleteMapping(value = "/subscription/delete")
+    @DeleteMapping(value = "/subscription")
     public SubscriptionListResponse deleteSubscriptions(@RequestParam String subscribeId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         Long channelPrimaryKey = Long.valueOf(subscribeId);
         long id = userPrincipal.getId();
