@@ -18,10 +18,10 @@ export default function({ $axios }, inject) {
     }
 
 
-    const youtubeScript = {
-        youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
+    const twitchScript = {
+        twitchFollowApi: (userId, channelId) => twitchFollowApi(userId, channelId),
         
     }
     // Inject to context as $api
-    inject('youtubeApi', youtubeScript)
+    inject('twitchApi', twitchScript)
 }
