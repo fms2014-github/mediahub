@@ -18,7 +18,7 @@ export default function({ $axios }, inject) {
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
 
-    const apiKey = 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE'
+    const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
         let data = null
