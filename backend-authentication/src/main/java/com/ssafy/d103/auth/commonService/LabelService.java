@@ -67,9 +67,10 @@ public class LabelService {
         labelRepository.delete(targetLabel);
     }
 
-    public void createLabel(long labelId, String labelName){
+    public void createLabel(long labelId, String labelName, long userId){
         Label superLabel = labelRepository.findById(labelId).orElseThrow(()-> new LabelNotFoundException(labelId));
         Label label = new Label();
+        label.setMemberId(userId);
         label.setLabelName(labelName);
         label.setSuperLabel(superLabel);
         labelRepository.save(label);

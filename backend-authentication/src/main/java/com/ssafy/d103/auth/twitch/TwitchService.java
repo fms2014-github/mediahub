@@ -6,7 +6,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.repository.ChannelRepository;
 import com.ssafy.d103.auth.repository.MemberRepository;
+import com.ssafy.d103.auth.twitch.dto.TwitchChannelDto;
 import com.ssafy.d103.auth.twitch.dto.FollowsDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
 import com.ssafy.d103.auth.twitch.model.TwitchUser;
@@ -27,6 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class TwitchService {
+    private final ChannelRepository channelRepository;
     private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
     private final Environment env;
@@ -201,8 +204,10 @@ public class TwitchService {
         return null;
     }
 
-    /*
-    유저 정보 받아오기
+    /**
+     * 유저 정보 accessToken으로 요청
+     * @param accessToken
+     * @return
      */
     public TwitchUser getTwitchUserInfo(String accessToken){
         HttpHeaders headers = new HttpHeaders();
@@ -223,4 +228,63 @@ public class TwitchService {
         return null;
     }
 
+    /**
+     * 트위치 채널 팔로우
+     * @param channelId
+     * @param userId
+     * @param accessToken
+     * @return
+     */
+    public TwitchChannelDto followTwitchChannel(String channelId, String userId, String accessToken){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", accept);
+        headers.add("Client-ID", twitchClientId);
+        headers.set("Authorization", "OAuth ".concat(accessToken));
+
+        StringBuilder url = new StringBuilder()
+                .append(twitchUserFollowRequestUrl)
+                .append("/")
+                .append(userId)
+                .append("/follows/channels/")
+                .append(channelId);
+
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.PUT, entity, String.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JsonObject jsonObject = JsonParser.parseString(response.getBody()).getAsJsonObject();
+            JsonElement jsonElement = jsonObject.get("channel");
+            return gson.fromJson(jsonElement, TwitchChannelDto.class);
+        }
+
+        return null;
+    }
+
+    /**
+     * 트위치 채널 언팔로우
+     * @param channelId
+     * @param accessToken
+     * @param userId
+     * @return
+     */
+    public boolean unFollowTwitchChannel(String channelId, String accessToken, String userId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", accept);
+        headers.add("Client-ID", twitchClientId);
+        headers.set("Authorization", "OAuth ".concat(accessToken));
+
+        StringBuilder url = new StringBuilder()
+                .append(twitchUserFollowRequestUrl)
+                .append("/")
+                .append(userId)
+                .append("/follows/channels/")
+                .append(channelId);
+
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.DELETE, entity, String.class);
+        if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
+            return true;
+        }
+
+        return false;
+    }
 }

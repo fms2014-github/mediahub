@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class FollowsDto {
     private String create_at;
-    private ChannelDto channel;
+    private TwitchChannelDto channel;
     private boolean notifications;
 }

@@ -3,11 +3,13 @@ package com.ssafy.d103.auth.controller;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.commonService.MemberService;
+import com.ssafy.d103.auth.dto.ChannelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import com.ssafy.d103.auth.twitch.TwitchService;
+import com.ssafy.d103.auth.twitch.dto.TwitchChannelDto;
 import com.ssafy.d103.auth.twitch.dto.FollowsDto;
 import com.ssafy.d103.auth.twitch.model.RetTwitchAuth;
 import com.ssafy.d103.auth.twitch.model.TwitchUser;
@@ -16,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -136,4 +135,32 @@ public class TwitchController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "트위치 팔로우")
+    @PostMapping("/channel/follow")
+    public ResponseEntity twitchFollow(@RequestParam String channelId, @RequestParam String accessToken, @RequestParam String userId, @RequestParam String rootLabelId){
+        TwitchChannelDto channelDto =twitchService.followTwitchChannel(channelId, userId, accessToken);
+        Label rootLabel = labelService.getLabelById(Long.parseLong(rootLabelId));
+        Channel channel = new Channel();
+        channel.setLabel(rootLabel);
+        channel.setProvider(AuthProvider.twitch.toString());
+        channel.setChannelId(channelDto.get_id());
+        channel.setName(channelDto.getName());
+        channel.setDisplayName(channelDto.getDisplay_name());
+        channel.setProfileImg(channelDto.getLogo());
+        channel.setFollower(channelDto.getFollowers());
+        channel.setSubscriber(channelDto.getFollowers());
+        channel.setDescription(channelDto.getDescription());
+
+        return new ResponseEntity(new ChannelDto(channelService.saveChannel(channel)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "트위치 팔로우 취소")
+    @DeleteMapping("/channel/follow")
+    public ResponseEntity twitchUnFollow(@RequestParam String channelId, @RequestParam String accessToken, @RequestParam String userId, @RequestParam String channelPk){
+        if(twitchService.unFollowTwitchChannel(channelId, accessToken, userId)){
+            channelService.deleteChannel(Long.parseLong(channelPk));
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

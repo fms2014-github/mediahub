@@ -36,6 +36,7 @@ public class MemberDto {
             AuthDto a = new AuthDto();
             a.setAccess_token(item.getAccess_token());
             a.setProvider(item.getAuth_provider());
+            a.setUserId(Integer.toString(item.getUserId()));
             return a;
         }).collect(Collectors.toList());
         this.label = label;
