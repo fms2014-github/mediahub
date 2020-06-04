@@ -10,9 +10,11 @@ import '../assets/label.scss'
 import { mapGetters } from 'vuex'
 import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
 const axios = require('axios')
+
 function dropEvent1(e) {
     e.preventDefault()
     e.stopPropagation()
+
     console.log('drop1target', e.target)
     console.log('drop', e.target.children[1])
     const channelId = e.dataTransfer.getData('targetId')
@@ -90,21 +92,18 @@ export default {
             button2.setAttribute('class', 'delete-child-label')
             button2.appendChild(document.createTextNode('-'))
             button2.onclick = () => {
-                console.log(button.parentNode.parentNode.dataset.labelId)
-                // if (name !== null) {
-                //     this.$axios
-                //         .post(
-                //             'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' +
-                //                 button.parentNode.parentNode.dataset.labelId +
-                //                 '&labelName=' +
-                //                 name,
-                //             {},
-                //             { headers: { Authorization: 'Bearer ' + this.getJwt() } },
-                //         )
-                //         .then((res) => {
-                //             console.log(res.status)
-                //         })
-                // }
+                const labelId = button2.parentNode.parentNode.dataset.labelId
+                if (name !== null) {
+                    this.$axios
+                        .delete(
+                            'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + labelId + '&labelName=' + name,
+                            {},
+                            { headers: { Authorization: 'Bearer ' + this.getJwt() } },
+                        )
+                        .then((res) => {
+                            console.log(res.status)
+                        })
+                }
             }
             if (data[i].superId === -1) {
                 node.setAttribute('id', 'label-wrap')
@@ -112,7 +111,6 @@ export default {
 
                 span.appendChild(document.createTextNode('카테고리'))
                 span.appendChild(button1)
-                span.appendChild(button2)
                 span.setAttribute('id', 'root-label')
                 span.setAttribute('class', 'label-title')
                 node.appendChild(span)
