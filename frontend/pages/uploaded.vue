@@ -26,7 +26,7 @@ export default {
     data: () => {
         return {
             playInfo: {
-                kind: 'youtube',
+                kind: 'google',
                 play: 'fvjpE_wFL5A',
                 channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
                 // kind: 'twitch',

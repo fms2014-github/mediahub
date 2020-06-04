@@ -3,7 +3,7 @@
         <div id="upload-vcontainer">
             <div id="inline-block">
                 <div id="loading"></div>
-                <div v-if="playInfo.kind === 'youtube'">
+                <div v-if="playInfo.kind === 'google'">
                     <youtube
                         id="youtube-video"
                         class="back-slide video"
@@ -54,7 +54,7 @@ export default {
 
         window.onkeydown = () => {
             if (event.keyCode !== 32) return
-            if (this.playInfo.kind === 'y') {
+            if (this.playInfo.kind === 'google') {
                 if (this.isPlay) this.Info.pauseVideo()
                 else this.Info.playVideo()
             } else if (this.Info.isPaused()) {

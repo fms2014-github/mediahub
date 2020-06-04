@@ -1,7 +1,7 @@
 <template>
     <div id="button">
         <div id="button-container">
-            <div v-if="playInfo.kind === 'youtube'">
+            <div v-if="playInfo.kind === 'google'">
                 <div class="flex-container">
                     <div v-if="!isSubscribe" class="youtube-red button" @click="youtubeInsert">구독</div>
                     <divs v-else class="youtube-gray button" @click="youtubeDelete">구독중</divs>
@@ -19,48 +19,59 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     props: { playInfo: { type: Object, default: null } },
     data: () => {
         return {
             isSubscribe: false,
-            subscribeId: '',
-            labelId: 0,
+            youtube: {
+                subscribeId: '',
+            },
+            labels: null,
         }
     },
-    async created() {
-        if (this.playInfo.kind === 'youtube') {
-            const data = (await this.$youtubeApi.isSubscribeApi(this.playInfo.channelId)).data
-            if (data.items.length === 1) {
+    created() {
+        // back에서 구독리스트 받아오면 그거 hashmap해서 구독 여부 확인 -> sideBar로 빠지고 local로 찾기
+    },
+    async mounted() {
+        this.labels = (
+            await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
+                headers: { Authorization: 'Bearer ' + this.getJwt() },
+            })
+        ).data.label
+        const data = this.labels
+        for (const d of data) {
+            console.log(d)
+            console.log()
+            const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
+            if (i >= 0) {
                 this.isSubscribe = true
-                this.subscribeId = data.items[0].id
+                this.youtube.subscribeId = d.channels[i].id
             }
+            console.log(i)
         }
-        // back에서 구독리스트 받아오면 그거 hashmap해서 구독 여부 확인
+        // console.log(JSON.parse(localStorage.getItem('labels')))
+        // const data = JSON.parse(localStorage.getItem('labels'))
+        // console.log(data)
+        // var index = data[0].channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
+        // console.log(index)
+        // console.log(data[0].channels[index])
     },
-    mounted() {},
     methods: {
+        ...mapGetters({ getJwt: 'login/getJwt' }),
         async youtubeInsert() {
-            const params = {
-                channelId: this.playInfo.channelId,
-                provider: this.playInfo.kind,
-            }
-            // 백에서 받아서 localStorage에 저장
-            const res = (await this.$backendAxios.insertChannel(params)).data
+            // 백에서 받아서 localStorage에 저장 or 카테고리 동기화
+            const res = await this.$backendAxios.insertChannel(this.playInfo.channelId)
             console.log(res)
-            console.log(JSON.parse(String(res)))
-            // res 데이터의 id를 받아서 labelId에 넣어야 삭제가능
-            this.$youtubeApi.insertSubscribeApi(this.playInfo.channelId)
             this.isSubscribe = true
-            // 구독id 백에서 구독id도 넘겨줘야함
-            this.subscribeId = data.id
+            // this.youtube.subscribeId =
         },
         youtubeDelete() {
-            this.$youtubeApi.deleteSubscribeApi(this.subscribeInfo.subscribeId)
-            this.$backendAxios.deleteChannel(this.subscribeInfo.labelId)
+            // this.$youtubeApi.deleteSubscribeApi(this.subscribeInfo.subscribeId)
+            this.$backendAxios.deleteChannel(this.youtube.subscribeId)
             this.isSubscribe = false
-            this.subscribeId = ''
-            this.labelId = 0
+            this.youtube.subscribeId = ''
         },
     },
 }

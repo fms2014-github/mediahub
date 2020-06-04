@@ -3,17 +3,25 @@
         <client-only placeholder="loading...">
             <live-video-slide-bar />
         </client-only>
-        <!-- <video-form /> -->
+        <video-form />
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import liveVideoSlideBar from '~/components/liveVideoSlideBar.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
+    middleware: 'authenticated',
     components: {
         liveVideoSlideBar,
-        // videoForm,
+        videoForm,
+    },
+    mounted() {
+        console.log('index', this.jwt())
+    },
+    methods: {
+        ...mapGetters({ jwt: 'login/getJwt' }),
     },
 }
 </script>

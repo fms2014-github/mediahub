@@ -2,27 +2,43 @@
     <div id="live-video">
         <div id="live-slider">
             <div id="button-wrap">
-                <button id="changeVideo" @click="nextSlide"></button>
+                <button v-if="!(twitchId === '' || youtubeId === '')" id="changeVideo" @click="nextSlide"></button>
             </div>
             <div id="video-wrap">
-                <div id="back-blind" class="back-slide"></div>
-                <youtube id="youtube-video" class="back-slide" :player-vars="{ autoplay: 0 }" :video-id="play" @ready="ready" />
-                <div id="twitch-video" class="front-slide"></div>
-                <live-chat></live-chat>
+                <div v-if="!(twitchId === '' || youtubeId === '')" id="back-blind" class="back-slide"></div>
+                <youtube
+                    v-if="youtubeId !== ''"
+                    id="youtube-video"
+                    class="back-slide"
+                    :player-vars="{ autoplay: 1 }"
+                    :video-id="youtubeId"
+                    @ready="ready"
+                />
+                <div v-if="twitchId !== ''" id="twitch-video" class="front-slide"></div>
+                <live-chat v-if="liveChatId !== null" :live-chat-id="liveChatId"></live-chat>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import liveChat from '@/components/livechat.vue'
+import { mapActions, mapGetters } from 'vuex'
+import liveChat from '@/components/liveChat.vue'
 export default {
     components: {
         liveChat,
     },
+    props: {
+        videoId: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
-            play: 'P6blDnXcXaY',
+            twitchId: '',
+            youtubeId: '',
+            liveChatId: null,
             videoEvent: {
                 paused: 0,
             },
@@ -30,32 +46,41 @@ export default {
     },
     mounted() {
         this.init()
+
+        console.log(this.videoId.split(',').length)
     },
     methods: {
-        init() {
-            const options = {
-                width: 0,
-                height: 0,
-                channel: 'silphtv',
+        async init() {
+            if (this.videoId.split(',')[0] === 't') {
+                this.twitchId = this.videoId.split(',')[1]
+                const options = {
+                    width: 0,
+                    height: 0,
+                    channel: this.twitchId,
+                }
+                // eslint-disable-next-line no-undef,no-var
+                this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                // eslint-disable-next-line no-undef
+                this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                    document.querySelector('#twitch-video iframe').style.width = '100%'
+                    document.querySelector('#twitch-video iframe').style.height = '100%'
+                })
             }
-            // eslint-disable-next-line no-undef,no-var
-            this.twitchPlayer = new Twitch.Player('twitch-video', options)
-            // eslint-disable-next-line no-undef
-            this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
-                document.querySelector('#twitch-video iframe').style.width = '100%'
-                document.querySelector('#twitch-video iframe').style.height = '100%'
-                // document.querySelector('#twitch-video iframe').style.position = 'absolute'
-                // document.querySelector('#twitch-video iframe').style.top = '0px'
-                // document.querySelector('#twitch-video iframe').style.left = '0px'
-            })
+            if (this.videoId.split(',')[0] === 'y') {
+                this.youtubeId = this.videoId.split(',')[1]
+                this.liveChatId = (
+                    await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
+                ).data.items[0].liveStreamingDetails.activeLiveChatId
+                console.log(this.liveChatId)
+            }
+            if (this.videoId.split(',')[2] === 't') {
+                // asd
+            }
         },
         ready(e) {
             this.player = e.target
             document.querySelector('#youtube-video iframe').style.width = '100%'
             document.querySelector('#youtube-video iframe').style.height = '100%'
-            // document.querySelector('#youtube-video iframe').style.position = 'absolute'
-            // document.querySelector('#youtube-video iframe').style.top = '0px'
-            // document.querySelector('#youtube-video iframe').style.left = '0px'
         },
         youtubePlay() {
             this.player.playVideo()
@@ -95,6 +120,8 @@ export default {
         flex-basis: 100%;
         #button-wrap {
             margin: 0 20px;
+            width: 60px;
+            height: 90px;
             #changeVideo {
                 display: inline-block;
                 position: relative;
