@@ -28,6 +28,8 @@ export default function({ $axios }, inject) {
 
     const twitchScript = {
         twitchClipsApi: (limit) => twitchClipsApi(limit),
+        twitchVideosApi: (channelId) => twitchVideosApi(channelId),
+        twitchStreamsApi: () => twitchStreamsApi(),
     }
     // Inject to context as $api
     inject('twitchApi', twitchScript)
