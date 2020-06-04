@@ -199,13 +199,14 @@ public class YouTubeController {
         YouTube.Subscriptions.Insert subscriptionInsert =
                 youTube.subscriptions().insert("snippet,contentDetails", subscription);
         Subscription returnedSubscription = subscriptionInsert.execute();
+        System.out.println("===========구독 추가============");
+        System.out.println(returnedSubscription.getSnippet().getTitle());
         // 채널 추가 로직
-        ChannelListResponse channelList = youTube.channels().list("snippet").setId(channelId).execute();
 
         Channel channel = new Channel();
-        channel.setDisplayName(channelList.getItems().get(0).getSnippet().getTitle());
-        channel.setName(channelList.getItems().get(0).getSnippet().getTitle());
-        channel.setDescription(channelList.getItems().get(0).getSnippet().getDescription());
+        channel.setDisplayName(returnedSubscription.getSnippet().getTitle());
+        channel.setName(returnedSubscription.getSnippet().getTitle());
+        channel.setDescription(returnedSubscription.getSnippet().getDescription());
         channel.setProvider(AuthProvider.google.toString());
         channel.setChannelId(channelId);
         channelService.createNewChannel(1,channel);
