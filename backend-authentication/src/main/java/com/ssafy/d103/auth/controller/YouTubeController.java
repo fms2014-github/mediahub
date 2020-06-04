@@ -172,7 +172,7 @@ public class YouTubeController {
     /***
      * 1. channel id로 subscription 추가
      * 2. channel id로 사용자 채널정보 추가
-     * @param channelId
+     * @param dataChange
      * @param userPrincipal
      * @return
      * @throws IOException
@@ -205,7 +205,7 @@ public class YouTubeController {
         Subscription returnedSubscription = subscriptionInsert.execute();
         System.out.println("===========구독 추가============");
         System.out.println(returnedSubscription.getSnippet().getTitle());
-        System.out.println(DataChange.getChannelId());
+        System.out.println(dataChange.getChannelId());
         System.out.println(member.getRootLabelId());
         // 채널 추가 로직
 
