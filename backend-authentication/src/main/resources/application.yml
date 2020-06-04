@@ -6,6 +6,8 @@ server:
     key-store-password: 02d103
     trust-store: media-platform-trust.pkcs12
     trust-store-password: 02d103
+security:
+
 spring:
   profiles:
   active: dev

@@ -201,6 +201,10 @@ public class YouTubeController {
                 youTube.subscriptions().insert("snippet,contentDetails", subscription);
         Subscription returnedSubscription = subscriptionInsert.execute();
         // 채널 추가 로직
+        Channel channel = new Channel();
+        channel.setChannelId(channelId);
+        channelService.createNewChannel(1,channel);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -219,6 +223,8 @@ public class YouTubeController {
         }
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
         youTube.subscriptions().delete(channel.getSubscriptionId());
+
+        channelService.deleteChannel(channelPrimaryKey);
         return null;
     }
 }
