@@ -11,7 +11,11 @@ export default function({ $axios }, inject) {
         
     })
 
-    const client_id = 'oqnfm929440pohis4h4xd1rfr4cd2u'
+    const client_id = 'db8sw2xqe82gk1x78mkubkr5xh545p'
+
+    const twitchClipsByChannelApi = (channelName, limit) => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/clips/top?channel=${channelName}&period=month&trending=true&limit=${limit}`)
+    }
 
     const twitchClipsApi = (limit) => {
         return twitchTokenApi.get(`https://api.twitch.tv/kraken/clips/followed?trending=true&limit=${limit}`)
@@ -30,6 +34,7 @@ export default function({ $axios }, inject) {
         twitchClipsApi: (limit) => twitchClipsApi(limit),
         twitchVideosApi: (channelId) => twitchVideosApi(channelId),
         twitchStreamsApi: () => twitchStreamsApi(),
+        twitchClipsByChannelApi: (channelId, limit) => twitchClipsByChannelApi(channelId, limit)
     }
     // Inject to context as $api
     inject('twitchApi', twitchScript)
