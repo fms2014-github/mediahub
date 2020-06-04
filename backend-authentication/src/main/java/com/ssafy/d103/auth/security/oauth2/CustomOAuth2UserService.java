@@ -160,6 +160,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .map(item -> {
                     Channel channel = new Channel();
                     channel.setLabel(rootLabel);
+                    channel.setName(item.getSnippet().getTitle());
+                    channel.setDisplayName(item.getSnippet().getTitle());
                     channel.setProvider(AuthProvider.google.toString());
                     channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
                     channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
