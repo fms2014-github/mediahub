@@ -277,7 +277,7 @@ public class TwitchService {
                 .append("/")
                 .append(userId)
                 .append("/follows/channels/")
-                .append(channelId);
+                .append(Long.parseLong(channelId));
 
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.DELETE, entity, String.class);
