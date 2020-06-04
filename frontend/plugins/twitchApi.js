@@ -17,6 +17,15 @@ export default function({ $axios }, inject) {
         return twitchTokenApi.get(`https://api.twitch.tv/kraken/clips/followed?trending=true&limit=${limit}`)
     }
 
+    const twitchVideosApi = (channelId) => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/channels/${channelId}/videos`)
+    }
+    
+    const twitchStreamsApi = () => {
+        return twitchTokenApi.get(`https://api.twitch.tv/kraken/streams/followed`)
+    }
+
+
     const twitchScript = {
         twitchClipsApi: (limit) => twitchClipsApi(limit),
     }
