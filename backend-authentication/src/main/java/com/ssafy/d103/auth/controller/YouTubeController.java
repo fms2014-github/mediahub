@@ -9,6 +9,7 @@ import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.payload.DataChange;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
@@ -171,14 +172,17 @@ public class YouTubeController {
     /***
      * 1. channel id로 subscription 추가
      * 2. channel id로 사용자 채널정보 추가
-     * @param channelId
+     * @param dataChange
      * @param userPrincipal
      * @return
      * @throws IOException
      */
     @ApiOperation(value = "channelId 요청할시 insert")
-    @GetMapping(value = "/subscription/insert/{channelId}")
-    public ResponseEntity<?> insertSubscription(@PathVariable String channelId, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    @PutMapping(value = "/subscription")
+    public ResponseEntity<?> insertSubscription(@RequestBody DataChange dataChange, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        System.out.println("================구독 시작 추가=================");
+        System.out.println(dataChange.getChannelId());
+        System.out.println(userPrincipal.getId());
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
         //youtube
@@ -190,7 +194,7 @@ public class YouTubeController {
         }
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
         ResourceId resourceId = new ResourceId();
-        resourceId.setChannelId(channelId);
+        resourceId.setChannelId(dataChange.getChannelId());
         resourceId.setKind("youtube#channel");
         SubscriptionSnippet snippet = new SubscriptionSnippet();
         snippet.setResourceId(resourceId);
@@ -199,23 +203,30 @@ public class YouTubeController {
         YouTube.Subscriptions.Insert subscriptionInsert =
                 youTube.subscriptions().insert("snippet,contentDetails", subscription);
         Subscription returnedSubscription = subscriptionInsert.execute();
+        System.out.println("===========구독 추가============");
+        System.out.println(returnedSubscription.getSnippet().getTitle());
+        System.out.println(dataChange.getChannelId());
+        System.out.println(member.getRootLabelId());
         // 채널 추가 로직
-        ChannelListResponse channelList = youTube.channels().list("snippet").setId(channelId).execute();
 
         Channel channel = new Channel();
-        channel.setDisplayName(channelList.getItems().get(0).getSnippet().getTitle());
-        channel.setName(channelList.getItems().get(0).getSnippet().getTitle());
-        channel.setDescription(channelList.getItems().get(0).getSnippet().getDescription());
+        channel.setChannelId(dataChange.getChannelId());
+        channel.setSubscriptionId(returnedSubscription.getId());
+        channel.setDisplayName(returnedSubscription.getSnippet().getTitle());
+        channel.setName(returnedSubscription.getSnippet().getTitle());
+        channel.setDescription(returnedSubscription.getSnippet().getDescription());
+        channel.setProfileImg(returnedSubscription.getSnippet().getThumbnails().getDefault().getUrl());
         channel.setProvider(AuthProvider.google.toString());
-        channel.setChannelId(channelId);
-        channelService.createNewChannel(1,channel);
+        channelService.createNewChannel(member.getRootLabelId(),channel);
+        System.out.println("===========구독 추가 끝============");
 
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(returnedSubscription);
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
-    @GetMapping(value = "/subscription/delete/{channelPrimaryKey}")
-    public SubscriptionListResponse deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    @DeleteMapping(value = "/subscription")
+    public SubscriptionListResponse deleteSubscriptions(@RequestBody DataChange dataChange, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        Long channelPrimaryKey = Long.valueOf(dataChange.getSubscribeId());
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
         Channel channel = channelService.findById(channelPrimaryKey);
