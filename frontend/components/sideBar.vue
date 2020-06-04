@@ -1,7 +1,7 @@
 <template>
     <div id="side-bar">
         <liveBroadcast></liveBroadcast>
-        <div v-if="rootTest !== null" id="tree"></div>
+        <div id="tree"></div>
     </div>
 </template>
 
@@ -98,6 +98,7 @@ export default {
         }
         const childElement = document.getElementsByClassName('child-label')
         childElement[0].style.paddingRight = '8px'
+        childElement[0].style.paddingBottm = '8px'
         for (let i = 0; i < childElement.length; i++) {
             childElement[i].style.paddingLeft = Number(childElement[i].dataset.superId) * 12 + 'px'
         }

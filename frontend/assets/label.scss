@@ -2,52 +2,58 @@
     display: flex;
     text-align: center;
     justify-content: center;
-    #root-label {
-        display: block;
-        margin: 4px 0px;
-    }
-    .drop-cap-wrap {
-        width: 34px;
-        height: 34px;
-        display: inline-block;
-        overflow: hidden;
-        margin: 4px 0px;
-        text-align: center;
-        border: {
-            width: 1px;
-            style: solid;
-            color: black;
-            radius: 4px;
+    #label-wrap{
+        #root-label {
+            display: block;
+            margin: 4px 0px;
         }
-        white-space: nowrap;
-        .drop-cap {
-            display: inline-block;
+        .drop-cap-wrap {
             width: 34px;
-            margin-top: 50%;
-            transform: translateY(-50%);
+            height: 34px;
+            display: inline-block;
+            overflow: hidden;
+            margin: 4px 0px;
             text-align: center;
-            font: {
-                weight: 800;
+            border: {
+                width: 1px;
+                style: solid;
+                color: black;
+                radius: 4px;
+            }
+            white-space: nowrap;
+            .drop-cap {
+                display: inline-block;
+                width: 34px;
+                margin-top: 50%;
+                transform: translateY(-50%);
+                text-align: center;
+                font: {
+                    weight: 800;
+                }
+            }
+            .child-label {
+                width: auto;
+                display: inline-block;
+                vertical-align: top;
+                padding: 8px 0 0 0;
+            }
+            hr {
+                margin: 8px 0 0 0px;
             }
         }
-        .child-label {
-            width: auto;
-            display: inline-block;
-            vertical-align: top;
+        .add-border {
+            padding: 2px 4px;
+            position: absolute;
+            background-color: white;
         }
-    }
-    .add-border {
-        padding: 2px 4px;
-        position: absolute;
-        background-color: white;
-    }
-    .expand-list {
-        overflow: unset;
-        text-align: left;
-        width: auto;
-        border-color: white;
-    }
-    .channel{
-        margin: 4px 0px;
+        .expand-list {
+            overflow: unset;
+            text-align: left;
+            width: auto;
+            border-color: white;
+        }
+        .channel{
+            margin: 4px 0px;
+        }
     }
 }

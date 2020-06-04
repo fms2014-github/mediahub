@@ -1,7 +1,7 @@
 export default function({ $axios }, inject) {
     // Create a custom axios instance
     const loginAxios = $axios.create({
-        baseURL: 'http://localhost:3000/',
+        baseURL: 'https://k02d1031.p.ssafy.io/',
         header: {
             // 'Access-Control-Allow-Origin': '*',
             Accept: 'application/json',
