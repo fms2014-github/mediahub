@@ -228,6 +228,13 @@ public class TwitchService {
         return null;
     }
 
+    /**
+     * 트위치 채널 팔로우
+     * @param channelId
+     * @param userId
+     * @param accessToken
+     * @return
+     */
     public TwitchChannelDto followTwitchChannel(String channelId, String userId, String accessToken){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", accept);
@@ -252,6 +259,13 @@ public class TwitchService {
         return null;
     }
 
+    /**
+     * 트위치 채널 언팔로우
+     * @param channelId
+     * @param accessToken
+     * @param userId
+     * @return
+     */
     public boolean unFollowTwitchChannel(String channelId, String accessToken, String userId) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", accept);
