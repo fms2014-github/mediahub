@@ -88,7 +88,7 @@ public class MemberController {
     @PostMapping("/label")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity createLabel(@RequestParam String labelId, @RequestParam String labelName, @CurrentUser UserPrincipal userPrincipal){
-        labelService.createLabel(Long.parseLong(labelId), labelName);
+        labelService.createLabel(Long.parseLong(labelId), labelName, userPrincipal.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
 

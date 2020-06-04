@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ChannelDto {
+public class TwitchChannelDto {
     private String display_name;
     private String _id;
     private String name;
