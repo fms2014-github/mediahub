@@ -3,12 +3,11 @@ export default function({ $axios }, inject) {
         'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
 
     const twitchTokenApi = $axios.create({
-        headers: { 
-            Accept : 'application/vnd.twitchtv.v5+json',
+        headers: {
+            Accept: 'application/vnd.twitchtv.v5+json',
             Authorization: `OAuth ${accessToken}`,
             'Client-ID': client_id,
         },
-        
     })
 
     const client_id = 'oqnfm929440pohis4h4xd1rfr4cd2u'
@@ -17,10 +16,8 @@ export default function({ $axios }, inject) {
         return twitchTokenApi.put(`https://api.twitch.tv/kraken/users/${userId}/follows/channels/${channelId}`)
     }
 
-
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
-        
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)
