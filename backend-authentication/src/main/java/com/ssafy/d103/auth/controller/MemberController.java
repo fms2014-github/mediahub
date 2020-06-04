@@ -63,7 +63,7 @@ public class MemberController {
     @ApiOperation(value = "라벨 위치 변경 요청")
     @PutMapping("/label/location")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity updateLabelLocation(@RequestBody UpdateLabelLocationDto labelId){
+    public ResponseEntity updateLabelLocation(@RequestBody UpdateLabelLocationDto labelId, @CurrentUser UserPrincipal userPrincipal){
         labelService.updateLabelLocation(Long.parseLong(labelId.getSuperLabelId()), Long.parseLong(labelId.getSubLabelId()));
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -71,7 +71,7 @@ public class MemberController {
     @ApiOperation(value = "라벨 정보 변경 요청")
     @PutMapping("/label")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName){
+    public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName, @CurrentUser UserPrincipal userPrincipal){
         labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -79,7 +79,7 @@ public class MemberController {
     @ApiOperation(value = "라벨 삭제 요청")
     @DeleteMapping("/label")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity deleteLabel(@RequestParam String labelId){
+    public ResponseEntity deleteLabel(@RequestParam String labelId, @CurrentUser UserPrincipal userPrincipal){
         labelService.deleteLabel(Long.parseLong(labelId));
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -95,14 +95,14 @@ public class MemberController {
     @ApiOperation(value = "채널 생성")
     @PostMapping("/channel")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<ChannelDto> createChannel(@RequestBody Channel channel, @RequestParam String labelId){
+    public ResponseEntity<ChannelDto> createChannel(@RequestBody Channel channel, @RequestParam String labelId, @CurrentUser UserPrincipal userPrincipal){
         return new ResponseEntity(new ChannelDto(channelService.createNewChannel(Long.parseLong(labelId), channel)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "채널 삭제")
     @DeleteMapping("/channel")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity deleteChannel(@RequestParam String channelId){
+    public ResponseEntity deleteChannel(@RequestParam String channelId, @CurrentUser UserPrincipal userPrincipal){
         channelService.deleteChannel(Long.parseLong(channelId));
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -110,7 +110,7 @@ public class MemberController {
     @ApiOperation(value = "채널 카테고리 변경")
     @PutMapping("/channel")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity changeLabel(@RequestParam String channelId, @RequestParam String labelId){
+    public ResponseEntity changeLabel(@RequestParam String channelId, @RequestParam String labelId, @CurrentUser UserPrincipal userPrincipal){
         Label label = labelService.getLabelById(Long.parseLong(labelId));
         Channel channel = channelService.findById(Long.parseLong(channelId));
         channel.setLabel(label);
