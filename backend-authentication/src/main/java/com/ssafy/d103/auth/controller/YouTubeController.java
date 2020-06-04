@@ -224,9 +224,9 @@ public class YouTubeController {
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
-    @DeleteMapping(value = "/subscription")
-    public SubscriptionListResponse deleteSubscriptions(@RequestBody DataChange dataChange, @CurrentUser UserPrincipal userPrincipal) throws IOException{
-        Long channelPrimaryKey = Long.valueOf(dataChange.getSubscribeId());
+    @DeleteMapping(value = "/subscription/{channelPrimaryKey}")
+    public SubscriptionListResponse deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
         Channel channel = channelService.findById(channelPrimaryKey);

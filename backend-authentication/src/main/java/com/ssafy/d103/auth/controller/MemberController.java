@@ -64,6 +64,7 @@ public class MemberController {
     @PutMapping("/label/location")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelLocation(@RequestBody UpdateLabelLocationDto labelId, @CurrentUser UserPrincipal userPrincipal){
+        System.out.println("========라벨 위치 변경=======");
         labelService.updateLabelLocation(Long.parseLong(labelId.getSuperLabelId()), Long.parseLong(labelId.getSubLabelId()));
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -72,6 +73,7 @@ public class MemberController {
     @PutMapping("/label")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity updateLabelInformation(@RequestParam String labelId, @RequestParam String labelName, @CurrentUser UserPrincipal userPrincipal){
+        System.out.println("========라벨 변경=======");
         labelService.updateLabelInformation(Long.parseLong(labelId), labelName);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -80,6 +82,7 @@ public class MemberController {
     @DeleteMapping("/label")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteLabel(@RequestParam String labelId, @CurrentUser UserPrincipal userPrincipal){
+        System.out.println("========라벨 삭제=======");
         labelService.deleteLabel(Long.parseLong(labelId));
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -88,6 +91,7 @@ public class MemberController {
     @PostMapping("/label")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity createLabel(@RequestParam String labelId, @RequestParam String labelName, @CurrentUser UserPrincipal userPrincipal){
+        System.out.println("========라벨 생성=======");
         labelService.createLabel(Long.parseLong(labelId), labelName, userPrincipal.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
