@@ -209,9 +209,11 @@ public class YouTubeController {
         channel.setDescription(returnedSubscription.getSnippet().getDescription());
         channel.setProvider(AuthProvider.google.toString());
         channel.setChannelId(channelId);
+        Label label = labelService.getLabelById(member.getRootLabelId());
+        channel.setLabel(label);
         channelService.createNewChannel(1,channel);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(returnedSubscription);
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
