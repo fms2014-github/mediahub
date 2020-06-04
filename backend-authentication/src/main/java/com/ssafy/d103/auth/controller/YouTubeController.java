@@ -201,17 +201,20 @@ public class YouTubeController {
         Subscription returnedSubscription = subscriptionInsert.execute();
         System.out.println("===========구독 추가============");
         System.out.println(returnedSubscription.getSnippet().getTitle());
+        System.out.println(channelId);
+        System.out.println(member.getRootLabelId());
         // 채널 추가 로직
 
         Channel channel = new Channel();
+        channel.setChannelId(channelId);
+        channel.setSubscriptionId(returnedSubscription.getId());
         channel.setDisplayName(returnedSubscription.getSnippet().getTitle());
         channel.setName(returnedSubscription.getSnippet().getTitle());
         channel.setDescription(returnedSubscription.getSnippet().getDescription());
+        channel.setProfileImg(returnedSubscription.getSnippet().getThumbnails().getDefault().getUrl());
         channel.setProvider(AuthProvider.google.toString());
-        channel.setChannelId(channelId);
-        Label label = labelService.getLabelById(member.getRootLabelId());
-        channel.setLabel(label);
-        channelService.createNewChannel(1,channel);
+        channelService.createNewChannel(member.getRootLabelId(),channel);
+        System.out.println("===========구독 추가 끝============");
 
         return ResponseEntity.ok(returnedSubscription);
     }
