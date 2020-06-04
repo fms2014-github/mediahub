@@ -37,7 +37,7 @@ export default {
     },
     created() {},
     mounted() {
-        if (this.playInfo.kind === 't') {
+        if (this.playInfo.kind === 'twitch') {
             const options = {
                 width: '100%',
                 height: 500,

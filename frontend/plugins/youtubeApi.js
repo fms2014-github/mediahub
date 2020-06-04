@@ -1,13 +1,13 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMAQ02v2WQ0B1ro8XNfTOJLHmRelknX36ELXuIOWJwkbxWczn9ma0v4bOSCUv0BDKJypctLuWZ5MfxCihg63pDtP_VIu1ssN7cTHQQ4Sp1Vkj60qd10Wl_p-I3npiHmC61rJULyA9tJglb-b-zgVz6k0sjrGEsIf'
+        'ya29.a0AfH6SMAKAqSNstRE6iF1W50Nb_5iDFlwaxlycebBjF3E4biQFHcuv_qAqLcR3IAGEbUvID4U85bRJUlsjtdrP2CeUZx4f0mwJh-6yz6AJ_RG8eu2tWkn6K7PtP87gs1O61hz_1mxOBDzb_1zW-bt9yuRAHzuuqa0CA-M'
 
     const jwtToken =
-        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE1OTExNTkxMTAsImV4cCI6MTU5MTE2MjcxMH0.jDlpQkouncU3JDAaw9WLrJ4ZYe00p_2f2_oOvUoXHICvoVifMxhUW3nVI9Ebn8gR_z5hHcGwMEzSg22fU06iOQ'
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJmaXJzdExvZ2luIjowLCJpYXQiOjE1OTEyNDgyNDIsImV4cCI6MTU5MjA4NDI0Mn0.e88bwRLkvO_w_QzncRL_jMY5dWUxT3duRYB6K-AqbLCRxadO7r_q9nWjdxbughZC8yXIb0HM9fRa2y-qiZTivQ'
     // Create a custom axios instance
     const backendAxios = $axios.create({
         headers: { Authorization: `Bearer ${jwtToken}` },
-        baseURL: 'http://k02d1031.p.ssafy.io:8081/',
+        baseURL: 'https://k02d1031.p.ssafy.io:8081/',
     })
 
     const youtubeApi = $axios.create({
@@ -53,21 +53,23 @@ export default function({ $axios }, inject) {
     }
 
     const insertChannel = (params) => {
-        return backendAxios.post(
-            '/v1/member/channel',
-            {
-                channelId: params.channelId,
-                displayName: params.name,
-                name: params.name,
-                provider: 'youtube',
-            },
-            {
-                params: {
-                    labelId: '3',
-                },
-            },
-        )
+        return backendAxios.get(`/v1/youtube/subscription/insert/${params.channelId}`)
     }
+
+    // const insertChannel = (params) => {
+    //     return backendAxios.post(
+    //         `/v1/youtube/subscription/insert/${params.channelId}`,
+    //         {
+    //             channelId: params.channelId,
+    //             provider: params.kind,
+    //         },
+    //         {
+    //             params: {
+    //                 labelId: '2',
+    //             },
+    //         },
+    //     )
+    // }
 
     const deleteChannel = (cId) => {
         return backendAxios.delete('/v1/member/channel', {
