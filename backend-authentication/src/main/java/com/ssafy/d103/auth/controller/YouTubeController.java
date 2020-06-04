@@ -2,14 +2,13 @@ package com.ssafy.d103.auth.controller;
 
 import com.google.api.services.youtube.YouTube;
 
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.model.Subscription;
-import com.google.api.services.youtube.model.SubscriptionListResponse;
-import com.google.api.services.youtube.model.SubscriptionSnippet;
+import com.google.api.services.youtube.model.*;
 import com.google.gson.Gson;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.model.*;
+import com.ssafy.d103.auth.model.Channel;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
@@ -201,7 +200,13 @@ public class YouTubeController {
                 youTube.subscriptions().insert("snippet,contentDetails", subscription);
         Subscription returnedSubscription = subscriptionInsert.execute();
         // 채널 추가 로직
+        ChannelListResponse channelList = youTube.channels().list("snippet").setId(channelId).execute();
+
         Channel channel = new Channel();
+        channel.setDisplayName(channelList.getItems().get(0).getSnippet().getTitle());
+        channel.setName(channelList.getItems().get(0).getSnippet().getTitle());
+        channel.setDescription(channelList.getItems().get(0).getSnippet().getDescription());
+        channel.setProvider(AuthProvider.google.toString());
         channel.setChannelId(channelId);
         channelService.createNewChannel(1,channel);
 
