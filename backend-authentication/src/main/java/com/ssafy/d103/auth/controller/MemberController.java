@@ -128,7 +128,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "FirstLogin 감소")
-    @PutMapping("/addFirstLogin")
+    @PutMapping("/subFirstLogin")
     public ResponseEntity subFirst(@CurrentUser UserPrincipal userPrincipal){
         Member member = memberService.loadMemberById(userPrincipal.getId());
         member.setFirstLogin(member.getFirstLogin()-1);

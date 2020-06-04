@@ -1,3 +1,11 @@
+server:
+  ssl:
+    enabled: true
+    key-alias: media-platform
+    key-store: media-platform.pkcs12
+    key-store-password: 02d103
+    trust-store: media-platform-trust.pkcs12
+    trust-store-password: 02d103
 spring:
   profiles:
   active: dev
@@ -92,6 +100,14 @@ app:
       - http://localhost:3000/login
 
 --- # 구분
+server:
+  ssl:
+    enabled: true
+    key-alias: media-platform
+    key-store: media-platform.pkcs12
+    key-store-password: 02d103
+    trust-store: media-platform-trust.pkcs12
+    trust-store-password: 02d103
 
 spring:
   address: 0.0.0.0
