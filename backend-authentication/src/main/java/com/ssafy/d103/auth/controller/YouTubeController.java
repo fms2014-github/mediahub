@@ -6,6 +6,7 @@ import com.google.api.services.youtube.model.*;
 import com.google.gson.Gson;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
+import com.ssafy.d103.auth.dto.ChannelDto;
 import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.model.Channel;
@@ -253,8 +254,20 @@ public class YouTubeController {
         channel.setProvider(AuthProvider.google.toString());
         channelService.createNewChannel(member.getRootLabelId(),channel);
         System.out.println("===========구독 추가 끝============");
+        ChannelDto channelDto = new ChannelDto(
+                channel.getId(),
+                channel.getLabel().getId(),
+                channel.getProvider(),
+                channel.getChannelId(),
+                channel.getName(),
+                channel.getDisplayName(),
+                channel.getProfileImg(),
+                channel.getFollower(),
+                channel.getSubscriber(),
+                channel.getDescription()
+        );
 
-        return ResponseEntity.ok(returnedSubscription);
+        return ResponseEntity.ok(channelDto);
     }
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
