@@ -33,9 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Api(tags = {"2. youtube"})
@@ -75,6 +73,12 @@ public class YouTubeController {
     public ResponseEntity<?> redirectCodeGoogle(@RequestParam String code, @CurrentUser UserPrincipal userPrincipal) {
         RetGoogleAuth retGoogleAuth = youTubeService.getGoogleTokenInfo(code);
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
+        Collection<Auth> memberAuth = member.getAuth();
+        Iterator<Auth> it = memberAuth.iterator();
+        while(it.hasNext()){
+            if(it.next().getAuth_provider()=="google")
+                return new ResponseEntity(HttpStatus.OK);
+        }
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
         auth.setAccess_token(retGoogleAuth.getAccessToken());
