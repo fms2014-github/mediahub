@@ -339,13 +339,15 @@ export default {
         ...mapGetters({ getJwt: 'login/getJwt' }),
         async init() {
             console.log('jwt', this.getJwt())
-            const data1 = (
+            const Info = (
                 await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
                     headers: { Authorization: 'Bearer ' + this.getJwt() },
                 })
             ).data
-            console.log('awef', data1)
-            this.labels = data1.label
+
+            localStorage.setItem('auth', JSON.stringify(Info.auth))
+            localStorage.setItem('labels', JSON.stringify(Info.label))
+            this.labels = Info.label
         },
     },
 }
