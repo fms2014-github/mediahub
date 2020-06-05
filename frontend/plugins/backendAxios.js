@@ -20,11 +20,7 @@ export default function({ $axios, store }, inject) {
     }
 
     const deleteYoutubeChannel = (sId) => {
-        return backendAxios.delete('youtube/subscription', {
-            params: {
-                subscribeId: sId,
-            },
-        })
+        return backendAxios.delete(`youtube/subscription/${sId}`)
     }
 
     const insertTwitchChannel = (params) => {

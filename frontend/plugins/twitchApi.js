@@ -1,6 +1,6 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMAdIq5QvIa_VNT8KxO3WhHa7LwjjDinDPmUEgvpbKZpxDNHQkvWJSiF2ivMTzq4ilTUUsy6UGFTTRswHjc4PXr5NWkavTxKfWuPZLvNL7IMb0KCMrOrQ6Js-rKzV_TDGeNoOipMximUfL9omys4sh1aQvsdFbPC'
+        'ya29.a0AfH6SMC6Erz11saBrKI13dNBEfHYu6-9MwSHm3wpqpCUiufYfVzPf6RNheHyUTHxCtR6E_SNzfoWW89obx5KFgGUmcprfLyAJS_Qa4IxwpCu4GDChSGhU_uzc03gLi_MxXKqbaTo8X7PyMz3CavY4UOloe2VCgXS69Xv'
 
     const clientId = 'db8sw2xqe82gk1x78mkubkr5xh545p'
     const twitchApi = $axios.create({

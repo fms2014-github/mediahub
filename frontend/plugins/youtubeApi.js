@@ -1,6 +1,6 @@
 export default function({ $axios }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMD3GS4ZKHXuHN0L5wBXgYJjcDgPhV8yX2oGeg_kCbBMtFfV_StD6MTZFXflE8uXiyn8bbyfyajZbwPQETlzNJmEP25scu7tGH97v9iJR_L8-iLW2O45PC8SFVCH5HpLjiwNwMGo7a5D-wDix_gIjRBnX6JRI5n4'
+        'ya29.a0AfH6SMC6Erz11saBrKI13dNBEfHYu6-9MwSHm3wpqpCUiufYfVzPf6RNheHyUTHxCtR6E_SNzfoWW89obx5KFgGUmcprfLyAJS_Qa4IxwpCu4GDChSGhU_uzc03gLi_MxXKqbaTo8X7PyMz3CavY4UOloe2VCgXS69Xv'
 
     const jwtToken =
         'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJmaXJzdExvZ2luIjowLCJpYXQiOjE1OTEyNDgyNDIsImV4cCI6MTU5MjA4NDI0Mn0.e88bwRLkvO_w_QzncRL_jMY5dWUxT3duRYB6K-AqbLCRxadO7r_q9nWjdxbughZC8yXIb0HM9fRa2y-qiZTivQ'
@@ -18,7 +18,7 @@ export default function({ $axios }, inject) {
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
 
-    const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
+    const apiKey = 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs'
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
         let data = null
@@ -119,40 +119,6 @@ export default function({ $axios }, inject) {
         })
     }
 
-    const insertChannel = (cId) => {
-        return backendAxios.post('/v1/youtube/subscription', {
-            channelId: cId,
-        })
-    }
-
-    // const insertChannel = (params) => {
-    //     return backendAxios.post(
-    //         `/v1/youtube/subscription/insert/${params.channelId}`,
-    //         {
-    //             channelId: params.channelId,
-    //             provider: params.kind,
-    //         },
-    //         {
-    //             params: {
-    //                 labelId: '2',
-    //             },
-    //         },
-    //     )
-    // }
-
-    const deleteChannel = (sId) => {
-        return backendAxios.delete('/v1/youtube/subscription', {
-            params: {
-                subscribeId: sId,
-            },
-        })
-    }
-
-    const backendScript = {
-        insertChannel: (params) => insertChannel(params),
-        deleteChannel: (cId) => deleteChannel(cId),
-    }
-
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
@@ -164,5 +130,4 @@ export default function({ $axios }, inject) {
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)
-    inject('backendAxios', backendScript)
 }
