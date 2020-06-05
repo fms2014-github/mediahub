@@ -154,10 +154,10 @@ export default {
                             e.preventDefault()
                             e.stopPropagation()
                             console.log('drop1target', e.target)
-                            console.log('drop1', e.target)
+                            console.log('drop1', e.target.children[1])
                             const channelId = e.dataTransfer.getData('targetId')
-                            e.target.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
-                            const labelId = e.target.dataset.labelId
+                            e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                            const labelId = e.target.children[1].dataset.labelId
                             this.$axios
                                 .put(
                                     `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,

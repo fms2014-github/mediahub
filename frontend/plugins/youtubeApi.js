@@ -1,9 +1,8 @@
-export default function({ $axios }, inject) {
+export default function({ $axios, store }, inject) {
     const accessToken =
-        'ya29.a0AfH6SMC6Erz11saBrKI13dNBEfHYu6-9MwSHm3wpqpCUiufYfVzPf6RNheHyUTHxCtR6E_SNzfoWW89obx5KFgGUmcprfLyAJS_Qa4IxwpCu4GDChSGhU_uzc03gLi_MxXKqbaTo8X7PyMz3CavY4UOloe2VCgXS69Xv'
-
-    const jwtToken =
-        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwicm9sZSI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJmaXJzdExvZ2luIjowLCJpYXQiOjE1OTEyNDgyNDIsImV4cCI6MTU5MjA4NDI0Mn0.e88bwRLkvO_w_QzncRL_jMY5dWUxT3duRYB6K-AqbLCRxadO7r_q9nWjdxbughZC8yXIb0HM9fRa2y-qiZTivQ'
+        'ya29.a0AfH6SMAUvarbOQhbgdC0qNACLgrvESImwdu5VTAu0SSowoQV02oWREzdRRpIZj0Sh7ZozGBfOwZ2oqfBO6gLxtcRNrp7KJbaYQNLgPFZAPbewKNwRRK_2svjtfW8VaBcyEzmdaOCBpQV4g8j2WK9Ix9HnhiGvtlu994'
+    //
+    const jwtToken = store.getters['login/getJwt']
     // Create a custom axios instance
     const backendAxios = $axios.create({
         headers: { Authorization: `Bearer ${jwtToken}` },
@@ -17,8 +16,8 @@ export default function({ $axios }, inject) {
         headers: { Authorization: `Bearer ${accessToken}` },
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
-
-    const apiKey = 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs'
+    console.log('aaweewjwt')
+    const apiKey = 'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg'
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
         let data = null
@@ -72,17 +71,6 @@ export default function({ $axios }, inject) {
     }
 
     const youtubeliveChatApi = ({ liveChatId, pageToken, pollingIntervalMillis }) => {
-        console.log(liveChatId)
-        const query = {
-            params: {
-                key: apiKey,
-                part: 'id,snippet,authorDetails',
-                liveChatId,
-                pageToken,
-                pollingIntervalMillis,
-            },
-        }
-        console.log(query)
         return youtubeApiKey.get('liveChat/messages', {
             params: {
                 key: apiKey,
@@ -92,6 +80,25 @@ export default function({ $axios }, inject) {
                 pollingIntervalMillis,
             },
         })
+    }
+    const youtubeliveChatInsertApi = ({ liveChatId, msg }) => {
+        return youtubeApiToken.post(
+            'liveChat/messages',
+            {
+                snippet: {
+                    liveChatId,
+                    type: 'textMessageEvent',
+                    textMessageDetails: {
+                        messageText: msg,
+                    },
+                },
+            },
+            {
+                params: {
+                    part: 'snippet',
+                },
+            },
+        )
     }
     const insertSubscribeApi = (cId) => {
         return youtubeApiToken.post(
@@ -127,6 +134,7 @@ export default function({ $axios }, inject) {
         insertSubscribeApi: (cId) => insertSubscribeApi(cId),
         deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
+        youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)
