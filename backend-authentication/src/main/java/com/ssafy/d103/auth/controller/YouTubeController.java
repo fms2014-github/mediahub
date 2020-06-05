@@ -6,6 +6,7 @@ import com.google.api.services.youtube.model.*;
 import com.google.gson.Gson;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
+import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Member;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -124,7 +126,7 @@ public class YouTubeController {
     @ApiOperation(value = "유튜브 동기화 요청, 구독 리스트 DB 저장")
     @GetMapping(value = "/synchronization")
     @Transactional
-    public ResponseEntity<?> synchronizeWithGoogle(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<?> synchronizeWithGoogle(@CurrentUser UserPrincipal userPrincipal) throws IOException {
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
 
@@ -136,15 +138,13 @@ public class YouTubeController {
         }
 
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
-        SubscriptionListResponse subscriptionListResponse = null;
-        try{
-            subscriptionListResponse = youTube.subscriptions()
-                .list("id, snippet, contentDetails")
-                .setMine(true)
-                .execute();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        SubscriptionListResponse subscriptionListResponse = youTube.subscriptions()
+            .list("id, snippet, contentDetails")
+            .setMaxResults(200L)
+            .setMine(true)
+            .execute();
+        member.getRootLabelId();
+
         Label rootLabel = labelService.getLabelById(member.getRootLabelId());
         List<Channel> channels = subscriptionListResponse.getItems().stream()
                 .map(item -> {
@@ -156,9 +156,43 @@ public class YouTubeController {
                     channel.setDescription(item.getSnippet().getDescription());
                     return channel;
                 }).collect(Collectors.toList());
+        List<Channel> memberChannels = new ArrayList<>();
+        List<LabelDto> label = new LinkedList<>();
+        LinkedList<Label> queue = new LinkedList<>();
+        queue.add(rootLabel);
+        rootLabel.getChannels().forEach(channel -> {
+            memberChannels.add(channel);
+        });
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i=0; i<size; i++){
+                Label temp = queue.poll();
+                queue.addAll(temp.getSubLabels());
+                label.add(new LabelDto(temp));
+                temp.getChannels().forEach(channel -> {
+                   memberChannels.add(channel);
+                });
+            }
+        }
+        for (int i = 0; i<memberChannels.size();i++){
+            for (int j = 0; j<channels.size(); j++){
+                if(memberChannels.get(i).getChannelId() == channels.get(j).getChannelId()){
+                    memberChannels.remove(i);
+                    channels.remove(j);
+                    i--;
+                    break;
+                }
+            }
+        }
+        System.out.println("syncro");
+        System.out.println(" +될 채널 "+memberChannels);
+        System.out.println("없어질 채널"+channels);
+        // youtube에서 받은 subscription 정보 중 현 DB와 비교하여 남은 channel들
         channelService.saveAll(channels);
-        member.setFirstLogin(member.getFirstLogin()+1);
-        customUserDetailsService.saveMember(member);
+        // 현 DB와 youtube subscription 정보를 비교하여 youtube에 없으나 DB에 남은 정보들
+        for (int i=0; i<memberChannels.size();i++){
+            channelService.deleteChannel(memberChannels.get(i).getId());
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -178,7 +212,7 @@ public class YouTubeController {
      * @throws IOException
      */
     @ApiOperation(value = "channelId 요청할시 insert")
-    @PutMapping(value = "/subscription")
+    @PostMapping(value = "/subscription")
     public ResponseEntity<?> insertSubscription(@RequestBody DataChange dataChange, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         System.out.println("================구독 시작 추가=================");
         System.out.println(dataChange.getChannelId());
