@@ -150,7 +150,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .subscriptions()
                     .list("id, snippet, contentDetails")
                     .setMine(true)
-                    .setMaxResults(15L)
+                    .setMaxResults(200L)
                     .execute();
         }catch (Exception e){
             e.printStackTrace();
