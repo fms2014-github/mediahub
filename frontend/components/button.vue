@@ -54,7 +54,6 @@ export default {
                 break
             }
         }
-        console.log(this.labels)
     },
     methods: {
         async youtubeInsert() {
