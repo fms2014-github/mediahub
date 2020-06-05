@@ -1,3 +1,6 @@
+import bodyParser from 'body-parser'
+import session from 'express-session'
+
 export default {
     mode: 'universal',
     /*
@@ -18,7 +21,11 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
         ],
-        script: [{ src: 'https://player.twitch.tv/js/embed/v1.js' }],
+        script: [
+            { src: 'https://player.twitch.tv/js/embed/v1.js' },
+            { src: 'https://apis.google.com/js/platform.js' },
+            { src: 'https://www.youtube.com/iframe_api' },
+        ],
     },
     /*
      ** Customize the progress-bar color
@@ -31,7 +38,14 @@ export default {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }],
+    plugins: [
+        { src: '~/plugins/youtubeEmbed', mode: 'client' },
+        '~/plugins/loginAxios.js',
+        '~/plugins/testaxios.js',
+        '~/plugins/youtubeApi.js',
+        '~/plugins/twitchApi.js',
+        '~/plugins/backendAxios.js',
+    ],
     /*
      ** Nuxt.js dev-modules
      */
@@ -61,4 +75,18 @@ export default {
          */
         extend(config, ctx) {},
     },
+    serverMiddleware: [
+        // body-parser middleware
+        bodyParser.json(),
+        // session middleware
+        session({
+            secret: 'super-secret-key',
+            resave: false,
+            saveUninitialized: false,
+            cookie: { maxAge: 6000000 },
+        }),
+        // Api middleware
+        // We add /api/login & /api/logout routes
+        '~/api',
+    ],
 }

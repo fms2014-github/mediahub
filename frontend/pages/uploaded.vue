@@ -4,7 +4,7 @@
             <client-only placeholder="loading...">
                 <upload-video :play-info="playInfo" />
             </client-only>
-            <sub-button :kind="playInfo.kind" />
+            <sub-button :play-info="playInfo" />
             <hr />
             <h1>추천 영상</h1>
             <video-form />
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import uploadVideo from '~/components/uploadVideo.vue'
 import subButton from '~/components/button.vue'
 import videoForm from '~/components/main/videoForm.vue'
@@ -25,13 +26,16 @@ export default {
     data: () => {
         return {
             playInfo: {
-                play: 'fvjpE_wFL5A',
-                kind: 'y',
-                // play: '624698735',
-                // kind: 't',
+                // kind: 'google',
+                // play: 'fvjpE_wFL5A',
+                // channelId: 'UCfLdIEPs1tYj4ieEdJnyNyw',
+                kind: 'twitch',
+                play: '638991439',
+                channelId: '140639269',
             },
         }
     },
+    async created() {},
 }
 </script>
 

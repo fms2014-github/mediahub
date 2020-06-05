@@ -1,15 +1,17 @@
 <template>
     <div id="nav-bar">
-        <router-link id="logo" to="#">로고</router-link>
-        <router-link to="#"><login-icon></login-icon></router-link>
-        <span id="alarm-icon" class="material-icons" @click="alarmCheck = !alarmCheck">
-            notifications
-        </span>
-        <router-link to="#">
+        <button id="logo" @click="logo">로고</button>
+        <button @click="logout"><img src="../assets/icon/logout.png" /></button>
+        <button @click="alarmCheck = !alarmCheck">
+            <span id="alarm-icon" class="material-icons">
+                notifications
+            </span>
+        </button>
+        <button @click="help">
             <span id="help-icon" class="material-icons">
                 help
             </span>
-        </router-link>
+        </button>
         <div v-if="alarmCheck" class="alarm-div">
             <alarm></alarm>
         </div>
@@ -17,13 +19,14 @@
 </template>
 
 <script>
-import loginIcon from '~/assets/icon/sign-in.svg?inline'
+// import loginIcon from '~/assets/icon/sign-in.svg?inline'
+import { mapActions } from 'vuex'
 import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
 export default {
     components: {
-        loginIcon,
+        // loginIcon,
         alarm,
         // logoutIcon,
     },
@@ -34,7 +37,19 @@ export default {
         }
     },
     mounted() {},
-    methods: {},
+    methods: {
+        ...mapActions({ logoutapi: 'login/logoutapi' }),
+        logo() {
+            this.$router.push('/')
+        },
+        logout() {
+            this.logoutapi()
+            this.$router.push('/login')
+        },
+        help() {
+            alert('서비스 준비 중 입니다.\n저희 서비스에 관심을 가져주셔서 감사합니다.')
+        },
+    },
 }
 </script>
 
@@ -54,13 +69,18 @@ export default {
         position: absolute;
         left: 0px;
     }
-    a,
-    a:active,
-    a:visited,
-    a:link {
+    button,
+    button:active,
+    button:visited,
+    button:focus,
+    button:link {
         color: black;
         text-decoration: none;
         margin: 0px 20px;
+        background-color: rgba(0, 0, 0, 0);
+        outline: none;
+        border-width: 0px;
+        cursor: pointer;
     }
     #alarm-icon {
         margin: 0px 20px;
@@ -68,7 +88,7 @@ export default {
     #help-icon {
         margin-right: 40px;
     }
-    a {
+    button {
         span {
             font-size: 32px;
         }
@@ -80,7 +100,7 @@ export default {
         z-index: 10;
     }
 }
-svg {
+img {
     width: 32px;
 }
 </style>

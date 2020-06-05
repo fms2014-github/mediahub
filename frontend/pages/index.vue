@@ -8,12 +8,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import liveVideoSlideBar from '~/components/liveVideoSlideBar.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
+    middleware: 'authenticated',
     components: {
         liveVideoSlideBar,
         videoForm,
+    },
+    mounted() {
+        console.log('index', this.jwt())
+    },
+    methods: {
+        ...mapGetters({ jwt: 'login/getJwt' }),
     },
 }
 </script>
