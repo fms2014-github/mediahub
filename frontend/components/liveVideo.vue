@@ -51,30 +51,51 @@ export default {
     },
     methods: {
         async init() {
-            if (this.videoId.split(',')[0] === 't') {
-                this.twitchId = this.videoId.split(',')[1]
-                const options = {
-                    width: 0,
-                    height: 0,
-                    channel: this.twitchId,
+            if (this.videoId.split(',').length !== 4) {
+                if (this.videoId.split(',')[0] === 'twitch') {
+                    this.twitchId = this.videoId.split(',')[1]
+                    const options = {
+                        width: 0,
+                        height: 0,
+                        channel: this.twitchId,
+                    }
+                    // eslint-disable-next-line no-undef,no-var
+                    this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                    // eslint-disable-next-line no-undef
+                    this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                        document.querySelector('#twitch-video iframe').style.width = '100%'
+                        document.querySelector('#twitch-video iframe').style.height = '100%'
+                    })
+                } else if (this.videoId.split(',')[0] === 'google') {
+                    this.youtubeId = this.videoId.split(',')[1]
+                    this.liveChatId = (
+                        await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
+                    ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    console.log(this.liveChatId)
                 }
-                // eslint-disable-next-line no-undef,no-var
-                this.twitchPlayer = new Twitch.Player('twitch-video', options)
-                // eslint-disable-next-line no-undef
-                this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
-                    document.querySelector('#twitch-video iframe').style.width = '100%'
-                    document.querySelector('#twitch-video iframe').style.height = '100%'
-                })
-            }
-            if (this.videoId.split(',')[0] === 'y') {
-                this.youtubeId = this.videoId.split(',')[1]
-                this.liveChatId = (
-                    await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
-                ).data.items[0].liveStreamingDetails.activeLiveChatId
-                console.log(this.liveChatId)
-            }
-            if (this.videoId.split(',')[2] === 't') {
-                // asd
+            } else {
+                if (this.videoId.split(',')[0] === 'twitch') {
+                    this.twitchId = this.videoId.split(',')[1]
+                    const options = {
+                        width: 0,
+                        height: 0,
+                        channel: this.twitchId,
+                    }
+                    // eslint-disable-next-line no-undef,no-var
+                    this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                    // eslint-disable-next-line no-undef
+                    this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                        document.querySelector('#twitch-video iframe').style.width = '100%'
+                        document.querySelector('#twitch-video iframe').style.height = '100%'
+                    })
+                }
+                if (this.videoId.split(',')[0] === 'google') {
+                    this.youtubeId = this.videoId.split(',')[1]
+                    this.liveChatId = (
+                        await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
+                    ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    console.log(this.liveChatId)
+                }
             }
         },
         ready(e) {
