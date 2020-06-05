@@ -38,6 +38,35 @@ function dropEvent2(e) {
         console.log(res.status)
     })
 }
+function addLabel(e) {
+    const name = prompt('라벨 이름을 적어주세요')
+    console.log(name)
+    if (name !== null) {
+        axios
+            .post(
+                'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + e.target.parentNode.parentNode.dataset.labelId + '&labelName=' + name,
+                {},
+                { headers: { Authorization: 'Bearer ' + this.getJwt() } },
+            )
+            .then((res) => {
+                console.log(res)
+            })
+        console.log(button1.parentNode.parentNode)
+    }
+}
+function deleteLabel(e) {
+    const labelId = e.target.parentNode.parentNode.dataset.labelId
+    console.log(labelId)
+    axios
+        .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
+            headers: { Authorization: 'Bearer ' + this.getJwt() },
+            params: { labelId },
+        })
+        .then((res) => {
+            console.log(res.status)
+        })
+}
+
 export default {
     components: {
         liveBroadcast,
@@ -57,11 +86,15 @@ export default {
         console.log(data1)
         this.labels = data1.label
         const data = this.labels
+        let rootLabelId
         for (const i in data) {
             // console.log('id', data[i].id)
             // console.log('memberId', data[i].memberId)
             // console.log('labelName', data[i].labelName)
             // console.log('superId', data[i].superId)
+            if (data[i].superId === -1) {
+                rootLabelId = data[i].id
+            }
             const tree = document.getElementById('tree')
             const node = document.createElement('div')
             node.setAttribute('data-label-id', data[i].id)
@@ -71,38 +104,10 @@ export default {
             const button2 = document.createElement('button')
             button1.setAttribute('class', 'add-child-label')
             button1.appendChild(document.createTextNode('+'))
-            button1.onclick = () => {
-                const name = prompt('라벨 이름을 적어주세요')
-                console.log(name)
-                if (name !== null) {
-                    this.$axios
-                        .post(
-                            'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' +
-                                button1.parentNode.parentNode.dataset.labelId +
-                                '&labelName=' +
-                                name,
-                            {},
-                            { headers: { Authorization: 'Bearer ' + this.getJwt() } },
-                        )
-                        .then((res) => {
-                            console.log(res.status)
-                        })
-                }
-            }
+            button1.addEventListener('click', addLabel)
             button2.setAttribute('class', 'delete-child-label')
             button2.appendChild(document.createTextNode('-'))
-            button2.onclick = () => {
-                const labelId = button2.parentNode.parentNode.dataset.labelId
-                console.log(labelId)
-                this.$axios
-                    .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
-                        headers: { Authorization: 'Bearer ' + this.getJwt() },
-                        params: { labelId },
-                    })
-                    .then((res) => {
-                        console.log(res.status)
-                    })
-            }
+            button2.addEventListener('click', deleteLabel)
             if (data[i].superId === -1) {
                 node.setAttribute('id', 'label-wrap')
                 const span = document.createElement('span')
@@ -115,7 +120,7 @@ export default {
                 tree.appendChild(node)
             } else {
                 const parentLabel = document.querySelector(`div[data-label-id='${data[i].superId}']`)
-                if (data[i].superId === 1) {
+                if (rootLabelId === data[i].superId) {
                     const span1 = document.createElement('span')
                     const span2 = document.createElement('span')
                     const dropCap = document.createElement('div')
