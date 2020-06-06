@@ -18,19 +18,20 @@
                     <span v-if="youtube !== ''" class="youtube">YT</span>
                     <span v-if="twitch !== ''" class="twitch platform-disable">TW</span>
                 </div>
-                <input v-model="message" type="text" name="message" @keyup.enter="sendMessage(sendSelect)" />
+                <input v-if="sendSelect === 'TW'" v-model="message" type="text" name="message" @keyup.enter="sendMessage(sendSelect)" />
+                <div v-if="twitch !== '' && sendSelect === 'YT'" id="twitch-chat-send">
+                    <iframe
+                        :id="twitch"
+                        frameborder="0"
+                        scrolling="yes"
+                        :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=localhost'"
+                        width="260"
+                        height="94"
+                    >
+                    </iframe>
+                    <div id="disable-twitch-emotion" title="트위치 이모션 기능은 사용할 수 없습니다"></div>
+                </div>
             </div>
-        </div>
-        <div v-if="twitch !== '' && youtube === ''" id="twitch-chat" style="height: 100%;">
-            <iframe
-                :id="twitch"
-                frameborder="0"
-                scrolling="yes"
-                :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=localhost'"
-                width="300"
-                style="height: 100%;"
-            >
-            </iframe>
         </div>
     </div>
 </template>
@@ -59,12 +60,12 @@ export default {
             chatRead: null,
             nextPageToken: ' ',
             pollingIntervalMillis: 5000,
-            sendSelect: 'YT',
+            sendSelect: 'TW',
             message: '',
         }
     },
     async mounted() {
-        console.log(this.twitch)
+        console.log('chat twitch', this.twitch)
         const objDiv = document.getElementById('message-list')
         if (this.twitch !== '') {
             this.tmi = require('tmi.js')
@@ -147,7 +148,6 @@ export default {
         }
     },
     destroyed() {
-        console.log('aefwefwefdddgggg')
         if (this.youtube !== '') {
             clearInterval(this.chatRead)
         }
@@ -163,17 +163,14 @@ export default {
                 for (let i = 0; i < selector.length; i++) {
                     selector[i].classList.toggle('platform-disable')
                 }
-                this.selectPlatform = document.querySelector('.platform-disable').textContent
-                console.log(this.selectPlatform)
+                this.sendSelect = document.querySelector('.platform-disable').textContent
+                console.log(this.sendSelect)
             }
         },
         sendMessage(platform) {
-            if (platform === 'YT') {
-                console.log(this.message)
-                this.$youtubeApi.youtubeliveChatInsertApi({ liveChatId: this.liveChatId, msg: this.message })
-                this.message = ''
-            } else if (platform === 'TW') {
-            }
+            console.log(this.message)
+            this.$youtubeApi.youtubeliveChatInsertApi({ liveChatId: this.liveChatId, msg: this.message })
+            this.message = ''
         },
     },
 }
@@ -205,13 +202,16 @@ export default {
             );
         }
         #message-list {
+            position: relative;
             padding: 0 8px;
             height: calc(100% - 94px);
             overflow: auto;
             @include scrollbar('&');
+            z-index: 100;
             border-bottom-width: 1px;
             border-bottom-color: #cdcdcd;
             border-bottom-style: solid;
+            background-color: white;
             img {
                 width: 24px;
                 height: 24px;
@@ -236,8 +236,9 @@ export default {
             }
         }
         #send-message {
-            height: 48px;
+            height: 52px;
             margin-top: 4px;
+
             #select-platform {
                 display: inline-block;
                 width: 10%;
@@ -271,6 +272,20 @@ export default {
                 width: calc(100% - 10% - 25px);
                 margin: 2px 0;
                 padding: 10px 5px;
+            }
+            #twitch-chat-send {
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                z-index: 1;
+                #disable-twitch-emotion {
+                    position: absolute;
+                    right: 16px;
+                    bottom: 8px;
+                    width: 30px;
+                    height: 30px;
+                    background-color: #f2f2f2;
+                }
             }
         }
     }

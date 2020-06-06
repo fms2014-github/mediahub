@@ -81,14 +81,12 @@ export default {
                 if (this.liveList.length === 5) break
             }
         }
-        console.log('aaaa1')
         const auth = JSON.parse(localStorage.getItem('auth'))
-        console.log('aaaa2')
         const i = auth.findIndex((i) => i.provider === 'twitch')
-        console.log('aaaa3')
         if (auth[i] !== undefined) {
-            console.log('aaaa4')
-            const lives = (await this.$twitchApi.twitchStreamsApi(auth[i].access_token)).data.streams
+            const testToken = 't9nmyowrhx8u8da9mvxx5e55ylwfuj'
+            // const lives = (await this.$twitchApi.twitchStreamsApi(auth[i].access_token)).data.streams
+            const lives = (await this.$twitchApi.twitchStreamsApi(testToken)).data.streams
             for (const item of lives) {
                 this.liveList.push({ kind: 'twitch', id: item.channel.name })
                 if (this.liveList.length === 10) break

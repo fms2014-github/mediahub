@@ -9,6 +9,17 @@
                 <youtube v-if="youtubeId !== ''" id="youtube-video" :player-vars="{ autoplay: 1 }" :video-id="youtubeId" @ready="ready" />
                 <div v-if="twitchId !== ''" id="twitch-video"></div>
                 <live-chat v-if="liveChatId !== null" :live-chat-id="liveChatId" :youtube="youtubeId" :twitch="twitchId"></live-chat>
+                <div v-if="liveChatId === null && twitchId !== ''" id="twitch-chat">
+                    <iframe
+                        :id="twitchId"
+                        frameborder="0"
+                        scrolling="yes"
+                        :src="'https://www.twitch.tv/embed/' + twitchId + '/chat?parent=localhost'"
+                        width="300"
+                        style="height: 100%;"
+                    >
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -142,6 +153,7 @@ export default {
         display: flex;
         padding-right: 50px;
         flex-basis: 100%;
+        align-items: center;
         #button-wrap {
             margin: 0 20px;
             width: 60px;
@@ -217,7 +229,8 @@ export default {
                 z-index: 2;
                 background-color: rgba(0, 0, 0, 0);
             }
-            #live-chat {
+            #live-chat,
+            #twitch-chat {
                 position: absolute;
                 margin-left: calc(100% + 70px);
                 height: calc(100% - 2px);
