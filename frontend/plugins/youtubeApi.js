@@ -13,10 +13,10 @@ export default function({ $axios, store }, inject) {
     const youtubeApiKey = $axios.create({
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
-    const youtubeApiToken = $axios.create({
-        headers: { Authorization: `Bearer ${accessToken}` },
-        baseURL: 'https://www.googleapis.com/youtube/v3/',
-    })
+    // const youtubeApiToken = $axios.create({
+    //     headers: { Authorization: `Bearer ${accessToken}` },
+    //     baseURL: 'https://www.googleapis.com/youtube/v3/',
+    // })
     console.log('aaweewjwt')
     const apiKey = [
         'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
@@ -55,17 +55,6 @@ export default function({ $axios, store }, inject) {
         })
     }
 
-    const isSubscribeApi = (channelId, accessToken) => {
-        return youtubeApiToken.get('subscriptions', {
-            headers: { Authorization: `Bearer ${accessToken}` },
-            params: {
-                part: 'snippet',
-                forChannelId: channelId,
-                mine: true,
-            },
-        })
-    }
-
     const youtubeSearchApi = ({ channelId, eventType, type }) => {
         return youtubeApiKey.get('search', {
             params: {
@@ -95,33 +84,46 @@ export default function({ $axios, store }, inject) {
             msg,
         })
     }
-    const insertSubscribeApi = (cId, accessToken) => {
-        return youtubeApiToken.post(
-            'subscriptions',
-            {
-                snippet: {
-                    resourceId: {
-                        kind: 'youtube#channel',
-                        channelId: cId,
-                    },
-                },
-            },
-            {
-                headers: { Authorization: `Bearer ${accessToken}` },
-                params: {
-                    part: 'snippet',
-                },
-            },
-        )
-    }
-    const deleteSubscribeApi = (channelId, accessToken) => {
-        return youtubeApiToken.delete('subscriptions', {
-            headers: { Authorization: `Bearer ${accessToken}` },
-            params: {
-                id: channelId,
-            },
-        })
-    }
+
+    // const insertSubscribeApi = (cId, accessToken) => {
+    //     return youtubeApiToken.post(
+    //         'subscriptions',
+    //         {
+    //             snippet: {
+    //                 resourceId: {
+    //                     kind: 'youtube#channel',
+    //                     channelId: cId,
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             headers: { Authorization: `Bearer ${accessToken}` },
+    //             params: {
+    //                 part: 'snippet',
+    //             },
+    //         },
+    //     )
+    // }
+    // const deleteSubscribeApi = (channelId, accessToken) => {
+    //     return youtubeApiToken.delete('subscriptions', {
+    //         headers: { Authorization: `Bearer ${accessToken}` },
+    //         params: {
+    //             id: channelId,
+    //         },
+    //     })
+    // }
+
+    // const isSubscribeApi = (channelId, accessToken) => {
+    //     return youtubeApiToken.get('subscriptions', {
+    //         headers: { Authorization: `Bearer ${accessToken}` },
+    //         params: {
+    //             part: 'snippet',
+    //             forChannelId: channelId,
+    //             mine: true,
+    //         },
+    //     })
+    // }
+
     const synchronization = () => {
         return backendAxios.get('/synchronization')
     }
@@ -129,9 +131,9 @@ export default function({ $axios, store }, inject) {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
         youtubeliveChatApi: (liveChatId) => youtubeliveChatApi(liveChatId),
-        isSubscribeApi: (channelId) => isSubscribeApi(channelId),
-        insertSubscribeApi: (cId) => insertSubscribeApi(cId),
-        deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
+        // isSubscribeApi: (channelId) => isSubscribeApi(channelId),
+        // insertSubscribeApi: (cId) => insertSubscribeApi(cId),
+        // deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
         synchronization: () => synchronization(),
         youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
