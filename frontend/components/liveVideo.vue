@@ -151,7 +151,7 @@ export default {
     height: 100%;
     #live-slider {
         display: flex;
-        padding-right: 50px;
+        padding-right: 100px;
         flex-basis: 100%;
         align-items: center;
         #button-wrap {

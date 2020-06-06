@@ -48,7 +48,8 @@ export const actions = {
         this.$router.push('/login')
     },
 
-    checkRequireSync({ commit }) {
+    async checkRequireSync({ commit }) {
+        await this.$backendAxios.addFirstLogin()
         commit('checkRequireSync')
     },
 }

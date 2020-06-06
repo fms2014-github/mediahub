@@ -6,7 +6,7 @@
                 <div v-for="item in messageList" :key="item.id" class="receive-message-list">
                     <div class="receive-message">
                         <div class="profile">
-                            <img class="profile-image" :src="item.profileImage" />
+                            <img class="profile-image" :src="item.provider === 'google' ? '/YouTube.png' : '/Twitch.png'" />
                             <span>{{ item.displayName }}</span>
                         </div>
                         <span>{{ item.textMessage }}</span>
@@ -93,6 +93,7 @@ export default {
                     profileImage: 'https://via.placeholder.com/24',
                     textMessage: msg,
                     displayName: context['display-name'],
+                    provider: 'twitch',
                 })
                 setTimeout(() => {
                     objDiv.scrollTop = objDiv.scrollHeight + 1000
@@ -117,6 +118,7 @@ export default {
                     profileImage: firstData.items[i].authorDetails.profileImageUrl,
                     textMessage: firstData.items[i].snippet.displayMessage,
                     displayName: firstData.items[i].authorDetails.displayName,
+                    provider: 'google',
                 })
             }
             this.nextPageToken = firstData.nextPageToken
@@ -136,6 +138,7 @@ export default {
                             profileImage: data.items[i].authorDetails.profileImageUrl,
                             textMessage: data.items[i].snippet.displayMessage,
                             displayName: data.items[i].authorDetails.displayName,
+                            provider: 'google',
                         })
                     }
                 }
@@ -183,23 +186,26 @@ export default {
     min-width: 300px;
     border: {
         width: 1px;
-        color: rgb(150, 150, 150);
+        color: rgba(150, 150, 150, 0.45);
         style: solid;
+        radius: 8px;
     }
     background-color: white;
+    box-shadow: 0px 0px 3px 1px rgba(140, 140, 140, 0.7);
+    padding: 4px;
     #total-chat {
         height: 100%;
         #streamer-name {
+            line-height: 36px;
+            text-align: center;
             height: 36px;
             padding: 5px;
-            background: linear-gradient(
-                to bottom,
-                rgb(205‬, 205‬, 205‬),
-                rgb(185, 185, 185),
-                rgb(170, 170, 170),
-                rgb(185, 185, 185),
-                rgb(205‬, 205‬, 205‬)
-            );
+            vertical-align: middle;
+            border: {
+                width: 0 0 1px 0;
+                color: rgb(150, 150, 150);
+                style: solid;
+            }
         }
         #message-list {
             position: relative;
@@ -221,18 +227,19 @@ export default {
             span {
                 vertical-align: middle;
             }
+            border: {
+                width: 1px;
+                color: rgba(150, 150, 150, 0.45);
+                style: solid;
+            }
             .receive-message {
                 margin: 12px 0px;
-                width: 70%;
-                margin-right: calc(30% - 16px);
+                width: 80%;
+                margin-right: calc(20% - 16px);
                 padding: 8px;
-                background-color: gray;
+                background-color: rgb(230, 230, 230);
                 border-radius: 8px;
-            }
-            .my-message {
-                margin-left: calc(30% - 16px);
-                background-color: rgb(255, 205, 0);
-                text-align: right;
+                box-shadow: 0px 0px 4px 1px rgba(150, 150, 150, 1);
             }
         }
         #send-message {

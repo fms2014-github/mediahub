@@ -25,7 +25,7 @@ export default {
     min-width: calc(1280px + 74px);
     background-color: rgb(240, 240, 240);
     #router-view {
-        margin: 58px 0 0 74px;
+        margin: 0 0 0 74px;
     }
 }
 </style>
