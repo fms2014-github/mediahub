@@ -95,6 +95,7 @@ app:
     tokenExpirationMsec: 836000000
   oauth2:
     authorizedRedirectUris:
+      - https://k02d1031.p.ssafy.io/login
       - https://k02d1031.p.ssafy.io/oauth2/redirect
       - https://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
@@ -203,6 +204,7 @@ app:
     tokenExpirationMsec: 836000000
   oauth2:
     authorizedRedirectUris:
+      - https://k02d1031.p.ssafy.io/login
       - https://k02d1031.p.ssafy.io/oauth2/redirect
       - https://k02d1031.p.ssafy.io:3000/oauth2/redirect
       - http://127.0.0.1:3000/oauth2/redirect
