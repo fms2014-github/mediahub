@@ -1,4 +1,5 @@
 export default function({ $axios, store }, inject) {
+    const timeInMs = Date.now()
     const accessToken =
         'ya29.a0AfH6SMAUvarbOQhbgdC0qNACLgrvESImwdu5VTAu0SSowoQV02oWREzdRRpIZj0Sh7ZozGBfOwZ2oqfBO6gLxtcRNrp7KJbaYQNLgPFZAPbewKNwRRK_2svjtfW8VaBcyEzmdaOCBpQV4g8j2WK9Ix9HnhiGvtlu994'
     //
@@ -6,7 +7,7 @@ export default function({ $axios, store }, inject) {
     // Create a custom axios instance
     const backendAxios = $axios.create({
         headers: { Authorization: `Bearer ${jwtToken}` },
-        baseURL: 'https://k02d1031.p.ssafy.io:8081/',
+        baseURL: 'https://k02d1031.p.ssafy.io:8081/v1/youtube',
     })
 
     const youtubeApiKey = $axios.create({
@@ -81,23 +82,10 @@ export default function({ $axios, store }, inject) {
         })
     }
     const youtubeliveChatInsertApi = ({ liveChatId, msg }) => {
-        return youtubeApiToken.post(
-            'liveChat/messages',
-            {
-                snippet: {
-                    liveChatId,
-                    type: 'textMessageEvent',
-                    textMessageDetails: {
-                        messageText: msg,
-                    },
-                },
-            },
-            {
-                params: {
-                    part: 'snippet',
-                },
-            },
-        )
+        return backendAxios.post('/chating', {
+            liveChatId,
+            msg,
+        })
     }
     const insertSubscribeApi = (cId) => {
         return youtubeApiToken.post(
@@ -124,7 +112,9 @@ export default function({ $axios, store }, inject) {
             },
         })
     }
-
+    const syncronization = () => {
+        return backendAxios.get('/syncronization')
+    }
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
@@ -133,6 +123,7 @@ export default function({ $axios, store }, inject) {
         insertSubscribeApi: (cId) => insertSubscribeApi(cId),
         deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
+        syncronization: () => syncronization(),
         youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
     }
     // Inject to context as $api

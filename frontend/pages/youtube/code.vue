@@ -34,7 +34,8 @@ export default {
                     tokenType: res.data.token_type,
                 })
                 if (status === 200) {
-                    this.$router.push('/')
+                    this.$backendAxios.addFirstLogin()
+                    this.$router.push('/subsync')
                 }
             })
         // const testaxios = this.$axios.create({

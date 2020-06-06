@@ -36,6 +36,7 @@
 import videoForm from '@/components/main/videoForm.vue'
 
 export default {
+    middleware: 'authenticated',
     components: {
         videoForm,
     },
