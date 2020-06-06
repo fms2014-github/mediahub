@@ -12,6 +12,12 @@
                 help
             </span>
         </button>
+        <div v-if="reSyncClick" id="reSync">
+            <button id="youtube-sync" @click="syncYoutube">
+                <img src="../assets/icon/YouTube.png" />
+                <span>YouTube</span>
+            </button>
+        </div>
         <div v-if="alarmCheck" class="alarm-div">
             <alarm></alarm>
         </div>
@@ -34,6 +40,7 @@ export default {
     data: () => {
         return {
             alarmCheck: false,
+            reSyncClick: false,
         }
     },
     mounted() {},
@@ -47,7 +54,13 @@ export default {
             this.$router.push('/login')
         },
         help() {
-            alert('서비스 준비 중 입니다.\n저희 서비스에 관심을 가져주셔서 감사합니다.')
+            this.alarmCheck = false
+            this.reSyncClick = !this.reSyncClick
+        },
+        syncYoutube() {
+            this.$youtubeApi.syncronization().then((res) => {
+                console.log(res.status)
+            })
         },
     },
 }
@@ -98,6 +111,47 @@ export default {
         top: 58px;
         right: 110px;
         z-index: 10;
+    }
+    #reSync {
+        width: 200px;
+        height: 82px;
+        position: absolute;
+        top: 60px;
+        right: 0px;
+        background-color: white;
+        border: {
+            width: 1px;
+            style: solid;
+            color: rgb(180, 180, 180);
+        }
+        #youtube-sync {
+            width: 160px;
+            height: 52px;
+            margin: 0px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            background-color: $youtube-color;
+            img {
+                background-color: rgb(255, 255, 255);
+                padding: 8px;
+                margin: 0 8px;
+                vertical-align: middle;
+            }
+            span {
+                vertical-align: middle;
+                font: {
+                    size: 0.9rem;
+                    weight: 700;
+                }
+                color: rgb(230, 230, 230);
+            }
+            border: {
+                width: 0px;
+                radius: 10px;
+            }
+        }
     }
 }
 img {
