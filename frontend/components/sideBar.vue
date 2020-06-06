@@ -1,6 +1,5 @@
 <template>
     <div id="side-bar">
-        <liveBroadcast></liveBroadcast>
         <div id="tree"></div>
     </div>
 </template>
@@ -12,7 +11,7 @@ import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
 
 export default {
     components: {
-        liveBroadcast,
+        // liveBroadcast,
     },
     data() {
         return {
@@ -72,9 +71,9 @@ export default {
                         const labelId = e.target.parentNode.parentNode.dataset.labelId
                         console.log(labelId)
                         this.$axios
-                            .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
+                            .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + labelId, {
                                 headers: { Authorization: 'Bearer ' + this.getJwt() },
-                                params: { labelId },
+                                params: {},
                             })
                             .then((res) => {
                                 console.log(res.status)
@@ -85,13 +84,14 @@ export default {
                 )
                 if (v[i].superId === -1) {
                     node.setAttribute('id', 'label-wrap')
-                    const span = document.createElement('span')
-
-                    span.appendChild(document.createTextNode('카테고리'))
-                    span.appendChild(button1)
-                    span.setAttribute('id', 'root-label')
-                    span.setAttribute('class', 'label-title')
-                    node.appendChild(span)
+                    const img = document.createElement('img')
+                    const wrap = document.createElement('div')
+                    wrap.setAttribute('id', 'root-label-wrap')
+                    wrap.appendChild(img)
+                    wrap.appendChild(button1)
+                    img.setAttribute('id', 'root-label')
+                    img.setAttribute('src', '/tree-strcuture.png')
+                    node.appendChild(wrap)
                     tree.appendChild(node)
                 } else {
                     const parentLabel = document.querySelector(`div[data-label-id='${v[i].superId}']`)
@@ -118,26 +118,30 @@ export default {
                         dropCapWrap.appendChild(node)
                         node.setAttribute('class', 'child-label')
                         parentLabel.insertBefore(dropCapWrap, parentLabel.children[1])
-                        dropCapWrap.addEventListener('drop', (e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            console.log('drop1target', e.target)
-                            console.log('drop1', e.target.children[1])
-                            const channelId = e.dataTransfer.getData('targetId')
-                            e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
-                            const labelId = e.target.children[1].dataset.labelId
-                            this.$axios
-                                .put(
-                                    `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
-                                    {},
-                                    {
-                                        headers: { Authorization: 'Bearer ' + this.getJwt() },
-                                    },
-                                )
-                                .then((res) => {
-                                    console.log(res.status)
-                                })
-                        })
+                        dropCapWrap.addEventListener(
+                            'drop',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                console.log('drop1target', e.target)
+                                console.log('drop1', e.target.children[1])
+                                const channelId = e.dataTransfer.getData('targetId')
+                                e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                                const labelId = e.target.children[1].dataset.labelId
+                                this.$axios
+                                    .put(
+                                        `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                        {},
+                                        {
+                                            headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                        },
+                                    )
+                                    .then((res) => {
+                                        console.log(res.status)
+                                    })
+                            },
+                            true,
+                        )
                         span2.addEventListener(
                             'drop',
                             (e) => {
@@ -329,13 +333,14 @@ export default {
 #side-bar {
     display: flex;
     position: fixed;
-    top: 58px;
+    top: 0px;
+    padding-top: 58px;
     height: 100%;
     flex-direction: column;
     min-width: $side-bar-width;
     background-color: white;
     align-self: stretch;
-    z-index: 9999;
+    z-index: 9998;
     svg {
         width: 42px;
     }

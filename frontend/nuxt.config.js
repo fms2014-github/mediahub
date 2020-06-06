@@ -41,7 +41,6 @@ export default {
     plugins: [
         { src: '~/plugins/youtubeEmbed', mode: 'client' },
         '~/plugins/loginAxios.js',
-        '~/plugins/testaxios.js',
         '~/plugins/youtubeApi.js',
         '~/plugins/twitchApi.js',
         '~/plugins/backendAxios.js',
