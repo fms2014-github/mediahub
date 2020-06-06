@@ -113,8 +113,8 @@ export default function({ $axios, store }, inject) {
             },
         })
     }
-    const syncronization = () => {
-        return backendAxios.get('/syncronization')
+    const synchronization = () => {
+        return backendAxios.get('/synchronization')
     }
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
@@ -124,7 +124,7 @@ export default function({ $axios, store }, inject) {
         insertSubscribeApi: (cId) => insertSubscribeApi(cId),
         deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
-        syncronization: () => syncronization(),
+        synchronization: () => synchronization(),
         youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
     }
     // Inject to context as $api
