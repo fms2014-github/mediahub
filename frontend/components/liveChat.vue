@@ -24,7 +24,7 @@
                         :id="twitch"
                         frameborder="0"
                         scrolling="yes"
-                        :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=localhost'"
+                        :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=' + location.host"
                         width="260"
                         height="94"
                     >

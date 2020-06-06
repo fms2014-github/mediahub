@@ -40,8 +40,8 @@ export default {
         // const testaxios = this.$axios.create({
         //     headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },
         // })
-        // console.log('code', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
-        // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
+        // console.log('code', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
+        // console.log('synchronization', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
     },
 }
 </script>
