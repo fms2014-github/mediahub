@@ -49,12 +49,21 @@ export default function({ $axios, store }, inject) {
         })
     }
 
+    const addFirstLogin = () => {
+        return backendAxios.put('member/addFirstLogin')
+    }
+    const subFirstLogin = () => {
+        return backendAxios.put('member/subFirstLogin')
+    }
+
     const backendScript = {
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
         deleteYoutubeChannel: (sId) => deleteYoutubeChannel(sId),
         insertTwitchChannel: (params) => insertTwitchChannel(params),
         deleteTwitchChannel: (params) => deleteTwitchChannel(params),
+        addFirstLogin: () => addFirstLogin(),
+        subFirstLogin: () => subFirstLogin(),
     }
 
     // Inject to context as $api
