@@ -13,8 +13,9 @@
                 </div>
                 <div v-if="liveList.length > 0">
                     <div v-for="(item, index) in liveList" :id="'v' + index" :key="item" :class="'video v' + index">
+                        <nuxt-link class="link" :to="'/streaming/' + item.kind + ',' + item.id"></nuxt-link>
                         <youtube
-                            v-if="item.kind === 'youtube'"
+                            v-if="item.kind === 'google'"
                             :id="'youtube-video' + index"
                             class="back-slide"
                             :player-vars="{ autoplay: 0, rel: 0 }"
@@ -45,12 +46,6 @@ export default {
             liveListInfo: new Array(10),
             isPlay: false,
             liveList: [],
-            test: [
-                { kind: 'youtube', id: 'qhuJpbqXxDo' },
-                { kind: 'twitch', id: 'ch1ckenkun' },
-                { kind: 'youtube', id: 'uK_sfFXZ3W0' },
-                { kind: 'twitch', id: 'tmxk319' },
-            ],
         }
     },
     watch: {
@@ -76,23 +71,30 @@ export default {
         },
     },
     async mounted() {
-        const testData = [
-            { id: 'UCAl4HWznMn7KhKBRFO5eiFA', name: '배틀그라운드 이스포츠' },
-            { id: 'UCs0LzOveQMLImmmTrMmP2sg', name: '채널 명예훈장' },
-            { id: 'UC-aMc9rzifR_0LoCLyLWEgg', name: 'MakNooN 막눈' },
-            { id: 'UCsOW9TPy2TKkqCchUHL04Fg', name: '맛있는 녀석들 (Tasty Guys)' },
-            { id: 'UC2NFRq9s2neD_Ml0tPhNC2Q', name: '우주하마' },
-        ]
-
-        for (const item of testData) {
-            const data = await this.$youtubeApi.youtubuLiveVideoApi(item.id, item.name)
-            if (data.items.length === 0) continue
-            const videoId = data.items[0].id.videoId
-            this.liveList.push({ kind: 'youtube', id: videoId })
-            if (this.liveList.length === 5) break
+        const labels = JSON.parse(localStorage.getItem('labels'))
+        for (const label of labels) {
+            for (const item of label.channels) {
+                if (item.provider === 'twitch') continue
+                const data = await this.$youtubeApi.youtubuLiveVideoApi(item.channelId, item.name)
+                if (data.items.length === 0) continue
+                this.liveList.push({ kind: 'google', id: data.items[0].id.videoId })
+                if (this.liveList.length === 5) break
+            }
+        }
+        const auth = JSON.parse(localStorage.getItem('auth'))
+        const i = auth.findIndex((i) => i.provider === 'twitch')
+        if (auth[i] !== undefined) {
+            const testToken = 't9nmyowrhx8u8da9mvxx5e55ylwfuj'
+            // const lives = (await this.$twitchApi.twitchStreamsApi(auth[i].access_token)).data.streams
+            const lives = (await this.$twitchApi.twitchStreamsApi(testToken)).data.streams
+            for (const item of lives) {
+                this.liveList.push({ kind: 'twitch', id: item.channel.name })
+                if (this.liveList.length === 10) break
+            }
         }
 
         setTimeout(() => {
+            console.log(this.liveList)
             if (this.liveList.length === 0) {
                 this.loaded()
             } else {
@@ -118,7 +120,7 @@ export default {
 
         window.onkeydown = () => {
             if (event.keyCode !== 32) return
-            if (this.liveListInfo[this.curIdx] === 'youtube') {
+            if (this.liveListInfo[this.curIdx] === 'google') {
                 if (this.isPlay) this.liveListInfo[this.curIdx].pauseVideo()
                 else this.liveListInfo[this.curIdx].playVideo()
             } else if (this.liveListInfo[this.curIdx].isPaused()) {
@@ -129,7 +131,7 @@ export default {
     methods: {
         move(dir) {
             const N = this.liveList.length
-            if (this.loadingCnt !== N || N === 1) return
+            if (this.loadingCnt !== N || N <= 1) return
             const idx = []
             let name
             for (let i = 0; i < N; i++) {
@@ -148,14 +150,14 @@ export default {
             this.play(this.curIdx)
         },
         pause(idx) {
-            if (this.liveList[idx].kind === 'youtube') {
+            if (this.liveList[idx].kind === 'google') {
                 this.liveListInfo[idx].stopVideo()
             } else {
                 this.liveListInfo[idx].pause()
             }
         },
         play(idx) {
-            if (this.liveList[idx].kind === 'youtube') {
+            if (this.liveList[idx].kind === 'google') {
                 this.liveListInfo[idx].playVideo()
             } else {
                 this.liveListInfo[idx].play()
@@ -240,6 +242,15 @@ export default {
                 }
             }
 
+            .link {
+                position: absolute;
+                display: inline-block;
+                height: calc(100% - 45px);
+                width: 100%;
+                top: 0px;
+                background-color: #00ff0000;
+                // background-color: yellow;
+            }
             .change {
                 transition: all 0.2s;
             }

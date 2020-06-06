@@ -2,16 +2,17 @@
     display: flex;
     text-align: center;
     justify-content: center;
-    #label-wrap{
-        #root-label {
-            display: block;
-            margin: 4px 0px;
-        }
-        .drop-cap-wrap {
-            width: 34px;
-            height: 34px;
+    #root-label {
+        display: block;
+        margin: 4px 0px;
+    }
+    .drop-cap-wrap{
+        width: 100%;
+        overflow: hidden;
+        .drop-cap {
+
             display: inline-block;
-            overflow: hidden;
+            
             margin: 4px 0px;
             text-align: center;
             border: {
@@ -21,7 +22,7 @@
                 radius: 4px;
             }
             white-space: nowrap;
-            .drop-cap {
+            .drop-cap-char {
                 display: inline-block;
                 width: 34px;
                 margin-top: 50%;
@@ -31,29 +32,59 @@
                     weight: 800;
                 }
             }
-            .child-label {
-                width: auto;
-                display: inline-block;
-                vertical-align: top;
-                padding: 8px 0 0 0;
-            }
-            hr {
-                margin: 8px 0 0 0px;
-            }
+
         }
-        .add-border {
-            padding: 2px 4px;
+        .child-label {
+            min-width: 120px;
+            display: none;
+            vertical-align: top;
             position: absolute;
             background-color: white;
+            white-space: nowrap;
         }
-        .expand-list {
-            overflow: unset;
-            text-align: left;
-            width: auto;
-            border-color: white;
+        .child-label2{
+            border: {
+                width: 0 0 0 2px;
+                style: solid;
+                color:rgb(150,150,150);
+            }
         }
-        .channel{
+        .label-title{
+            display: inline-block;
             margin: 4px 0px;
         }
+    }
+    .add-shadow {
+        box-shadow: 0px 0px 3px 2px rgba(0,0,0,0.4);
+    }
+    .add-child-label,
+    .add-child-label:active,
+    .add-child-label:visited,
+    .add-child-label:focus,
+    .add-child-label:hover,
+    .delete-child-label,
+    .delete-child-label:active,
+    .delete-child-label:visited,
+    .delete-child-label:focus,
+    .delete-child-label:hover{
+        border: {
+            width: 1px;
+            color: black;
+            style: solid;
+        }
+        background-color: white;
+        width: 14px;
+        padding: 0px;
+        margin: 1px;
+        line-height: 9pt
+    }
+    .expand-list {
+        overflow: unset;
+        text-align: left;
+        border-color: white;
+        display: inline-block !important;
+    }
+    .channel{
+        margin: 4px 0px;
     }
 }

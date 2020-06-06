@@ -9,6 +9,7 @@
 import '../assets/label.scss'
 import { mapGetters } from 'vuex'
 import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
+
 export default {
     components: {
         liveBroadcast,
@@ -18,102 +19,311 @@ export default {
             labels: null,
         }
     },
-    async mounted() {
-        console.log('jwt', this.getJwt())
-        this.labels = (
-            await this.$axios.get('http://k02d1031.p.ssafy.io:8081/v1/member/information', {
-                headers: { Authorization: 'Bearer ' + this.getJwt() },
-            })
-        ).data.label
-        const data = this.labels
-        for (const i in data) {
-            // console.log('id', data[i].id)
-            // console.log('memberId', data[i].memberId)
-            // console.log('labelName', data[i].labelName)
-            // console.log('superId', data[i].superId)
-            const tree = document.getElementById('tree')
-            const node = document.createElement('div')
-            node.setAttribute('data-label-id', data[i].id)
-            node.setAttribute('data-super-id', data[i].superId)
-            node.setAttribute('data-member-id', data[i].memberId)
-
-            if (data[i].superId === -1) {
-                node.setAttribute('id', 'label-wrap')
-                const span = document.createElement('span')
-                span.appendChild(document.createTextNode('카테고리'))
-                span.setAttribute('id', 'root-label')
-                node.appendChild(span)
-                tree.appendChild(node)
-            } else {
-                const parentLabel = document.querySelector(`div[data-label-id='${data[i].superId}']`)
-                if (data[i].superId === 1) {
+    watch: {
+        labels(v) {
+            var myNode = document.getElementById('tree')
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild)
+            }
+            console.log('awaaef', v)
+            let rootLabelId
+            for (const i in v) {
+                // console.log('id', v[i].id)
+                // console.log('memberId', v[i].memberId)
+                // console.log('labelName', v[i].labelName)
+                // console.log('superId', v[i].superId)
+                if (v[i].superId === -1) {
+                    rootLabelId = v[i].id
+                }
+                const tree = document.getElementById('tree')
+                const node = document.createElement('div')
+                node.setAttribute('data-label-id', v[i].id)
+                node.setAttribute('data-super-id', v[i].superId)
+                node.setAttribute('data-member-id', v[i].memberId)
+                const button1 = document.createElement('button')
+                const button2 = document.createElement('button')
+                button1.setAttribute('class', 'add-child-label')
+                button1.appendChild(document.createTextNode('+'))
+                button1.addEventListener('click', (e) => {
+                    const name = prompt('라벨 이름을 적어주세요')
+                    console.log(name)
+                    if (name !== null) {
+                        this.$axios
+                            .post(
+                                'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' +
+                                    e.target.parentNode.parentNode.dataset.labelId +
+                                    '&labelName=' +
+                                    name,
+                                {},
+                                { headers: { Authorization: 'Bearer ' + this.getJwt() } },
+                            )
+                            .then((res) => {
+                                console.log(res)
+                                this.init()
+                            })
+                        console.log(button1.parentNode.parentNode)
+                    }
+                })
+                button2.setAttribute('class', 'delete-child-label')
+                button2.appendChild(document.createTextNode('-'))
+                button2.addEventListener(
+                    'click',
+                    (e) => {
+                        const labelId = e.target.parentNode.parentNode.dataset.labelId
+                        console.log(labelId)
+                        this.$axios
+                            .delete(
+                                'https://k02d1031.p.ssafy.io:8081/v1/member/label',
+                                {},
+                                {
+                                    headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                    params: { labelId },
+                                },
+                            )
+                            .then((res) => {
+                                console.log(res.status)
+                                this.init()
+                            })
+                    },
+                    true,
+                )
+                if (v[i].superId === -1) {
+                    node.setAttribute('id', 'label-wrap')
                     const span = document.createElement('span')
-                    const wrap = document.createElement('div')
-                    const hr = document.createElement('hr')
-                    wrap.setAttribute('class', 'drop-cap-wrap')
-                    span.setAttribute('class', 'drop-cap')
-                    span.appendChild(document.createTextNode(data[i].labelName[0]))
-                    wrap.appendChild(span)
-                    wrap.appendChild(node)
-                    node.appendChild(document.createTextNode(data[i].labelName))
-                    node.appendChild(hr)
-                    node.setAttribute('class', 'child-label')
-                    parentLabel.insertBefore(wrap, document.querySelector('.channel'))
+
+                    span.appendChild(document.createTextNode('카테고리'))
+                    span.appendChild(button1)
+                    span.setAttribute('id', 'root-label')
+                    span.setAttribute('class', 'label-title')
+                    node.appendChild(span)
+                    tree.appendChild(node)
                 } else {
-                    const hr = document.createElement('hr')
-                    node.appendChild(document.createTextNode(data[i].labelName))
-                    node.appendChild(hr)
-                    node.setAttribute('class', 'child-label')
-                    parentLabel.insertBefore(node, document.querySelector('.channel'))
+                    const parentLabel = document.querySelector(`div[data-label-id='${v[i].superId}']`)
+                    if (rootLabelId === v[i].superId) {
+                        const span1 = document.createElement('span')
+                        const span2 = document.createElement('span')
+                        const dropCap = document.createElement('div')
+                        const dropCapWrap = document.createElement('div')
+                        const hr = document.createElement('hr')
+                        dropCapWrap.setAttribute('class', 'drop-cap-wrap')
+                        dropCapWrap.setAttribute('droppable', 'true')
+                        dropCap.setAttribute('class', 'drop-cap')
+                        span1.setAttribute('class', 'drop-cap-char')
+                        span1.appendChild(document.createTextNode(v[i].labelName[0]))
+                        dropCap.appendChild(span1)
+
+                        span2.appendChild(document.createTextNode(v[i].labelName))
+                        span2.setAttribute('class', 'label-title')
+                        span2.appendChild(button1)
+                        span2.appendChild(button2)
+                        span2.setAttribute('droppable', 'true')
+                        node.appendChild(span2)
+                        dropCapWrap.appendChild(dropCap)
+                        dropCapWrap.appendChild(node)
+                        node.setAttribute('class', 'child-label')
+                        parentLabel.insertBefore(dropCapWrap, parentLabel.children[1])
+                        dropCapWrap.addEventListener('drop', (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log('drop1target', e.target)
+                            console.log('drop1', e.target.children[1])
+                            const channelId = e.dataTransfer.getData('targetId')
+                            e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                            const labelId = e.target.children[1].dataset.labelId
+                            this.$axios
+                                .put(
+                                    `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                    {},
+                                    {
+                                        headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                    },
+                                )
+                                .then((res) => {
+                                    console.log(res.status)
+                                })
+                        })
+                        span2.addEventListener(
+                            'drop',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                console.log('drop2target', e.target)
+                                console.log('drop2', e.target.parentNode)
+                                // node.parentNode.removeEventListener('drop', dropEvent1)
+                                const channelId = e.dataTransfer.getData('targetId')
+                                e.target.parentNode.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                                const labelId = e.target.parentNode.dataset.labelId
+                                this.$axios
+                                    .put(
+                                        `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                        {},
+                                        {
+                                            headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                        },
+                                    )
+                                    .then((res) => {
+                                        console.log(res.status)
+                                    })
+                            },
+                            true,
+                        )
+                        span2.addEventListener(
+                            'dragover',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                            },
+                            true,
+                        )
+                        dropCapWrap.addEventListener(
+                            'dragover',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                            },
+                            true,
+                        )
+                    } else {
+                        const span = document.createElement('span')
+                        const hr = document.createElement('hr')
+                        span.appendChild(document.createTextNode(v[i].labelName))
+                        span.setAttribute('class', 'label-title')
+                        span.appendChild(button1)
+                        span.appendChild(button2)
+                        span.setAttribute('droppable', 'false')
+                        node.appendChild(span)
+                        node.setAttribute('class', 'child-label2')
+                        console.log('aawwddff', document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel') == null)
+                        parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel'))
+                        node.setAttribute('droppable', 'true')
+                        span.addEventListener(
+                            'drop',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                console.log('drop2target', e.target)
+                                console.log('drop2', e.target.parentNode)
+                                // node.parentNode.removeEventListener('drop', dropEvent1)
+                                const channelId = e.dataTransfer.getData('targetId')
+                                e.target.parentNode.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                                const labelId = e.target.parentNode.dataset.labelId
+                                this.$axios
+                                    .put(
+                                        `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                        {},
+                                        {
+                                            headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                        },
+                                    )
+                                    .then((res) => {
+                                        console.log(res.status)
+                                    })
+                            },
+                            true,
+                        )
+                        span.addEventListener(
+                            'dragover',
+                            (e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                            },
+                            true,
+                        )
+                    }
+                }
+                for (const k in v[i].channels) {
+                    // console.log(k, v[i].channels[k])
+
+                    const channel = document.createElement('div')
+                    const parentLabel = document.querySelector(`div[data-label-id='${v[i].channels[k].labelId}']`)
+                    channel.setAttribute('class', 'channel')
+                    channel.setAttribute('data-channel-channel-id', v[i].channels[k].channelId)
+                    channel.setAttribute('data-channel-description', v[i].channels[k].description)
+                    channel.setAttribute('data-channel-display-name', v[i].channels[k].displayName)
+                    channel.setAttribute('data-channel-follower', v[i].channels[k].follower)
+                    channel.setAttribute('data-channel-label-id', v[i].channels[k].labelId)
+                    channel.setAttribute('data-channel-id', v[i].channels[k].id)
+                    channel.setAttribute('data-channel-name', v[i].channels[k].name)
+                    channel.setAttribute('data-channel-profileImg', v[i].channels[k].profileImg)
+                    channel.setAttribute('data-channel-provider', v[i].channels[k].provider)
+                    channel.setAttribute('data-channel-subscriber', v[i].channels[k].subscriber)
+                    channel.setAttribute('draggable', 'true')
+                    const nuxtLink = document.createElement('a')
+                    const img = document.createElement('img')
+                    nuxtLink.appendChild(img)
+                    nuxtLink.setAttribute('href', `/channel/${v[i].channels[k].provider},${v[i].channels[k].channelId}`)
+                    img.setAttribute('src', v[i].channels[k].profileImg)
+                    img.style.width = '34px'
+                    img.style.borderRadius = '17px'
+                    channel.appendChild(nuxtLink)
+                    // channel.appendChild(
+                    //     document.createTextNode(
+                    //         `${v[i].channels[k].channelId}, ${v[i].channels[k].provider}`
+                    //     )
+                    // )
+                    parentLabel.appendChild(channel)
+                    channel.addEventListener('dragstart', (e) => {
+                        console.log('dragstart', channel)
+                        e.dataTransfer.setData('targetId', channel.dataset.channelId)
+                    })
                 }
             }
-            for (const k in data[i].channels) {
-                // console.log(k, data[i].channels[k])
-                const channel = document.createElement('div')
-                const parentLabel = document.querySelector(`div[data-label-id='${data[i].channels[k].labelId}']`)
-                channel.setAttribute('class', 'channel')
-                channel.setAttribute('data-channel-channel-id', data[i].channels[k].channelId)
-                channel.setAttribute('data-channel-description', data[i].channels[k].description)
-                channel.setAttribute('data-channel-display-name', data[i].channels[k].displayName)
-                channel.setAttribute('data-channel-follower', data[i].channels[k].follower)
-                channel.setAttribute('data-channel-label-id', data[i].channels[k].labelId)
-                channel.setAttribute('data-channel-id', data[i].channels[k].id)
-                channel.setAttribute('data-channel-name', data[i].channels[k].name)
-                channel.setAttribute('data-channel-profileImg', data[i].channels[k].profileImg)
-                channel.setAttribute('data-channel-provider', data[i].channels[k].provider)
-                channel.setAttribute('data-channel-subscriber', data[i].channels[k].subscriber)
-                const img = document.createElement('img')
-
-                img.setAttribute('src', data[i].channels[k].profileImg)
-                img.style.width = '34px'
-                img.style.borderRadius = '17px'
-                channel.appendChild(img)
-                // channel.appendChild(
-                //     document.createTextNode(
-                //         `${data[i].channels[k].channelId}, ${data[i].channels[k].provider}`
-                //     )
-                // )
-                parentLabel.appendChild(channel)
+            const childElement = document.getElementsByClassName('child-label')
+            if (childElement !== null) {
+                for (let i = 0; i < childElement.length; i++) {
+                    childElement[i].style.paddingRight = '8px'
+                    childElement[i].style.paddingLeft = '32px'
+                    childElement[i].style.paddingTop = '8px'
+                    childElement[i].style.paddingBottom = '8px'
+                }
             }
-        }
-        const childElement = document.getElementsByClassName('child-label')
-        childElement[0].style.paddingRight = '8px'
-        childElement[0].style.paddingBottm = '8px'
-        for (let i = 0; i < childElement.length; i++) {
-            childElement[i].style.paddingLeft = Number(childElement[i].dataset.superId) * 12 + 'px'
-        }
-        const dropCapElement = document.getElementsByClassName('drop-cap-wrap')
-        dropCapElement[0].addEventListener('mouseover', () => {
-            dropCapElement[0].classList.add('expand-list')
-            dropCapElement[0].children[1].classList.add('add-border')
-        })
-        dropCapElement[0].addEventListener('mouseleave', () => {
-            dropCapElement[0].classList.remove('expand-list')
-            dropCapElement[0].children[1].classList.remove('add-border')
-        })
+            const childElement2 = document.getElementsByClassName('child-label2')
+            if (childElement2.length !== 0) {
+                for (let i = 0; i < childElement2.length; i++) {
+                    childElement2[i].style.paddingRight = '8px'
+                    childElement2[i].style.paddingLeft = '24px'
+                }
+            }
+            const dropCapElement = document.getElementsByClassName('drop-cap')
+            for (let i = 0; i < dropCapElement.length; i++) {
+                dropCapElement[i].addEventListener('mouseover', () => {
+                    dropCapElement[i].classList.add('add-shadow')
+                    dropCapElement[i].parentNode.children[1].classList.add('expand-list')
+                })
+                dropCapElement[i].addEventListener('mouseleave', () => {
+                    dropCapElement[i].classList.remove('add-shadow')
+                    dropCapElement[i].parentNode.children[1].classList.remove('expand-list')
+                })
+                dropCapElement[i].parentNode.addEventListener('mouseover', () => {
+                    dropCapElement[i].parentNode.children[1].classList.add('expand-list')
+                })
+                dropCapElement[i].parentNode.addEventListener('mouseleave', () => {
+                    dropCapElement[i].parentNode.children[1].classList.remove('expand-list')
+                })
+            }
+            const labelTitleElement = document.getElementsByClassName('label-title')
+            for (let i = 0; i < labelTitleElement.length; i++) {
+                labelTitleElement[i].addEventListener('mouseover', () => {})
+            }
+        },
+    },
+    mounted() {
+        this.init()
     },
     methods: {
         ...mapGetters({ getJwt: 'login/getJwt' }),
+        async init() {
+            console.log('jwt', this.getJwt())
+            const Info = (
+                await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
+                    headers: { Authorization: 'Bearer ' + this.getJwt() },
+                })
+            ).data
+
+            localStorage.setItem('auth', JSON.stringify(Info.auth))
+            localStorage.setItem('labels', JSON.stringify(Info.label))
+            this.labels = Info.label
+        },
     },
 }
 </script>

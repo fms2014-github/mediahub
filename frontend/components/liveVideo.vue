@@ -6,16 +6,20 @@
             </div>
             <div id="video-wrap">
                 <div v-if="!(twitchId === '' || youtubeId === '')" id="back-blind" class="back-slide"></div>
-                <youtube
-                    v-if="youtubeId !== ''"
-                    id="youtube-video"
-                    class="back-slide"
-                    :player-vars="{ autoplay: 1 }"
-                    :video-id="youtubeId"
-                    @ready="ready"
-                />
-                <div v-if="twitchId !== ''" id="twitch-video" class="front-slide"></div>
-                <live-chat v-if="liveChatId !== null" :live-chat-id="liveChatId"></live-chat>
+                <youtube v-if="youtubeId !== ''" id="youtube-video" :player-vars="{ autoplay: 1 }" :video-id="youtubeId" @ready="ready" />
+                <div v-if="twitchId !== ''" id="twitch-video"></div>
+                <live-chat v-if="liveChatId !== null" :live-chat-id="liveChatId" :youtube="youtubeId" :twitch="twitchId"></live-chat>
+                <div v-if="liveChatId === null && twitchId !== ''" id="twitch-chat">
+                    <iframe
+                        :id="twitchId"
+                        frameborder="0"
+                        scrolling="yes"
+                        :src="'https://www.twitch.tv/embed/' + twitchId + '/chat?parent=localhost'"
+                        width="300"
+                        style="height: 100%;"
+                    >
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -46,35 +50,66 @@ export default {
     },
     mounted() {
         this.init()
+        console.log(this.twitchId !== '' && this.youtubeId !== '')
 
         console.log(this.videoId.split(',').length)
     },
     methods: {
         async init() {
-            if (this.videoId.split(',')[0] === 't') {
-                this.twitchId = this.videoId.split(',')[1]
-                const options = {
-                    width: 0,
-                    height: 0,
-                    channel: this.twitchId,
+            if (this.videoId.split(',').length !== 4) {
+                if (this.videoId.split(',')[0] === 'twitch') {
+                    console.log(this.videoId.split(',')[1])
+                    this.twitchId = this.videoId.split(',')[1]
+                    setTimeout(() => {
+                        const options = {
+                            width: 0,
+                            height: 0,
+                            channel: this.twitchId,
+                        }
+                        // eslint-disable-next-line no-undef,no-var
+                        this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                        // eslint-disable-next-line no-undef
+                        this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                            document.querySelector('#twitch-video iframe').style.width = '100%'
+                            document.querySelector('#twitch-video iframe').style.height = '100%'
+                        })
+                    }, 100)
+                } else if (this.videoId.split(',')[0] === 'google') {
+                    this.youtubeId = this.videoId.split(',')[1]
+                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    console.log('123qweasdzcx', this.liveChatId)
                 }
-                // eslint-disable-next-line no-undef,no-var
-                this.twitchPlayer = new Twitch.Player('twitch-video', options)
-                // eslint-disable-next-line no-undef
-                this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
-                    document.querySelector('#twitch-video iframe').style.width = '100%'
-                    document.querySelector('#twitch-video iframe').style.height = '100%'
-                })
-            }
-            if (this.videoId.split(',')[0] === 'y') {
-                this.youtubeId = this.videoId.split(',')[1]
-                this.liveChatId = (
-                    await this.$youtubeApi.youtubeVideosApi(this.videoId.split(',')[1])
-                ).data.items[0].liveStreamingDetails.activeLiveChatId
-                console.log(this.liveChatId)
-            }
-            if (this.videoId.split(',')[2] === 't') {
-                // asd
+            } else {
+                console.log(this.videoId)
+                if (this.videoId.split(',')[2] === 'twitch') {
+                    this.twitchId = this.videoId.split(',')[3]
+                    console.log('qawsedrf', this.twitchId)
+                    setTimeout(() => {
+                        const options = {
+                            width: 0,
+                            height: 0,
+                            channel: this.twitchId,
+                        }
+                        // eslint-disable-next-line no-undef,no-var
+                        this.twitchPlayer = new Twitch.Player('twitch-video', options)
+                        // eslint-disable-next-line no-undef
+                        this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                            document.querySelector('#twitch-video iframe').style.width = '100%'
+                            document.querySelector('#twitch-video iframe').style.height = '100%'
+                        })
+                        if (this.twitchId !== '' && this.youtubeId !== '') {
+                            const youtubeState = document.getElementById('youtube-video').classList
+                            const twitchState = document.getElementById('twitch-video').classList
+                            youtubeState.add('back-slide')
+                            twitchState.add('front-slide')
+                        }
+                    }, 500)
+                }
+                if (this.videoId.split(',')[0] === 'google') {
+                    this.youtubeId = this.videoId.split(',')[1]
+                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    console.log('123qweasdzcx', this.liveChatId)
+                }
             }
         },
         ready(e) {
@@ -118,6 +153,7 @@ export default {
         display: flex;
         padding-right: 50px;
         flex-basis: 100%;
+        align-items: center;
         #button-wrap {
             margin: 0 20px;
             width: 60px;
@@ -193,7 +229,8 @@ export default {
                 z-index: 2;
                 background-color: rgba(0, 0, 0, 0);
             }
-            #live-chat {
+            #live-chat,
+            #twitch-chat {
                 position: absolute;
                 margin-left: calc(100% + 70px);
                 height: calc(100% - 2px);
