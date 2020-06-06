@@ -1,11 +1,10 @@
 import { Base64 } from 'js-base64'
 
 export default function({ store, redirect }) {
-    console.log(JSON.parse(Base64.decode(store.state.login.authUser.jwt.split('.')[1])).firstLogin === 2)
-
+    console.log('firstLogin.js', store.state.login.authUser)
     if (store.state.login.authUser.jwt === '') {
         return redirect('/login')
-    } else if (JSON.parse(Base64.decode(store.state.login.authUser.jwt.split('.')[1])).firstLogin === 2) {
+    } else if (store.state.login.authUser.firstLogin === 2) {
         return redirect('/')
     }
 }

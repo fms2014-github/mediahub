@@ -1,6 +1,5 @@
 <template>
     <div id="side-bar">
-        <liveBroadcast></liveBroadcast>
         <div id="tree"></div>
     </div>
 </template>
@@ -12,7 +11,7 @@ import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
 
 export default {
     components: {
-        liveBroadcast,
+        // liveBroadcast,
     },
     data() {
         return {
@@ -72,9 +71,9 @@ export default {
                         const labelId = e.target.parentNode.parentNode.dataset.labelId
                         console.log(labelId)
                         this.$axios
-                            .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
+                            .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + labelId, {
                                 headers: { Authorization: 'Bearer ' + this.getJwt() },
-                                params: { labelId },
+                                params: {},
                             })
                             .then((res) => {
                                 console.log(res.status)

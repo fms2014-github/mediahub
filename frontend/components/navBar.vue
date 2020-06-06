@@ -58,7 +58,7 @@ export default {
             this.reSyncClick = !this.reSyncClick
         },
         syncYoutube() {
-            this.$youtubeApi.syncronization().then((res) => {
+            this.$youtubeApi.synchronization().then((res) => {
                 console.log(res.status)
             })
         },
