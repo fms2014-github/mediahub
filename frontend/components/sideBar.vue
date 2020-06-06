@@ -9,34 +9,6 @@
 import '../assets/label.scss'
 import { mapGetters } from 'vuex'
 import liveBroadcast from '@/assets/icon/liveBroadcast.svg?inline'
-function addLabel(e) {
-    const name = prompt('라벨 이름을 적어주세요')
-    console.log(name)
-    if (name !== null) {
-        axios
-            .post(
-                'https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + e.target.parentNode.parentNode.dataset.labelId + '&labelName=' + name,
-                {},
-                { headers: { Authorization: 'Bearer ' + this.getJwt() } },
-            )
-            .then((res) => {
-                console.log(res)
-            })
-        console.log(button1.parentNode.parentNode)
-    }
-}
-function deleteLabel(e) {
-    const labelId = e.target.parentNode.parentNode.dataset.labelId
-    console.log(labelId)
-    axios
-        .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label', {
-            headers: { Authorization: 'Bearer ' + this.getJwt() },
-            params: { labelId },
-        })
-        .then((res) => {
-            console.log(res.status)
-        })
-}
 
 export default {
     components: {
@@ -154,10 +126,10 @@ export default {
                             e.preventDefault()
                             e.stopPropagation()
                             console.log('drop1target', e.target)
-                            console.log('drop1', e.target)
+                            console.log('drop1', e.target.children[1])
                             const channelId = e.dataTransfer.getData('targetId')
-                            e.target.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
-                            const labelId = e.target.dataset.labelId
+                            e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                            const labelId = e.target.children[1].dataset.labelId
                             this.$axios
                                 .put(
                                     `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
@@ -261,6 +233,7 @@ export default {
                 }
                 for (const k in v[i].channels) {
                     // console.log(k, v[i].channels[k])
+
                     const channel = document.createElement('div')
                     const parentLabel = document.querySelector(`div[data-label-id='${v[i].channels[k].labelId}']`)
                     channel.setAttribute('class', 'channel')
@@ -275,12 +248,14 @@ export default {
                     channel.setAttribute('data-channel-provider', v[i].channels[k].provider)
                     channel.setAttribute('data-channel-subscriber', v[i].channels[k].subscriber)
                     channel.setAttribute('draggable', 'true')
+                    const nuxtLink = document.createElement('a')
                     const img = document.createElement('img')
-
+                    nuxtLink.appendChild(img)
+                    nuxtLink.setAttribute('href', `/channel/${v[i].channels[k].provider},${v[i].channels[k].channelId}`)
                     img.setAttribute('src', v[i].channels[k].profileImg)
                     img.style.width = '34px'
                     img.style.borderRadius = '17px'
-                    channel.appendChild(img)
+                    channel.appendChild(nuxtLink)
                     // channel.appendChild(
                     //     document.createTextNode(
                     //         `${v[i].channels[k].channelId}, ${v[i].channels[k].provider}`
