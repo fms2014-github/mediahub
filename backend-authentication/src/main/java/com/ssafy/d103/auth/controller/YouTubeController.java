@@ -11,6 +11,7 @@ import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.model.Channel;
 import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.payload.ChatingMassege;
 import com.ssafy.d103.auth.payload.DataChange;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
@@ -293,5 +294,30 @@ public class YouTubeController {
 
         channelService.deleteChannel(channelPrimaryKey);
         return null;
+    }
+
+    @ApiOperation(value = "channelId 요청할시 insert")
+    @PostMapping(value = "/chating")
+    public YouTube.LiveChatMessages.Insert insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
+        //youtube
+        String refreshToken = null;
+        for(Auth a : member.getAuth()){
+            if(a.getAuth_provider().equals("google")){
+                refreshToken = a.getRefresh_token();
+            }
+        }
+        YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
+        LiveChatMessage liveChatMessage = new LiveChatMessage();
+        LiveChatMessageSnippet snippet = new LiveChatMessageSnippet();
+        LiveChatTextMessageDetails details = new LiveChatTextMessageDetails();
+        details.setMessageText(msg.getMessageText());
+        snippet.setLiveChatId(msg.getLiveChatId());
+        snippet.setType("textMessageEvent");
+        snippet.setTextMessageDetails(details);
+        liveChatMessage.setSnippet(snippet);
+
+        return youTube.liveChatMessages().insert("snippet",liveChatMessage);
     }
 }
