@@ -24,7 +24,7 @@
                         :id="twitch"
                         frameborder="0"
                         scrolling="yes"
-                        :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=' + location.host"
+                        :src="'https://www.twitch.tv/embed/' + twitch + '/chat?parent=' + host"
                         width="260"
                         height="94"
                     >
@@ -62,9 +62,11 @@ export default {
             pollingIntervalMillis: 5000,
             sendSelect: 'TW',
             message: '',
+            host: '',
         }
     },
     async mounted() {
+        this.host = location.hostname
         console.log('chat twitch', this.twitch)
         const objDiv = document.getElementById('message-list')
         if (this.twitch !== '') {

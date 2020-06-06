@@ -4,10 +4,16 @@
   "description": "My supreme Nuxt.js project",
   "author": "김석용",
   "private": true,
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "3000"
+    }
+    },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "pm2-runtime pm2.config.js",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
