@@ -89,7 +89,7 @@ export default {
     button:link {
         color: black;
         text-decoration: none;
-        margin: 0px 20px;
+        margin: 0px 15px;
         background-color: rgba(0, 0, 0, 0);
         outline: none;
         border-width: 0px;

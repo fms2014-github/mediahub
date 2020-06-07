@@ -34,10 +34,15 @@ export default function({ $axios }, inject) {
         })
     }
 
+    const twitchChannelApi = (channelId) => {
+        return twitchApi.get(`channels/${channelId}`)
+    }
+
     const twitchScript = {
         twitchClipsByChannelApi: (channelName) => twitchClipsByChannelApi(channelName),
         twitchVideosApi: (channelId) => twitchVideosApi(channelId),
         twitchStreamsApi: (token) => twitchStreamsApi(token),
+        twitchChannelApi: (channelId) => twitchChannelApi(channelId),
     }
     // Inject to context as $api
     inject('twitchApi', twitchScript)

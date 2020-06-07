@@ -70,6 +70,9 @@ export default function({ $axios, store }, inject) {
                 channelId,
                 eventType,
                 type,
+                // pageToken,
+                // maxResults: 50,
+                // order,
             },
         })
     }

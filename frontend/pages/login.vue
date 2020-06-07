@@ -67,6 +67,7 @@ export default {
 
 
 #login-page {
+    font-family: 'S-CoreDream-3Light';
     display: flex;
     justify-content: center;
     align-items: center;
