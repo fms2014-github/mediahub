@@ -36,16 +36,15 @@ export default {
     },
     created() {},
     mounted() {
-        this.data = JSON.parse(localStorage.getItem('auth'))
+        this.auth = JSON.parse(localStorage.getItem('auth'))
         this.labels = JSON.parse(localStorage.getItem('labels'))
         if (this.playInfo.kind === 'twitch') {
-            // 나중에 access token 한번만 받는 로직 성공하면 youtube, twitch구분하는 걸로 고쳐야함.
-            const auth = this.data[this.data.length - 1]
-            this.twitch.accessToken = auth.access_token
-            this.twitch.userId = auth.userId
+            const i = this.auth.findIndex((i) => i.provider === 'twitch')
+            this.twitch.accessToken = this.auth[i].access_token
+            this.twitch.userId = this.auth[i].userId
         }
-
         this.twitch.rootLabelId = this.labels[0].id
+        console.log(this.labels)
         for (const d of this.labels) {
             const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
             if (i >= 0) {
