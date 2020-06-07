@@ -17,7 +17,6 @@ export default function({ $axios, store }, inject) {
     //     headers: { Authorization: `Bearer ${accessToken}` },
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
-    console.log('aaweewjwt')
     const apiKey = [
         'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
         'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
@@ -31,6 +30,12 @@ export default function({ $axios, store }, inject) {
         'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
         'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
         'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
+        'AIzaSyCbdrUK6qc6PigMBDTHXc0--GpfGUJNOME',
+        'AIzaSyBTgmHOxDaWurmnbwZfXS1r5AIqFvikuLc',
+        'AIzaSyBHrgowLrb9pikeBRKqRxkeZtM8P5lwjrQ',
+        'AIzaSyD6L7D9vmQezoiVsmARGFvRSUsrbNn07Qs',
+        'AIzaSyAc6ZuKkihmURSjcfeL8PcNB6tRwIzsn8s',
+        'AIzaSyC9g5hODYWetX520NyaRjanPhd9zApEDa0',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {

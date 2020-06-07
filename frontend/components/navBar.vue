@@ -64,7 +64,11 @@ export default {
                 console.log(res.status)
             })
         },
-        syncTwitch() {},
+        syncTwitch() {
+            this.$backendAxios.twitchSynchronization().then((res) => {
+                console.log(res.status)
+            })
+        },
     },
 }
 </script>
