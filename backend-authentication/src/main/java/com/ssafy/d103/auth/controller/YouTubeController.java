@@ -191,9 +191,7 @@ public class YouTubeController {
         List<LabelDto> label = new LinkedList<>();
         LinkedList<Label> queue = new LinkedList<>();
         queue.add(rootLabel);
-//        rootLabel.getChannels().forEach(channel -> {
-//            memberChannels.add(channel);
-//        });
+
         while(!queue.isEmpty()){
             int size = queue.size();
             for(int i=0; i<size; i++){
@@ -307,7 +305,7 @@ public class YouTubeController {
 
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
     @DeleteMapping(value = "/subscription/{channelPrimaryKey}")
-    public SubscriptionListResponse deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    public ResponseEntity<?> deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
 
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
@@ -323,12 +321,12 @@ public class YouTubeController {
         youTube.subscriptions().delete(channel.getSubscriptionId());
 
         channelService.deleteChannel(channelPrimaryKey);
-        return null;
+        return ResponseEntity.ok("");
     }
 
     @ApiOperation(value = "channelId 요청할시 insert")
     @PostMapping(value = "/chating")
-    public LiveChatMessage insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
+    public ResponseEntity<?> insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         System.out.println(msg);
         System.out.println("=========================채팅 Insert=======================");
         long id = userPrincipal.getId();
@@ -359,6 +357,6 @@ public class YouTubeController {
         LiveChatMessage response = request.execute();
         System.out.println(response);
         System.out.println("=========================채팅=======================");
-        return response;
+        return ResponseEntity.ok(response);
     }
 }
