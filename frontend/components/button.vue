@@ -29,7 +29,6 @@ export default {
                 accessToken: '',
                 userId: '',
                 rootLabelId: '',
-                channelPk: 0,
             },
             data: null,
             labels: null,
@@ -37,18 +36,15 @@ export default {
     },
     created() {},
     mounted() {
-        this.data = JSON.parse(localStorage.getItem('auth'))
+        this.auth = JSON.parse(localStorage.getItem('auth'))
         this.labels = JSON.parse(localStorage.getItem('labels'))
         if (this.playInfo.kind === 'twitch') {
-            // 나중에 access token 한번만 받는 로직 성공하면 youtube, twitch구분해서 찾아와야함.
-            const auth = this.data[this.data.length - 1]
-            this.twitch.accessToken = auth.access_token
-            this.twitch.userId = auth.userId
+            const i = this.auth.findIndex((i) => i.provider === 'twitch')
+            this.twitch.accessToken = this.auth[i].access_token
+            this.twitch.userId = this.auth[i].userId
         }
-
-        // const test = await this.$twitchApi.twitchStreamsApi(this.twitch.accessToken)
-        // console.log(test)
         this.twitch.rootLabelId = this.labels[0].id
+        console.log(this.labels)
         for (const d of this.labels) {
             const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
             if (i >= 0) {
@@ -60,16 +56,12 @@ export default {
     },
     methods: {
         async youtubeInsert() {
-            // 백에서 받아서 localStorage에 저장 or 카테고리 동기화
             const res = await this.$backendAxios.insertYoutubeChannel(this.playInfo.channelId)
-            console.log(res)
-            this.isSubscribe = true
-            // this.youtube.subscribeId =
+            this.insertInit(res)
         },
         youtubeDelete() {
             this.$backendAxios.deleteYoutubeChannel(this.subscribeId)
-            this.isSubscribe = false
-            this.subscribeId = ''
+            this.deleteInit()
         },
         async twitchInsert() {
             const params = {
@@ -79,8 +71,7 @@ export default {
                 rootLabelId: this.twitch.rootLabelId,
             }
             const res = await this.$backendAxios.insertTwitchChannel(params)
-            console.log(res)
-            this.isSubscribe = true
+            this.insertInit(res)
         },
         twitchDelete() {
             const params = {
@@ -90,31 +81,25 @@ export default {
                 channelPk: this.subscribeId,
             }
             this.$backendAxios.deleteTwitchChannel(params)
-            this.isSubscribe = false
-            this.subscribeId = ''
+            this.deleteInit()
         },
         insertInit(res) {
-            const labels = JSON.parse(localStorage.getItem('labels'))
-            console.log(labels)
-            labels[0].channels.push(res)
-            this.labels = labels
-            localStorage.setItem('labels', JSON.stringify(labels))
-            console.log(this.labels)
+            this.isSubscribe = true
+            this.subscribeId = res.data.id
+            this.labels[0].channels.push(res.data)
+            localStorage.setItem('labels', JSON.stringify(this.labels))
         },
         deleteInit() {
-            const labels = JSON.parse(localStorage.getItem('labels'))
-            for (const d of labels) {
-                const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
+            this.isSubscribe = false
+            this.subscribeId = 0
+            for (const idx in this.labels) {
+                const i = this.labels[idx].channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
                 if (i >= 0) {
-                    this.isSubscribe = true
-                    this.subscribeId = d.channels[i].id
-                    labels.splice(i, 1)
+                    this.labels[idx].channels.splice(i, 1)
                     break
                 }
             }
-            this.labels = labels
-            localStorage.setItem('labels', JSON.stringify(labels))
-            console.log(this.labels)
+            localStorage.setItem('labels', JSON.stringify(this.labels))
         },
     },
 }

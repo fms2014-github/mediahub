@@ -1,16 +1,18 @@
 <template>
     <div id="login-page">
-        <div v-show="loading" id="login-page-modal">
-            <h1>동영상 통합 관리 서비스</h1>
-            <h2>Social Login</h2>
-            <div id="login-button-wrap">
-                <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
-                <div class="border"></div>
-                <div class="border"></div>
-                <div class="border"></div>
-                <div class="border"></div>
+        <transition name="animate" enter-active-class="animated zoomInDown" leave-active-class="animated zoomOutDonw">
+            <div v-if="animate" v-show="loading" id="login-page-modal">
+                <h1>동영상 통합 관리 서비스</h1>
+                <div id="login-button-wrap">
+                    <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
+                    <div class="border"></div>
+                    <div class="border"></div>
+                    <div class="border"></div>
+                    <div class="border"></div>
+                </div>
             </div>
-        </div>
+        </transition>
+
     </div>
 </template>
 
@@ -19,6 +21,7 @@ export default {
     data() {
         return {
             loading: false,
+            animate: true,
         }
     },
     layout: 'cover',
@@ -61,6 +64,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
 #login-page {
     font-family: 'S-CoreDream-3Light';
     display: flex;

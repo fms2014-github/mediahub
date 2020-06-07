@@ -20,6 +20,8 @@ export default {
             console.log('code', res.data)
             const { data } = await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization')
             console.log('twitch code', data)
+            this.$backendAxios.addFirstLogin()
+            this.$router.push('/subsync')
         })
         // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization'))
     },
