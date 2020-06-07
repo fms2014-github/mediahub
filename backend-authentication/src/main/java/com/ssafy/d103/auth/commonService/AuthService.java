@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     @Autowired
     private AuthRepository authRepository;
-    public void deleteAuth(Long authId){
-        Auth targetAuth = authRepository.findById(authId).orElseThrow(() -> new AuthException(authId));
-        authRepository.delete(targetAuth);
+    public void deleteAuth(Auth auth){
+        authRepository.delete(auth);
     }
 }
