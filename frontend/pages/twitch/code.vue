@@ -3,7 +3,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
+    layout: 'cover',
     mounted() {
         const fragmentString = window.location.search.replace('?', '')
         // Parse query string to see if page request is coming from OAuth 2.0 server.
@@ -18,12 +20,16 @@ export default {
         })
         testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/token-code?code=' + params.code).then(async (res) => {
             console.log('code', res.data)
-            const { data } = await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization')
-            console.log('twitch code', data)
-            this.$backendAxios.addFirstLogin()
-            this.$router.push('/subsync')
+            const { status } = await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization')
+            if (status === 200) {
+                this.checkRequireSync()
+                this.$router.push('/subsync')
+            }
         })
         // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization'))
+    },
+    methods: {
+        ...mapActions({ checkRequireSync: 'login/checkRequireSync' }),
     },
 }
 </script>

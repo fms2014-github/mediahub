@@ -12,7 +12,6 @@
                 </div>
             </div>
         </transition>
-
     </div>
 </template>
 
@@ -64,8 +63,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
 #login-page {
     font-family: 'S-CoreDream-3Light';
     display: flex;
