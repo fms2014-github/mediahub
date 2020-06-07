@@ -346,9 +346,12 @@ public class YouTubeController {
         LiveChatTextMessageDetails textMessageDetails = new LiveChatTextMessageDetails();
         textMessageDetails.setMessageText(msg.getMessageText());
 
-        snippet.setType("textMessageEvent");
         snippet.setTextMessageDetails(textMessageDetails);
+        snippet.setType("textMessageEvent");
+
         liveChatMessage.setSnippet(snippet);
+        System.out.println(liveChatMessage);
+        System.out.println("++++send++++");
         LiveChatMessage result = youTube.liveChatMessages().insert("snippet",liveChatMessage).execute();
         System.out.println("=========================채팅=======================");
         return result;
