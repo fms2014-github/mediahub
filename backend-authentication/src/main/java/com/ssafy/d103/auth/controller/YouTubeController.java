@@ -346,7 +346,7 @@ public class YouTubeController {
         snippet.setLiveChatId(msg.getLiveChatId());
 
         LiveChatTextMessageDetails textMessageDetails = new LiveChatTextMessageDetails();
-        textMessageDetails.setMessageText(msg.getMessageText());
+        textMessageDetails.setMessageText("\""+msg.getMessageText()+"\"");
 
         snippet.setTextMessageDetails(textMessageDetails);
         snippet.setType("textMessageEvent");
