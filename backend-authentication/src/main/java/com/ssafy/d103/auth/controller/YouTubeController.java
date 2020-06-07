@@ -1,5 +1,6 @@
 package com.ssafy.d103.auth.controller;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
 
 import com.google.api.services.youtube.model.*;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -326,7 +328,7 @@ public class YouTubeController {
 
     @ApiOperation(value = "channelId 요청할시 insert")
     @PostMapping(value = "/chating")
-    public LiveChatMessage insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    public LiveChatMessage insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         System.out.println(msg);
         System.out.println("=========================채팅 Insert=======================");
         long id = userPrincipal.getId();
@@ -352,8 +354,11 @@ public class YouTubeController {
         liveChatMessage.setSnippet(snippet);
         System.out.println(liveChatMessage);
         System.out.println("++++send++++");
-        LiveChatMessage result = youTube.liveChatMessages().insert("snippet",liveChatMessage).execute();
+        YouTube.LiveChatMessages.Insert request = youTube.liveChatMessages()
+                .insert("snippet", liveChatMessage);
+        LiveChatMessage response = request.execute();
+        System.out.println(response);
         System.out.println("=========================채팅=======================");
-        return result;
+        return response;
     }
 }
