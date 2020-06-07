@@ -53,6 +53,10 @@ export default function({ $axios, store }, inject) {
         return backendAxios.put('member/subFirstLogin')
     }
 
+    const twitchSynchronization = () => {
+        return backendAxios.put('/twitch/channel/synchronization')
+    }
+
     const backendScript = {
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
@@ -61,6 +65,7 @@ export default function({ $axios, store }, inject) {
         deleteTwitchChannel: (params) => deleteTwitchChannel(params),
         addFirstLogin: () => addFirstLogin(),
         subFirstLogin: () => subFirstLogin(),
+        twitchSynchronization: () => twitchSynchronization(),
     }
 
     // Inject to context as $api

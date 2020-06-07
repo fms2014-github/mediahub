@@ -1,5 +1,6 @@
 <template>
     <div id="side-bar">
+        <button id="logo" @click="logo">로고</button>
         <div id="tree"></div>
     </div>
 </template>
@@ -118,30 +119,26 @@ export default {
                         dropCapWrap.appendChild(node)
                         node.setAttribute('class', 'child-label')
                         parentLabel.insertBefore(dropCapWrap, parentLabel.children[1])
-                        dropCapWrap.addEventListener(
-                            'drop',
-                            (e) => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                console.log('drop1target', e.target)
-                                console.log('drop1', e.target.children[1])
-                                const channelId = e.dataTransfer.getData('targetId')
-                                e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
-                                const labelId = e.target.children[1].dataset.labelId
-                                this.$axios
-                                    .put(
-                                        `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
-                                        {},
-                                        {
-                                            headers: { Authorization: 'Bearer ' + this.getJwt() },
-                                        },
-                                    )
-                                    .then((res) => {
-                                        console.log(res.status)
-                                    })
-                            },
-                            true,
-                        )
+                        dropCapWrap.addEventListener('drop', (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log('drop1target', e.target)
+                            console.log('drop1', e.target.children[1])
+                            const channelId = e.dataTransfer.getData('targetId')
+                            e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
+                            const labelId = e.target.children[1].dataset.labelId
+                            this.$axios
+                                .put(
+                                    `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                    {},
+                                    {
+                                        headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                    },
+                                )
+                                .then((res) => {
+                                    console.log(res.status)
+                                })
+                        })
                         span2.addEventListener(
                             'drop',
                             (e) => {
@@ -324,6 +321,9 @@ export default {
             localStorage.setItem('labels', JSON.stringify(Info.label))
             this.labels = Info.label
         },
+        logo() {
+            this.$router.push('/')
+        },
     },
 }
 </script>
@@ -334,15 +334,25 @@ export default {
     display: flex;
     position: fixed;
     top: 0px;
-    padding-top: 58px;
     height: 100%;
     flex-direction: column;
     min-width: $side-bar-width;
     background-color: white;
     align-self: stretch;
-    z-index: 9998;
+    z-index: 9999;
     svg {
         width: 42px;
+    }
+    #logo,
+    #logo:focus {
+        width: 100%;
+        height: 65px;
+        border: {
+            width: 0px;
+        }
+        background-color: white;
+        outline: none;
+        cursor: pointer;
     }
 }
 </style>

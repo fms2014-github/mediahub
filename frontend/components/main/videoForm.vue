@@ -1,213 +1,154 @@
 <template>
     <div id="videoForm-container">
-        <div class="videoDiv">
-            <div class="videoList">
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <nuxt-link to="/streaming/google,HK39B8aWyYA"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
+        <div class="video-div">
+            <div class="video-list">
+                <div v-for="l in vlist" :key="l.videoId" class="video-form" @click="goVideo(l.videoId, l.provider)">
+                    <div class="img-wrap">
+                        <img v-if="l.provider === 'youtube'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                        <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                        <img v-if="l.provider === 'youtube'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                        <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
                     </div>
                     <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">1일1깡교과서(이거보고 따라하세요)</div>
-                            <div class="profileNickname">히샨</div>
-                            <span class="profileHits">조회수 387만회 </span>
-                            <span class="profileDate">1개월 전</span>
+                        <div><img class="profile-img" :src="l.profileImg" alt="" @click="goChannel(l.channelId, l.provider)" /></div>
+                        <div class="profile-contents">
+                            <div class="profile-title">{{ l.title }}</div>
+                            <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">{{ l.channelName }}</div>
+                            <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
+                            <div v-if="l.game !== null" id="profile-game" class="profile-content">{{ l.game }}</div>
+                            <img v-if="l.live !== 'none'" src="../../assets/icon/live.png" alt="" class="live-icon" />
                         </div>
                     </div>
                 </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <nuxt-link to="/streaming/twitch,silphtv"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">[케미 테스트] 유재석x비 댄스 호흡 좀 맞춰볼깡?</div>
-                            <div class="profileNickname">놀면 뭐하니?</div>
-                            <span class="profileHits">조회수 100만회 </span>
-                            <span class="profileDate">4일 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <nuxt-link to="/streaming/google,zCDeJzkoQqg,twitch,maknoonlol"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile3.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">당신만 몰랐던 해리포터와 아즈카반의 죄수 꿀잼 비하인드 스토리</div>
-                            <div class="profileNickname">덕질하는 여자</div>
-                            <span class="profileHits">조회수 3만회 </span>
-                            <span class="profileDate">3개월 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/zCIr-lbCuXc"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile1.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">일찍 일어나지 않아도, 당신의 좋은 오늘</div>
-                            <div class="profileNickname">해그린달 haegreendal</div>
-                            <span class="profileHits">조회수 128만회 </span>
-                            <span class="profileDate">2개월 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/hpI2A4RTvhs"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">1일1깡교과서(이거보고 따라하세요)</div>
-                            <div class="profileNickname">히샨</div>
-                            <span class="profileHits">조회수 387만회 </span>
-                            <span class="profileDate">1개월 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/t4d2Ve6QztQ"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">[케미 테스트] 유재석x비 댄스 호흡 좀 맞춰볼깡?</div>
-                            <div class="profileNickname">놀면 뭐하니?</div>
-                            <span class="profileHits">조회수 100만회 </span>
-                            <span class="profileDate">4일 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/ymQ3EnzueKw"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile3.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">당신만 몰랐던 해리포터와 아즈카반의 죄수 꿀잼 비하인드 스토리</div>
-                            <div class="profileNickname">덕질하는 여자</div>
-                            <span class="profileHits">조회수 3만회 </span>
-                            <span class="profileDate">3개월 전</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="videoForm">
-                    <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/zCIr-lbCuXc"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                    <div class="profile">
-                        <div><img class="profileImg" src="~/assets/images/mainHeader/profile1.png" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">일찍 일어나지 않아도, 당신의 좋은 오늘</div>
-                            <div class="profileNickname">해그린달 haegreendal</div>
-                            <span class="profileHits">조회수 128만회 </span>
-                            <span class="profileDate">2개월 전</span>
-                        </div>
-                    </div>
-                </div>
+                <button @click="go()">리스트test</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-export default {}
+export default {
+    props: {
+        vlist: {
+            type: Array,
+            default: null,
+            // type: Array,
+            // default: new Array(),
+        },
+    },
+    data: () => {
+        return {
+            viewCnt: '',
+        }
+    },
+
+    created() {},
+    methods: {
+        go() {
+            console.log('gogolist출력')
+            console.log(this.vlist)
+        },
+        goVideo(videoId, provider) {
+            alert('provider, videoId:: ' + provider + ',' + videoId)
+        },
+        goChannel(channelId, provider) {
+            alert('provider, channelId:: ' + provider + ',' + channelId)
+        },
+    },
+}
 </script>
 
 <style lang="scss" scoped>
 #videoForm-container {
-    .videoList {
+    .video-list {
         margin: 20px 0;
         display: flex;
         flex-wrap: wrap;
         /* background-color: pink; */
     }
-    .videoForm {
+    .video-form {
         width: 21%;
         margin: 0 2%;
-        .iframe-wrap {
+        cursor: pointer;
+        .img-wrap {
             position: relative;
             width: 100%;
-            margin: 3%;
+            margin: 3% 0;
             height: 0;
             padding-bottom: 56.25%;
-            iframe {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-            }
+        }
+        .img-url {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .img-url:hover {
+            width: 98%;
+            height: 98%;
+        }
+        #img-y:hover {
+            border: 3px solid #ff000085;
+        }
+        #img-t:hover {
+            border: 3px solid #9147ff85;
+        }
+        .img-icon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            z-index: 10;
         }
     }
 
     .profile {
+        height: 120px;
         display: flex;
-        margin: 0 5px 0 0;
         padding: 5px;
     }
-    .profileImg {
+    .profile-img {
         width: 40px;
         height: 40px;
+        border-radius: 50px;
     }
-    .profileContent {
+    .profile-contents {
         display: block;
         padding: 5px 0 0 10px;
     }
-    .profileTitle {
-        font-weight: 700;
-        font-size: 15px;
+    .profile-title {
+        max-height: 35px;
+        min-height: 17px;
+        line-height: 17px;
+        text-overflow: ellipsis;
+        // white-space: nowrap;
+        overflow: hidden;
+        font-weight: 500;
+        font-size: 13.6px;
+        margin-bottom: 6px;
     }
-    .profileNickname {
-        font-size: 13px;
-        color: rgb(77, 77, 77);
+    .profile-title:hover {
+        overflow-y: scroll;
     }
-    .profileHits,
-    .profileDate {
-        font-size: 13px;
-        color: rgb(77, 77, 77);
+    .profile-title::-webkit-scrollbar {
+        width: 8px;
+    }
+    .profile-title::-webkit-scrollbar {
+        width: 8px;
+    }
+    .profile-title::-webkit-scrollbar-track {
+        background-color: rgba(231, 231, 231, 0.815);
+    }
+    .profile-title::-webkit-scrollbar-thumb {
+        background-color: rgba(219, 202, 202, 0.815);
+    }
+
+    .profile-content {
+        font-size: 12px;
+        color: rgb(102, 102, 102);
+        margin-bottom: 1.5px;
+    }
+    .live-icon {
+        width: 40px;
+        display: block;
     }
 }
 </style>

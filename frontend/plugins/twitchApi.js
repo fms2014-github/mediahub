@@ -16,7 +16,7 @@ export default function({ $axios }, inject) {
         return twitchApi.get('clips/top', {
             params: {
                 channel: channelName,
-                period: month,
+                period: 'month',
                 trending: true,
                 limit: 100,
             },
@@ -34,10 +34,15 @@ export default function({ $axios }, inject) {
         })
     }
 
+    const twitchChannelApi = (channelId) => {
+        return twitchApi.get(`channels/${channelId}`)
+    }
+
     const twitchScript = {
         twitchClipsByChannelApi: (channelName) => twitchClipsByChannelApi(channelName),
         twitchVideosApi: (channelId) => twitchVideosApi(channelId),
         twitchStreamsApi: (token) => twitchStreamsApi(token),
+        twitchChannelApi: (channelId) => twitchChannelApi(channelId),
     }
     // Inject to context as $api
     inject('twitchApi', twitchScript)

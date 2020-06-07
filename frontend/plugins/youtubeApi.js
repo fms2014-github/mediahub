@@ -17,7 +17,6 @@ export default function({ $axios, store }, inject) {
     //     headers: { Authorization: `Bearer ${accessToken}` },
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
-    console.log('aaweewjwt')
     const apiKey = [
         'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
         'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
@@ -28,6 +27,15 @@ export default function({ $axios, store }, inject) {
         'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
         'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',
         'AIzaSyBLdqVb-uUmLn7V0b04OjR7RlKsZbFel8c',
+        'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
+        'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
+        'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
+        'AIzaSyCbdrUK6qc6PigMBDTHXc0--GpfGUJNOME',
+        'AIzaSyBTgmHOxDaWurmnbwZfXS1r5AIqFvikuLc',
+        'AIzaSyBHrgowLrb9pikeBRKqRxkeZtM8P5lwjrQ',
+        'AIzaSyD6L7D9vmQezoiVsmARGFvRSUsrbNn07Qs',
+        'AIzaSyAc6ZuKkihmURSjcfeL8PcNB6tRwIzsn8s',
+        'AIzaSyC9g5hODYWetX520NyaRjanPhd9zApEDa0',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
@@ -40,7 +48,7 @@ export default function({ $axios, store }, inject) {
                     eventType: 'live',
                     q: channelName,
                     type: 'video',
-                    key: apiKey[timeInMs % 9],
+                    key: apiKey[timeInMs % apiKey.length],
                 },
             })
             .then((res) => {
@@ -52,7 +60,7 @@ export default function({ $axios, store }, inject) {
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
@@ -62,11 +70,14 @@ export default function({ $axios, store }, inject) {
     const youtubeSearchApi = ({ channelId, eventType, type }) => {
         return youtubeApiKey.get('search', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet',
                 channelId,
                 eventType,
                 type,
+                // pageToken,
+                // maxResults: 50,
+                // order,
             },
         })
     }
@@ -74,7 +85,7 @@ export default function({ $axios, store }, inject) {
     const youtubeliveChatApi = ({ liveChatId, pageToken, pollingIntervalMillis }) => {
         return youtubeApiKey.get('liveChat/messages', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet,authorDetails',
                 liveChatId,
                 pageToken,

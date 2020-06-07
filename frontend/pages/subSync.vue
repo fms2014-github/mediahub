@@ -5,12 +5,10 @@
             <h2>구독 정보를 동기화하시려면 아래 버튼을 눌러주세요.</h2>
             <div id="button-wrap">
                 <button id="youtube-sync" @click="syncYoutube">
-                    <img src="../assets/icon/YouTube.png" />
-                    <span>YouTube</span>
+                    <img src="../assets/icon/youtubeBtn.png" />
                 </button>
                 <button id="twitch-sync" @click="syncTwitch">
-                    <img src="../assets/icon/Twitch.png" />
-                    <span>Twitch</span>
+                    <img src="../assets/icon/twitchBtn.png" />
                 </button>
                 <button v-if="requireSync == 1" id="late-sync" @click="lateSync">
                     <span>다른 계정은 다음에 할께요</span>
@@ -69,6 +67,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/commonMixin.scss';
 #subscription-sync {
+    font-family: 'S-CoreDream-3Light';
     #content-wrap {
         display: flex;
         flex-direction: column;
@@ -102,47 +101,36 @@ export default {
                 height: 62px;
                 margin: 10px 0 10px 50%;
                 transform: translateX(-50%);
-                background-color: $youtube-color;
+                background-color: rgba(255, 0, 0, 0.7);
+                outline: none;
                 img {
-                    background-color: rgb(255, 255, 255);
-                    padding: 8px;
+                    width: 170px;
+                    height: 50px;
+
                     margin: 0 8px;
                     vertical-align: middle;
                 }
-                span {
-                    vertical-align: middle;
-                    font: {
-                        size: 0.9rem;
-                        weight: 700;
-                    }
-                    color: rgb(230, 230, 230);
-                }
+
                 border: {
                     width: 0px;
-                    radius: 10px;
                 }
             }
             #twitch-sync {
-                background-color: $twitch-color;
-                margin: 10px 0 10px 50%;
+                background-color: rgba(145, 71, 255, 0.7);
+                margin: 10px 0 0 50%;
                 transform: translateX(-50%);
                 width: 250px;
                 height: 62px;
+                outline: none;
                 img {
+                    width: 170px;
+                    height: 50px;
                     margin: 0 8px;
                     vertical-align: middle;
                 }
-                span {
-                    vertical-align: middle;
-                    font: {
-                        size: 0.9rem;
-                        weight: 700;
-                    }
-                    color: rgb(30, 30, 30);
-                }
+
                 border: {
                     width: 0px;
-                    radius: 10px;
                 }
             }
             #late-sync {

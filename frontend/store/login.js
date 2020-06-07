@@ -24,7 +24,6 @@ export const mutations = {
     },
     checkRequireSync(state) {
         state.authUser.firstLogin++
-        this.$loginAxios.post('/auth/setSession', { firstLogin: state.authUser.firstLogin })
     },
 }
 
@@ -48,8 +47,9 @@ export const actions = {
         this.$router.push('/login')
     },
 
-    async checkRequireSync({ commit }) {
-        await this.$backendAxios.addFirstLogin()
+    async checkRequireSync({ commit, state }) {
         commit('checkRequireSync')
+        await this.$backendAxios.addFirstLogin()
+        await this.$loginAxios.post('/auth/setSession', { firstLogin: state.authUser.firstLogin })
     },
 }
