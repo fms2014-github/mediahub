@@ -35,8 +35,9 @@ export default {
     flex-wrap: wrap;
     height: calc(100% - 58px);
     #live-component {
+        margin-top: 20px;
         width: 156.25vh;
-        padding-right: 340px;
+        padding-right: 300px;
     }
     hr {
         width: 100%;

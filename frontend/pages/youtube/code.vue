@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
     mounted() {
         const fragmentString = window.location.search.replace('?', '')
@@ -34,14 +35,19 @@ export default {
                     tokenType: res.data.token_type,
                 })
                 if (status === 200) {
-                    this.$router.push('/')
+                    const { data } = await this.$backendAxios.addFirstLogin()
+                    this.checkRequireSync()
+                    this.$router.push('/subsync')
                 }
             })
         // const testaxios = this.$axios.create({
         //     headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },
         // })
-        // console.log('code', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
-        // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
+        // console.log('code', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
+        // console.log('synchronization', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
+    },
+    methods: {
+        ...mapActions({ checkRequireSync: 'login/checkRequireSync' }),
     },
 }
 </script>

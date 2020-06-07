@@ -18,6 +18,7 @@ import uploadVideo from '~/components/uploadVideo.vue'
 import subButton from '~/components/button.vue'
 import videoForm from '~/components/main/videoForm.vue'
 export default {
+    middleware: 'authenticated',
     components: {
         uploadVideo,
         subButton,

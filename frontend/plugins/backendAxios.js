@@ -1,7 +1,4 @@
 export default function({ $axios, store }, inject) {
-    const accessToken =
-        'ya29.a0AfH6SMD1sSvOJaY546r1vPJCpO1Ddk9Qiu9XH6_quegYCvVMTVUmi50bBb2XIk1yiIR7NF9OGknnZuJOS34wPBW3iSjMpScB8yXHFrweRYRNr6plD8zuRxVjM7RhVfLqnZAF12181Y30UAUpY5Uv09urD9WBIv0Mpfxj'
-
     const jwtToken = store.getters['login/getJwt']
 
     // Create a custom axios instance
@@ -49,12 +46,21 @@ export default function({ $axios, store }, inject) {
         })
     }
 
+    const addFirstLogin = () => {
+        return backendAxios.put('member/addFirstLogin')
+    }
+    const subFirstLogin = () => {
+        return backendAxios.put('member/subFirstLogin')
+    }
+
     const backendScript = {
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
         deleteYoutubeChannel: (sId) => deleteYoutubeChannel(sId),
         insertTwitchChannel: (params) => insertTwitchChannel(params),
         deleteTwitchChannel: (params) => deleteTwitchChannel(params),
+        addFirstLogin: () => addFirstLogin(),
+        subFirstLogin: () => subFirstLogin(),
     }
 
     // Inject to context as $api
