@@ -67,6 +67,9 @@ export default function({ $axios }, inject) {
                 channelId,
                 eventType,
                 type,
+                // pageToken,
+                // maxResults: 50,
+                // order,
             },
         })
     }

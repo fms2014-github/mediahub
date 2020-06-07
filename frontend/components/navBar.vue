@@ -1,15 +1,22 @@
 <template>
     <div id="nav-bar">
         <button id="logo" @click="logo">로고</button>
-        <button @click="logout"><img src="../assets/icon/logout.png" /></button>
-        <button @click="alarmCheck = !alarmCheck">
+        <button class="nav-btn" @click="logout">
+            <span class="material-icons">
+                meeting_room
+            </span>
+        </button>
+        <button class="nav-btn" @click="alarmCheck = !alarmCheck">
             <span id="alarm-icon" class="material-icons">
                 notifications
             </span>
         </button>
-        <button @click="help">
+        <button class="nav-btn" @click="help">
+            <!-- <span id="help-icon" class="material-icons">
+                format_quote
+            </span> -->
             <span id="help-icon" class="material-icons">
-                help
+                question_answer
             </span>
         </button>
         <div v-if="alarmCheck" class="alarm-div">
@@ -76,21 +83,21 @@ export default {
     button:link {
         color: black;
         text-decoration: none;
-        margin: 0px 20px;
+        margin: 0px 15px;
         background-color: rgba(0, 0, 0, 0);
         outline: none;
         border-width: 0px;
         cursor: pointer;
     }
-    #alarm-icon {
-        margin: 0px 20px;
-    }
     #help-icon {
-        margin-right: 40px;
+        margin-right: 50px;
+    }
+    .nav-btn {
+        padding-top: 4px;
     }
     button {
         span {
-            font-size: 32px;
+            font-size: 27px;
         }
     }
     .alarm-div {
@@ -99,8 +106,5 @@ export default {
         right: 110px;
         z-index: 10;
     }
-}
-img {
-    width: 32px;
 }
 </style>

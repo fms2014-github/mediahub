@@ -62,6 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 #login-page {
+    font-family: 'S-CoreDream-3Light';
     display: flex;
     justify-content: center;
     align-items: center;

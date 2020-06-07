@@ -2,20 +2,21 @@
     <div id="videoForm-container">
         <div class="video-div">
             <div class="video-list">
-                <div v-for="l in vlist" :key="l.videoId" class="video-form" @click="goVideo(l.videoId)">
+                <div v-for="l in vlist" :key="l.videoId" class="video-form" @click="goVideo(l.videoId, l.provider)">
                     <div class="img-wrap">
-                        <img :src="l.thumbnail" alt="" class="img-url" />
-                        <img v-if="l.provider == 'youtube'" src="../../assets/icon/youtubeIcon.png" alt="" class="imgIcon" />
-                        <img v-if="l.provider == 'twitch'" src="../../assets/icon/twitchIcon.png" alt="" class="imgIcon" />
+                        <img v-if="l.provider === 'youtube'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                        <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                        <img v-if="l.provider === 'youtube'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                        <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
                     </div>
                     <div class="profile">
-                        <div><img class="profileImg" :src="l.profileImg" alt="" /></div>
-                        <div class="profileContent">
-                            <div class="profileTitle">{{ l.title }}</div>
-                            <div class="profileNickname">{{ l.channelName }}</div>
-                            <span class="profileHits">조회수 {{ l.viewCnt }}ㆍ</span>
-                            <span class="profileDate">{{ l.published }}</span>
-                            <img v-if="l.live !== 'none'" src="../../assets/icon/live.png" alt="" class="liveIcon" />
+                        <div><img class="profile-img" :src="l.profileImg" alt="" @click="goChannel(l.channelId, l.provider)" /></div>
+                        <div class="profile-contents">
+                            <div class="profile-title">{{ l.title }}</div>
+                            <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">{{ l.channelName }}</div>
+                            <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
+                            <div v-if="l.game !== null" id="profile-game" class="profile-content">{{ l.game }}</div>
+                            <img v-if="l.live !== 'none'" src="../../assets/icon/live.png" alt="" class="live-icon" />
                         </div>
                     </div>
                 </div>
@@ -47,8 +48,11 @@ export default {
             console.log('gogolist출력')
             console.log(this.vlist)
         },
-        goVideo(videoId) {
-            alert('비디오아이디:: ' + videoId)
+        goVideo(videoId, provider) {
+            alert('provider, videoId:: ' + provider + ',' + videoId)
+        },
+        goChannel(channelId, provider) {
+            alert('provider, channelId:: ' + provider + ',' + channelId)
         },
     },
 }
@@ -69,7 +73,7 @@ export default {
         .img-wrap {
             position: relative;
             width: 100%;
-            margin: 3%;
+            margin: 3% 0;
             height: 0;
             padding-bottom: 56.25%;
         }
@@ -78,51 +82,71 @@ export default {
             width: 100%;
             height: 100%;
         }
-        .imgIcon {
+        .img-url:hover {
+            width: 98%;
+            height: 98%;
+        }
+        #img-y:hover {
+            border: 3px solid #ff000085;
+        }
+        #img-t:hover {
+            border: 3px solid #9147ff85;
+        }
+        .img-icon {
             position: absolute;
             width: 30px;
             height: 30px;
             z-index: 10;
-            margin: -2px 2px;
         }
     }
 
     .profile {
         height: 120px;
         display: flex;
-        margin: 0 5px 0 0;
         padding: 5px;
     }
-    .profileImg {
+    .profile-img {
         width: 40px;
         height: 40px;
         border-radius: 50px;
     }
-    .profileContent {
+    .profile-contents {
         display: block;
         padding: 5px 0 0 10px;
     }
-    .profileTitle {
-        height: 35px;
+    .profile-title {
+        max-height: 35px;
+        min-height: 17px;
         line-height: 17px;
+        text-overflow: ellipsis;
+        // white-space: nowrap;
         overflow: hidden;
         font-weight: 500;
         font-size: 13.6px;
         margin-bottom: 6px;
     }
-    .profileTitle:hover {
+    .profile-title:hover {
         overflow-y: scroll;
     }
-    .profileNickname {
+    .profile-title::-webkit-scrollbar {
+        width: 8px;
+    }
+    .profile-title::-webkit-scrollbar {
+        width: 8px;
+    }
+    .profile-title::-webkit-scrollbar-track {
+        background-color: rgba(231, 231, 231, 0.815);
+    }
+    .profile-title::-webkit-scrollbar-thumb {
+        background-color: rgba(219, 202, 202, 0.815);
+    }
+
+    .profile-content {
         font-size: 12px;
         color: rgb(102, 102, 102);
+        margin-bottom: 1.5px;
     }
-    .profileHits,
-    .profileDate {
-        font-size: 12px;
-        color: rgb(102, 102, 102);
-    }
-    .liveIcon {
+    .live-icon {
         width: 40px;
         display: block;
     }
