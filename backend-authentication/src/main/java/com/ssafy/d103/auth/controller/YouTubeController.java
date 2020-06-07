@@ -169,20 +169,20 @@ public class YouTubeController {
         List<LabelDto> label = new LinkedList<>();
         LinkedList<Label> queue = new LinkedList<>();
         queue.add(rootLabel);
-        rootLabel.getChannels().forEach(channel -> {
-            memberChannels.add(channel);
-        });
-//        while(!queue.isEmpty()){
-//            int size = queue.size();
-//            for(int i=0; i<size; i++){
-//                Label temp = queue.poll();
-//                queue.addAll(temp.getSubLabels());
-//                label.add(new LabelDto(temp));
-//                temp.getChannels().forEach(channel -> {
-//                   memberChannels.add(channel);
-//                });
-//            }
-//        }
+//        rootLabel.getChannels().forEach(channel -> {
+//            memberChannels.add(channel);
+//        });
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i=0; i<size; i++){
+                Label temp = queue.poll();
+                queue.addAll(temp.getSubLabels());
+                label.add(new LabelDto(temp));
+                temp.getChannels().forEach(channel -> {
+                   memberChannels.add(channel);
+                });
+            }
+        }
         System.out.println("===========syncro before============");
         System.out.println("현 DB 채널"+memberChannels);
         System.out.println("구독중 채널"+channels);
