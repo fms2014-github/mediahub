@@ -18,7 +18,7 @@ export default {
             },
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
             { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
             { rel: 'stylesheet', type: 'text/css', href: 'https://cdn.jsdelivr.net/npm/animate.css@3.5.1'},
         ],
@@ -39,7 +39,13 @@ export default {
     /*
      ** Plugins to load before mounting the App
      */
-    plugins: [{ src: '~/plugins/youtubeEmbed', mode: 'client' }, '~/plugins/loginAxios.js', '~/plugins/testaxios.js', '~/plugins/youtubeApi.js'],
+    plugins: [
+        { src: '~/plugins/youtubeEmbed', mode: 'client' },
+        '~/plugins/loginAxios.js',
+        '~/plugins/youtubeApi.js',
+        '~/plugins/twitchApi.js',
+        '~/plugins/backendAxios.js',
+    ],
     /*
      ** Nuxt.js dev-modules
      */

@@ -1,34 +1,63 @@
-export default function({ $axios }, inject) {
-    const accessToken =
-        'ya29.a0AfH6SMDIh61B0gU8SvVou5if_r7yFUIfPtClDPWFv4fRgfzm9ZPwf-5Tw1olt_4qF4ESAfN1_nj-7OK1h44wBswrPCnUFWV4njc7Vmmkk2mF_Smsro3Drqpa3VszjTps7bcEQptwhaxLX1lHMIsSjZqcdBXSxzIagPvO'
-
+export default function({ $axios, store }, inject) {
+    const timeInMs = Date.now()
+    // const accessToken =
+    //     'ya29.a0AfH6SMAUvarbOQhbgdC0qNACLgrvESImwdu5VTAu0SSowoQV02oWREzdRRpIZj0Sh7ZozGBfOwZ2oqfBO6gLxtcRNrp7KJbaYQNLgPFZAPbewKNwRRK_2svjtfW8VaBcyEzmdaOCBpQV4g8j2WK9Ix9HnhiGvtlu994'
+    // //
+    const jwtToken = store.getters['login/getJwt']
     // Create a custom axios instance
+    const backendAxios = $axios.create({
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        baseURL: 'https://k02d1031.p.ssafy.io:8081/v1/youtube',
+    })
+
     const youtubeApiKey = $axios.create({
         baseURL: 'https://www.googleapis.com/youtube/v3/',
     })
-    const youtubeApiToken = $axios.create({
-        headers: { Authorization: `Bearer ${accessToken}` },
-        baseURL: 'https://www.googleapis.com/youtube/v3/',
-    })
+    // const youtubeApiToken = $axios.create({
+    //     headers: { Authorization: `Bearer ${accessToken}` },
+    //     baseURL: 'https://www.googleapis.com/youtube/v3/',
+    // })
+    console.log('aaweewjwt')
+    const apiKey = [
+        'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
+        'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
+        'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
+        'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
+        'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
+        'AIzaSyDYOg3oe_oZZ8hhm3Hj7dfLUTqc6fh8QMc',
+        'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
+        'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',
+        'AIzaSyBLdqVb-uUmLn7V0b04OjR7RlKsZbFel8c',
+        'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
+        'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
+        'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
+    ]
 
-    const apiKey = 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so'
+    const youtubuLiveVideoApi = async (channel, channelName) => {
+        let data = null
+        await youtubeApiKey
+            .get('search', {
+                params: {
+                    part: 'id',
+                    channelId: channel,
+                    eventType: 'live',
+                    q: channelName,
+                    type: 'video',
+                    key: apiKey[timeInMs % apiKey.length],
+                },
+            })
+            .then((res) => {
+                data = res.data
+            })
+        return data
+    }
 
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                key: apiKey,
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
-            },
-        })
-    }
-
-    const isSubscribeApi = (channelId) => {
-        return youtubeApiToken.get('subscriptions', {
-            params: {
-                part: 'snippet',
-                forChannelId: channelId,
-                mine: true,
             },
         })
     }
@@ -36,7 +65,7 @@ export default function({ $axios }, inject) {
     const youtubeSearchApi = ({ channelId, eventType, type }) => {
         return youtubeApiKey.get('search', {
             params: {
-                key: apiKey,
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet',
                 channelId,
                 eventType,
@@ -46,20 +75,9 @@ export default function({ $axios }, inject) {
     }
 
     const youtubeliveChatApi = ({ liveChatId, pageToken, pollingIntervalMillis }) => {
-        console.log(liveChatId)
-        const query = {
-            params: {
-                key: apiKey,
-                part: 'id,snippet,authorDetails',
-                liveChatId,
-                pageToken,
-                pollingIntervalMillis,
-            },
-        }
-        console.log(query)
         return youtubeApiKey.get('liveChat/messages', {
             params: {
-                key: apiKey,
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet,authorDetails',
                 liveChatId,
                 pageToken,
@@ -67,39 +85,65 @@ export default function({ $axios }, inject) {
             },
         })
     }
-    const insertSubscribeApi = (cId) => {
-        return youtubeApiToken.post(
-            'subscriptions',
-            {
-                snippet: {
-                    resourceId: {
-                        kind: 'youtube#channel',
-                        channelId: cId,
-                    },
-                },
-            },
-            {
-                params: {
-                    part: 'snippet',
-                },
-            },
-        )
-    }
-    const deleteSubscribeApi = (channelId) => {
-        return youtubeApiToken.delete('subscriptions', {
-            params: {
-                id: channelId,
-            },
+    const youtubeliveChatInsertApi = ({ liveChatId, msg }) => {
+        return backendAxios.post('/chating', {
+            liveChatId,
+            messageText: msg,
         })
     }
 
+    // const insertSubscribeApi = (cId, accessToken) => {
+    //     return youtubeApiToken.post(
+    //         'subscriptions',
+    //         {
+    //             snippet: {
+    //                 resourceId: {
+    //                     kind: 'youtube#channel',
+    //                     channelId: cId,
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             headers: { Authorization: `Bearer ${accessToken}` },
+    //             params: {
+    //                 part: 'snippet',
+    //             },
+    //         },
+    //     )
+    // }
+    // const deleteSubscribeApi = (channelId, accessToken) => {
+    //     return youtubeApiToken.delete('subscriptions', {
+    //         headers: { Authorization: `Bearer ${accessToken}` },
+    //         params: {
+    //             id: channelId,
+    //         },
+    //     })
+    // }
+
+    // const isSubscribeApi = (channelId, accessToken) => {
+    //     return youtubeApiToken.get('subscriptions', {
+    //         headers: { Authorization: `Bearer ${accessToken}` },
+    //         params: {
+    //             part: 'snippet',
+    //             forChannelId: channelId,
+    //             mine: true,
+    //         },
+    //     })
+    // }
+
+    const synchronization = () => {
+        return backendAxios.get('/synchronization')
+    }
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
         youtubeliveChatApi: (liveChatId) => youtubeliveChatApi(liveChatId),
-        isSubscribeApi: (channelId) => isSubscribeApi(channelId),
-        insertSubscribeApi: (cId) => insertSubscribeApi(cId),
-        deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
+        // isSubscribeApi: (channelId) => isSubscribeApi(channelId),
+        // insertSubscribeApi: (cId) => insertSubscribeApi(cId),
+        // deleteSubscribeApi: (channelId) => deleteSubscribeApi(channelId),
+        youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
+        synchronization: () => synchronization(),
+        youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)

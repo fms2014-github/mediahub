@@ -15,10 +15,10 @@ export default {
     middleware: 'authenticated',
     components: {
         liveVideoSlideBar,
-        // videoForm,
+        videoForm,
     },
     mounted() {
-        console.log('index', this.jwt())
+        // console.log('index', this.jwt())
     },
     methods: {
         ...mapGetters({ jwt: 'login/getJwt' }),

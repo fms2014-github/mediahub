@@ -4,7 +4,7 @@
             <div class="videoList">
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <nuxt-link to="/streaming/y,VykycecFVoc"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
+                        <nuxt-link to="/streaming/google,HK39B8aWyYA"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
@@ -18,14 +18,7 @@
                 </div>
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/t4d2Ve6QztQ"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+                        <nuxt-link to="/streaming/twitch,silphtv"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>
@@ -39,14 +32,7 @@
                 </div>
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/ymQ3EnzueKw"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+                        <nuxt-link to="/streaming/google,zCDeJzkoQqg,twitch,maknoonlol"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile3.png" alt="" /></div>
@@ -60,14 +46,7 @@
                 </div>
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/zCIr-lbCuXc"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+                        <nuxt-link to="/uploaded/google,FHaaShvM"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile1.png" alt="" /></div>
@@ -81,14 +60,7 @@
                 </div>
                 <div class="videoForm">
                     <div class="iframe-wrap">
-                        <iframe
-                            width="400"
-                            height="225‬"
-                            src="https://www.youtube.com/embed/hpI2A4RTvhs"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+                        <nuxt-link to="/uploaded/google,FHaaShvM"><img src="https://via.placeholder.com/400x225"/></nuxt-link>
                     </div>
                     <div class="profile">
                         <div><img class="profileImg" src="~/assets/images/mainHeader/profile2.png" alt="" /></div>

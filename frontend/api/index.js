@@ -16,17 +16,25 @@ router.use((req, res, next) => {
 
 // Add POST - /api/login
 router.post('/setSession', (req, res) => {
-    console.log('req.body', req.body)
+    console.log('/setSession', req.session.data)
     if (req.body.jwt !== null) {
-        req.session.jwt = req.body
-        return res.json(req.body)
+        console.log('/setSession', req.session.data)
+        if (req.session.data === undefined) {
+            req.session.data = { jwt: req.body.jwt }
+            console.log('/setSession', req.session.data)
+        }
+        if (req.session.data !== undefined) {
+            req.session.data.firstLogin = req.body.firstLogin
+        }
+        console.log('/setSession', req.session.data)
+        return res.status(200).json(req.session.data)
     }
     return res.status(401).json(null)
 })
 
 // Add POST - /api/logout
 router.post('/deleteSession', (req, res) => {
-    delete req.session.jwt
+    delete req.session.data
     res.json({ ok: true })
 })
 

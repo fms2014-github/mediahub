@@ -34,6 +34,7 @@ export default {
         let m
         while ((m = regex.exec(fragmentString))) {
             if (decodeURIComponent(m[1]) === 'token') {
+                console.log('awefwaef')
                 await this.$store.dispatch('login/loginapi', decodeURIComponent(m[2]))
                 this.$router.push('/subSync')
             }
@@ -56,7 +57,7 @@ export default {
     },
     methods: {
         login() {
-            window.location.href = 'http://k02d1031.p.ssafy.io:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/login'
+            window.location.href = 'https://k02d1031.p.ssafy.io:8081/oauth2/authorize/google?redirect_uri=http://localhost:3000/login'
         },
     },
 }
