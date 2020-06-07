@@ -55,7 +55,8 @@ export default function({ $axios, store }, inject) {
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                key: apiKey[timeInMs % apiKey.length],
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyA_4PVT4iLvL92YcMpYrxx_905xfsScqlU',
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
