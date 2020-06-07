@@ -27,7 +27,7 @@ export default {
                 grant_type: 'authorization_code',
             })
             .then(async (res) => {
-                // console.log(res)
+                console.log(res)
                 const { status } = await testaxios.post('https://k02d1031.p.ssafy.io:8081/v1/youtube/setToken', {
                     accessToken: res.data.access_token,
                     expiresIn: res.data.expires_in,
@@ -46,8 +46,8 @@ export default {
         // const testaxios = this.$axios.create({
         //     headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },
         // })
-        // // console.log('code', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
-        // // console.log('synchronization', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
+        // console.log('code', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/token-code?code=' + params.code))
+        // console.log('synchronization', await testaxios.get('https://k02d1031.p.ssafy.io:8081/v1/youtube/synchronization'))
     },
     methods: {
         ...mapActions({ checkRequireSync: 'login/checkRequireSync' }),

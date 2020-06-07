@@ -38,8 +38,8 @@ export default {
     },
     created() {},
     mounted() {
-        // console.log(this.videoId)
-        // console.log('youtube', this.playInfo)
+        console.log(this.videoId)
+        console.log('youtube', this.playInfo)
         this.playInfo.play = this.videoId
         const fragmentString = window.location.search.replace('?', '')
         // Parse query string to see if page request is coming from OAuth 2.0 server.

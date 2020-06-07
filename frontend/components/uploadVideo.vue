@@ -65,7 +65,7 @@ export default {
     methods: {
         ready(event) {
             this.loaded()
-            // // console.log(event)
+            // console.log(event)
         },
         playing(event) {
             this.Info = event.target

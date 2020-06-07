@@ -125,9 +125,9 @@ export default {
                     this.streamer.viewCount = res.data.items[0].statistics.viewCount
                     this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
                     this.test = res.data.items[0].statistics.videoCount
-                    // // console.log(res)
+                    // console.log(res)
                 })
-            // console.log(this.test)
+            console.log(this.test)
         } else {
             const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             this.streamer.name = streamer.display_name // name도 추가할까?
@@ -158,7 +158,7 @@ export default {
                         },
                     })
                 ).data
-                // // console.log(this.vData)
+                // console.log(this.vData)
                 this.total = this.vData1.pageInfo.totalResults
                 this.nextPageToken = this.vData1.nextPageToken
                 if (!this.vData1.nextPageToken) {
@@ -171,7 +171,7 @@ export default {
                 const idStr = this.idList.join(',')
 
                 this.vData2 = (await this.$youtubeApi.youtubeVideosApi(idStr)).data
-                // console.log(this.vData2)
+                console.log(this.vData2)
                 // for (let i = 0; i < this.vData1.items.length; i++) {
                 //     // this.vData2 = (await this.$youtubeApi.youtubeVideosApi(this.vData1.items[i].id.videoId)).data
                 //     this.viewCnt = this.numChange(this.vData2.items[0].statistics.viewCount) + '회'
