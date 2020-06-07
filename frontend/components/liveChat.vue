@@ -9,7 +9,7 @@
                             <img class="profile-image" :src="item.provider === 'google' ? '/YouTube.png' : '/Twitch.png'" />
                             <span>{{ item.displayName }}</span>
                         </div>
-                        <span>{{ item.textMessage }}</span>
+                        <span style="display: inline-block; margin-top: 8px;">{{ item.textMessage }}</span>
                     </div>
                 </div>
             </div>
@@ -172,7 +172,9 @@ export default {
         },
         sendMessage(platform) {
             console.log(this.message)
-            this.$youtubeApi.youtubeliveChatInsertApi({ liveChatId: this.liveChatId, msg: this.message })
+            this.$youtubeApi.youtubeliveChatInsertApi({ liveChatId: this.liveChatId, msg: this.message }).then((res) => {
+                console.log(res)
+            })
             this.message = ''
         },
     },
