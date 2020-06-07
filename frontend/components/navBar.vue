@@ -1,6 +1,5 @@
 <template>
     <div id="nav-bar">
-        <button id="logo" @click="logo">로고</button>
         <button @click="logout"><img src="../assets/icon/logout.png" /></button>
         <button @click="alarmCheck = !alarmCheck">
             <span id="alarm-icon" class="material-icons">
@@ -15,6 +14,10 @@
             <button id="youtube-sync" @click="syncYoutube">
                 <img src="../assets/icon/YouTube.png" />
                 <span>YouTube</span>
+            </button>
+            <button id="tiwtch-sync" @click="syncTwitch">
+                <img src="../assets/icon/Twitch.png" />
+                <span>Twitch</span>
             </button>
         </div>
         <div v-if="alarmCheck" class="alarm-div">
@@ -61,6 +64,7 @@ export default {
                 console.log(res.status)
             })
         },
+        syncTwitch() {},
     },
 }
 </script>
@@ -77,11 +81,7 @@ export default {
     min-width: calc(1280px);
     height: $nav-bar-height;
     background-color: white;
-    z-index: 9999;
-    #logo {
-        position: absolute;
-        left: 0px;
-    }
+    z-index: 9998;
     button,
     button:active,
     button:visited,
