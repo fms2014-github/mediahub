@@ -16,7 +16,7 @@ export default function({ $axios }, inject) {
         return twitchApi.get('clips/top', {
             params: {
                 channel: channelName,
-                period: month,
+                period: 'month',
                 trending: true,
                 limit: 100,
             },
