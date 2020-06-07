@@ -156,10 +156,13 @@ public class YouTubeController {
                 .map(item -> {
                     Channel channel = new Channel();
                     channel.setLabel(rootLabel);
+                    channel.setName(item.getSnippet().getTitle());
+                    channel.setDisplayName(item.getSnippet().getTitle());
                     channel.setProvider(AuthProvider.google.toString());
                     channel.setChannelId(item.getSnippet().getResourceId().getChannelId());
                     channel.setProfileImg(item.getSnippet().getThumbnails().getDefault().getUrl());
                     channel.setDescription(item.getSnippet().getDescription());
+                    channel.setSubscriptionId(item.getId());
                     return channel;
                 }).collect(Collectors.toList());
         List<Channel> memberChannels = new ArrayList<>();
@@ -180,9 +183,12 @@ public class YouTubeController {
                 });
             }
         }
+        System.out.println("===========syncro before============");
+        System.out.println("현 DB 채널"+memberChannels);
+        System.out.println("구독중 채널"+channels);
         for (int i = 0; i<memberChannels.size();i++){
             for (int j = 0; j<channels.size(); j++){
-                if(memberChannels.get(i).getChannelId() == channels.get(j).getChannelId()){
+                if(memberChannels.get(i).getChannelId().equals(channels.get(j).getChannelId())){
                     memberChannels.remove(i);
                     channels.remove(j);
                     i--;
@@ -190,13 +196,15 @@ public class YouTubeController {
                 }
             }
         }
-        System.out.println("syncro");
-        System.out.println(" +될 채널 "+memberChannels);
-        System.out.println("없어질 채널"+channels);
+        System.out.println("=======syncro after========");
+        System.out.println("없어질 채널 "+memberChannels);
+        System.out.println("추가채널"+channels);
         // youtube에서 받은 subscription 정보 중 현 DB와 비교하여 남은 channel들
-        channelService.saveAll(channels);
+        if(channels.size()>0)
+            channelService.saveAll(channels);
         // 현 DB와 youtube subscription 정보를 비교하여 youtube에 없으나 DB에 남은 정보들
         for (int i=0; i<memberChannels.size();i++){
+            System.out.println(memberChannels.get(i).getId() + " 삭제 중 Channel");
             channelService.deleteChannel(memberChannels.get(i).getId());
         }
         return new ResponseEntity(HttpStatus.OK);

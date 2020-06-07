@@ -80,7 +80,6 @@ public class MemberController {
 
     @ApiOperation(value = "라벨 삭제 요청")
     @DeleteMapping("/label")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity deleteLabel(@RequestParam String labelId, @CurrentUser UserPrincipal userPrincipal){
         System.out.println("========라벨 삭제=======");
         labelService.deleteLabel(Long.parseLong(labelId));

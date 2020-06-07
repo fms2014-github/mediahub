@@ -51,7 +51,10 @@ public class Channel {
     public String toString() {
         return "ChannelEntity{" +
                 "id=" + id +
+                ", channelId='" + channelId + '\'' +
+                ", name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", provider='" + provider + '\'' +
-                '}';
+                "}\n";
     }
 }
