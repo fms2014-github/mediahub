@@ -28,10 +28,12 @@
                     </div>
                 </div>
                 <div id="btns-div">
-                    <div id="profile-btns">
+                    <sub-button v-if="youtubeButton.channelId !== ''" :play-info="youtubeButton" />
+                    <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
+                    <!-- <div id="profile-btns">
                         <button id="sub-btn" class="profile-btn">구독</button>
                         <button id="follow-btn" class="profile-btn">팔로우</button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -53,10 +55,12 @@
 
 <script>
 import axios from 'axios'
+import subButton from '~/components/button.vue'
 import videoForm from '@/components/main/videoForm.vue'
 export default {
     components: {
         videoForm,
+        subButton,
     },
     asyncData({ params }) {
         const channelId = params.channelId
@@ -101,10 +105,29 @@ export default {
                     provider: '',
                 },
             ],
+            youtubeButton: {
+                kind: 'google',
+                channelId: '',
+            },
+            twitchButton: {
+                kind: 'twitch',
+                channelId: '',
+            },
         }
     },
     async created() {
         const channelInfo = this.channelId.split(',')
+        const yi = channelInfo.findIndex((i) => i === 'youtube')
+        if (yi >= 0) {
+            console.log('channelId/y', channelInfo[yi + 1])
+            this.youtubeButton.channelId = channelInfo[yi + 1]
+        }
+        const ti = channelInfo.findIndex((i) => i === 'twitch')
+        if (ti >= 0) {
+            console.log('channelId/t', channelInfo[ti + 1])
+            this.twitchButton.channelId = channelInfo[ti + 1]
+        }
+        console.log(channelInfo)
         this.provider = channelInfo[0]
         this.channelId = channelInfo[1]
         if (this.provider === 'youtube') {
