@@ -90,6 +90,7 @@ export default {
             game: '',
             moreVideo: true,
             test: 0,
+            idList: [],
             videoList: [
                 {
                     videoId: '',
@@ -118,14 +119,13 @@ export default {
                 .then((res) => {
                     this.streamer.name = res.data.items[0].snippet.title
                     this.streamer.description = res.data.items[0].snippet.description
-                    this.streamer.published = res.data.items[0].snippet.publishedAt
+                    this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
                     this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
                     this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
-                    this.streamer.published = this.streamer.published.substring(0, 10)
                     this.streamer.viewCount = res.data.items[0].statistics.viewCount
                     this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
                     this.test = res.data.items[0].statistics.videoCount
-                    console.log(res)
+                    // console.log(res)
                 })
             console.log(this.test)
         } else {
@@ -139,8 +139,8 @@ export default {
             this.streamer.bannerImg = streamer.video_banner
         }
     },
-    async mounted() {
-        await this.more()
+    mounted() {
+        this.more()
     },
     methods: {
         async more() {
@@ -154,20 +154,30 @@ export default {
                             pageToken: this.nextPageToken,
                             maxResults: 50,
                             order: this.order,
+                            type: 'video',
                         },
                     })
                 ).data
+                // console.log(this.vData)
                 this.total = this.vData1.pageInfo.totalResults
                 this.nextPageToken = this.vData1.nextPageToken
+                if (!this.vData1.nextPageToken) {
+                    this.moreVideo = false
+                }
 
-                for (let i = 0; i < this.vData1.items.length; i++) {
-                    if (this.vData1.items[i].id.videoId == null) continue
-                    this.vData2 = (await this.$youtubeApi.youtubeVideosApi(this.vData1.items[i].id.videoId)).data
-                    console.log(this.vData1)
-                    this.viewCnt = this.numChange(this.vData2.items[0].statistics.viewCount) + '회'
+                for (var i = 0; i < this.vData1.items.length; i++) {
+                    this.idList.push(this.vData1.items[i].id.videoId)
+                }
+                const idStr = this.idList.join(',')
 
-                    const listTemp = {
-                        videoId: this.vData1.items[i].id.videoId,
+                this.vData2 = (await this.$youtubeApi.youtubeVideosApi(idStr)).data
+                console.log(this.vData2)
+                // for (let i = 0; i < this.vData1.items.length; i++) {
+                //     // this.vData2 = (await this.$youtubeApi.youtubeVideosApi(this.vData1.items[i].id.videoId)).data
+                //     this.viewCnt = this.numChange(this.vData2.items[0].statistics.viewCount) + '회'
+
+                for (let i = 0; i < this.vData2.items.length; i++) {
+                    this.list[this.vData2.items[i].id] = {
                         title: this.vData1.items[i].snippet.title,
                         published: this.vData1.items[i].snippet.publishedAt.substring(0, 10),
                         thumbnail: this.vData1.items[i].snippet.thumbnails.medium.url,
@@ -178,8 +188,8 @@ export default {
                         channelName: this.streamer.name,
                         channelId: this.channelId,
                         game: this.game,
+                        count: this.vData2.items[i].statistics.viewCount,
                     }
-                    this.list.push(listTemp)
                 }
             }
             if (this.provider === 'twitch') {
