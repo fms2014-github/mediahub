@@ -1,6 +1,10 @@
+@import 'commonMixin.scss';
+
+
 #tree {
     text-align: center;
     overflow: auto;
+    @include scrollbar('&');
     #root-label-wrap{
         #root-label {
             display: inline-block;

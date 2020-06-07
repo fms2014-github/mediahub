@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div v-if="liveList.length > 0">
-                    <div v-for="(item, index) in liveList" :id="'v' + index" :key="item" :class="'video v' + index">
+                    <div v-for="(item, index) in liveList" :id="'v' + index" :key="item.id" :class="'video v' + index">
                         <nuxt-link class="link" :to="'/streaming/' + item.kind + ',' + item.id"></nuxt-link>
                         <youtube
                             v-if="item.kind === 'google'"
