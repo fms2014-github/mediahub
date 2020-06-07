@@ -98,20 +98,32 @@ public class YouTubeController {
                                                 @CurrentUser UserPrincipal userPrincipal) {
         System.out.println("===================setToken=======================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
+        boolean check = false;
+        Long authId = 0L;
+        Auth auth = new Auth();
         for(Auth a :member.getAuth()){
             if(a.getAuth_provider().equals(AuthProvider.google.toString())){
-                System.out.println(a.getAuth_provider());
-                authService.deleteAuth(a);
+                check = true;
+                authId = a.getId();
             }
         }
+        if(check){ // 있을때
+            for (Auth a : member.getAuth()){
+                if(authId == a.getId()){
+                    a.setRefresh_token(retGoogleAuth.getRefreshToken());
+                    a.setAccess_token(retGoogleAuth.getAccessToken());
+                }
+            }
+        }else{ // 없을때
+            auth.setAuth_provider(AuthProvider.google.toString());
+            auth.setAccess_token(retGoogleAuth.getAccessToken());
+            auth.setRefresh_token(retGoogleAuth.getRefreshToken());
+            auth.setToken_type(retGoogleAuth.getTokenType());
+            auth.setMember(member);
+            member.getAuth().add(auth);
+        }
         System.out.println(retGoogleAuth.getAccessToken());
-        Auth auth = new Auth();
-        auth.setAuth_provider(AuthProvider.google.toString());
-        auth.setAccess_token(retGoogleAuth.getAccessToken());
-        auth.setRefresh_token(retGoogleAuth.getRefreshToken());
-        auth.setToken_type(retGoogleAuth.getTokenType());
-        auth.setMember(member);
-        member.getAuth().add(auth);
+
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
