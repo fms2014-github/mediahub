@@ -2,11 +2,11 @@
     <div id="videoForm-container">
         <div class="video-div">
             <div class="video-list">
-                <div v-for="l in vlist" :key="l.videoId" class="video-form" @click="goVideo(l.videoId, l.provider)">
+                <div v-for="l in vlist" :key="l.id" class="video-form" @click="goVideo(l, l.provider)">
                     <div class="img-wrap">
-                        <img v-if="l.provider === 'youtube'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                        <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
                         <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
-                        <img v-if="l.provider === 'youtube'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                        <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
                         <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
                     </div>
                     <div class="profile">
@@ -16,7 +16,7 @@
                             <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">{{ l.channelName }}</div>
                             <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
                             <div v-if="l.game !== null" id="profile-game" class="profile-content">{{ l.game }}</div>
-                            <img v-if="l.live !== 'none'" src="../../assets/icon/live.png" alt="" class="live-icon" />
+                            <img v-if="l.live === 'live'" src="../../assets/icon/live.png" alt="" class="live-icon" />
                         </div>
                     </div>
                 </div>
@@ -31,9 +31,7 @@ export default {
     props: {
         vlist: {
             type: Array,
-            default: null,
-            // type: Array,
-            // default: new Array(),
+            required: true,
         },
     },
     data: () => {
@@ -41,8 +39,6 @@ export default {
             viewCnt: '',
         }
     },
-
-    created() {},
     methods: {
         go() {
             console.log('gogolist출력')

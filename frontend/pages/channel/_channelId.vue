@@ -43,7 +43,7 @@
             </select>
         </div> -->
         <div id="video-container">
-            <videoForm :vlist="list" />
+            <videoForm v-if="list !== []" :vlist="list" />
         </div>
         <div v-show="moreVideo" id="more-div">
             <p id="more-btn" @click="more()">더보기</p>
@@ -89,7 +89,6 @@ export default {
             provider: '',
             game: '',
             moreVideo: true,
-            test: 0,
             idList: [],
             videoList: [
                 {
@@ -107,7 +106,12 @@ export default {
         const channelInfo = this.channelId.split(',')
         this.provider = channelInfo[0]
         this.channelId = channelInfo[1]
-        if (this.provider === 'youtube') {
+        if (channelInfo.length === 4) {
+            this.provider += ',' + channelInfo[2]
+            this.channelId += ',' + channelInfo[3]
+        }
+
+        if (this.provider === 'google') {
             await axios
                 .get(`https://www.googleapis.com/youtube/v3/channels`, {
                     params: {
@@ -124,10 +128,7 @@ export default {
                     this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
                     this.streamer.viewCount = res.data.items[0].statistics.viewCount
                     this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
-                    this.test = res.data.items[0].statistics.videoCount
-                    // console.log(res)
                 })
-            console.log(this.test)
         } else {
             const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             this.streamer.name = streamer.display_name // name도 추가할까?
@@ -144,7 +145,7 @@ export default {
     },
     methods: {
         async more() {
-            if (this.provider === 'youtube') {
+            if (this.provider === 'google') {
                 this.vData1 = (
                     await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
                         params: {
@@ -158,38 +159,32 @@ export default {
                         },
                     })
                 ).data
-                // console.log(this.vData)
-                this.total = this.vData1.pageInfo.totalResults
                 this.nextPageToken = this.vData1.nextPageToken
                 if (!this.vData1.nextPageToken) {
                     this.moreVideo = false
                 }
-
                 for (var i = 0; i < this.vData1.items.length; i++) {
                     this.idList.push(this.vData1.items[i].id.videoId)
                 }
                 const idStr = this.idList.join(',')
-
                 this.vData2 = (await this.$youtubeApi.youtubeVideosApi(idStr)).data
-                console.log(this.vData2)
-                // for (let i = 0; i < this.vData1.items.length; i++) {
-                //     // this.vData2 = (await this.$youtubeApi.youtubeVideosApi(this.vData1.items[i].id.videoId)).data
-                //     this.viewCnt = this.numChange(this.vData2.items[0].statistics.viewCount) + '회'
-
+                console.log(this.vData2.items[0].snippet.publishedAt)
                 for (let i = 0; i < this.vData2.items.length; i++) {
-                    this.list[this.vData2.items[i].id] = {
-                        title: this.vData1.items[i].snippet.title,
-                        published: this.vData1.items[i].snippet.publishedAt.substring(0, 10),
-                        thumbnail: this.vData1.items[i].snippet.thumbnails.medium.url,
+                    const data = {
+                        videoId: this.vData2.items[i].id,
+                        title: this.vData2.items[i].snippet.title,
+                        publishedOrigin: this.vData2.items[i].snippet.publishedAt,
+                        published: this.vData2.items[i].snippet.publishedAt.substring(0, 10),
+                        thumbnail: this.vData2.items[i].snippet.thumbnails.medium.url,
                         live: this.vData1.items[i].snippet.liveBroadcastContent,
-                        provider: 'youtube',
+                        provider: 'google',
                         profileImg: this.streamer.img,
-                        viewCnt: this.viewCnt,
+                        viewCnt: this.numChange(this.vData2.items[i].statistics.viewCount),
                         channelName: this.streamer.name,
                         channelId: this.channelId,
                         game: this.game,
-                        count: this.vData2.items[i].statistics.viewCount,
                     }
+                    this.list.push(data)
                 }
             }
             if (this.provider === 'twitch') {
@@ -197,10 +192,10 @@ export default {
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.game = this.vData1[i].game
                     this.viewCnt = this.numChange(this.vData1[i].views) + '회'
-
-                    const listTemp = {
+                    const data = {
                         videoId: this.vData1[i]._id,
                         title: this.vData1[i].title,
+                        publishedOrigin: this.vData1[i].created_at,
                         published: this.vData1[i].created_at.substring(0, 10),
                         thumbnail: this.vData1[i].preview.medium,
                         live: 'none',
@@ -211,9 +206,13 @@ export default {
                         channelId: this.channelId,
                         game: this.game,
                     }
-                    this.list.push(listTemp)
+                    this.list.push(data)
                 }
             }
+            if (this.provider)
+                this.list.sort((a, b) => {
+                    return Date.parse(b.publishedOrigin) - Date.parse(a.publishedOrigin)
+                })
         },
         numChange(n) {
             let cnt = n
