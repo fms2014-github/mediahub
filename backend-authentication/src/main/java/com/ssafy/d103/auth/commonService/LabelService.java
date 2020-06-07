@@ -48,7 +48,11 @@ public class LabelService {
     public void deleteLabel(long labelId) {
         Label targetLabel = labelRepository.findById(labelId).orElseThrow(()->new LabelNotFoundException(labelId));
         Label superLabel = targetLabel.getSuperLabel();
-        List<Channel> targetLabelChannels = channelRepository.findAllByLabel_Id(labelId).orElseThrow(()-> new ChannelNotFoundException(labelId));
+        List<Channel> targetLabelChannels = null;
+        Optional<List<Channel>> list = channelRepository.findAllByLabel_Id(labelId);
+        if(list.isPresent()){
+            targetLabelChannels = list.get();
+        }
         for(int i=0; i<targetLabelChannels.size(); i++){
             targetLabelChannels.get(i).setLabel(targetLabel.getSuperLabel());
         }
