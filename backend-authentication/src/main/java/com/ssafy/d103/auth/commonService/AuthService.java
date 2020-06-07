@@ -1,6 +1,5 @@
 package com.ssafy.d103.auth.commonService;
 
-import com.ssafy.d103.auth.exception.AuthException;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,6 @@ public class AuthService {
     @Autowired
     private AuthRepository authRepository;
     public void deleteAuth(Auth auth){
-        authRepository.deleteAuthById(auth.getId());
+        authRepository.deleteById(auth.getId());
     }
 }
