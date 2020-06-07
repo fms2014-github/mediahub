@@ -102,7 +102,8 @@ export default {
             ],
         }
     },
-    async created() {
+
+    async mounted() {
         const channelInfo = this.channelId.split(',')
         this.provider = channelInfo[0]
         this.channelId = channelInfo[1]
@@ -139,8 +140,6 @@ export default {
             this.streamer.viewCount = streamer.views
             this.streamer.bannerImg = streamer.video_banner
         }
-    },
-    mounted() {
         this.more()
     },
     methods: {
