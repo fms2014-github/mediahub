@@ -1,20 +1,12 @@
 package com.ssafy.d103.auth.controller;
 
-import com.ssafy.d103.auth.dto.MemberDto;
-import com.ssafy.d103.auth.model.StreamerMultiPlatform;
-import com.ssafy.d103.auth.payload.AuthResponse;
 import com.ssafy.d103.auth.payload.LoginRequest;
-import com.ssafy.d103.auth.repository.StreamerMultiPlatformRepository;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.UserPrincipal;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

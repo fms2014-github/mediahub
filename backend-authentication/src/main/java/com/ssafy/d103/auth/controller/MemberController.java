@@ -2,11 +2,9 @@ package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
+import com.ssafy.d103.auth.commonService.StreamChannelService;
 import com.ssafy.d103.auth.dto.*;
-import com.ssafy.d103.auth.model.Auth;
-import com.ssafy.d103.auth.model.Channel;
-import com.ssafy.d103.auth.model.Label;
-import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
 import com.ssafy.d103.auth.security.UserPrincipal;
@@ -33,6 +31,7 @@ public class MemberController {
     private final CustomUserDetailsService memberService;
     private final LabelService labelService;
     private final ChannelService channelService;
+    private final StreamChannelService streamChannelService;
     /**
      * 기본 멤버 정보, 라벨
      *
@@ -137,5 +136,39 @@ public class MemberController {
         member.setFirstLogin(member.getFirstLogin()-1);
         memberService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유투브나 트위치 채널 이름 혹은 채널 아이디로 모든 방송 조회 " +
+            "channelId : youtube인 경우는 channel Id, twitch인 경우는 twitch channel name")
+    @GetMapping("/stream-channel")
+    public ResponseEntity getStreamChannelByChannelIdOrChannelName(@RequestParam String channelId, @RequestParam String provider){
+        StreamChannel streamChannel = null;
+        if(provider.equals("youtube")){
+            streamChannel = streamChannelService.findById("Y.".concat(channelId));
+        }else if(provider.equals("twitch")){
+            streamChannel = streamChannelService.findById("T.".concat(channelId));
+        }
+
+        if(streamChannel != null){
+            Member member = memberService.loadMemberById(streamChannel.getMember().getId());
+            List<StreamChannelDto> list = member.getStreamChannel().stream()
+                    .map(StreamChannel -> {
+                        StreamChannelDto streamChannelDto = new StreamChannelDto();
+                        if(StreamChannel.getId().charAt(0) == 'Y'){
+                            streamChannelDto.setProvider("youtube");
+                        }else if(StreamChannel.getId().charAt(0) == 'T'){
+                            streamChannelDto.setProvider("twitch");
+                        }
+                        streamChannelDto.setChannelId(StreamChannel.getId().substring(2));
+                        return streamChannelDto;
+                    })
+                    .collect(Collectors.toList());
+            return new ResponseEntity(list, HttpStatus.OK);
+        }else{
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+
     }
 }

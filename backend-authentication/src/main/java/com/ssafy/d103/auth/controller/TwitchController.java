@@ -3,6 +3,7 @@ package com.ssafy.d103.auth.controller;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.commonService.MemberService;
+import com.ssafy.d103.auth.commonService.StreamChannelService;
 import com.ssafy.d103.auth.dto.ChannelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class TwitchController {
     private final TwitchService twitchService;
     private final CustomUserDetailsService customUserDetailsService;
+    private final StreamChannelService streamChannelService;
     private final MemberService memberService;
     private final LabelService labelService;
     private final ChannelService channelService;
@@ -103,7 +105,7 @@ public class TwitchController {
         for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("twitch")){
                 twitchUserId = Long.toString(a.getUserId());
-                accessToken = a.getAccess_token();
+            accessToken = a.getAccess_token();
             }
         }
 
@@ -128,8 +130,9 @@ public class TwitchController {
         //member.setFirstLogin(member.getFirstLogin()+1);
         TwitchUser twitchUser = twitchService.getTwitchUserInfo(accessToken);
         StreamChannel streamChannel = new StreamChannel();
-        streamChannel.setId("Y".concat(twitchUser.getName()));
+        streamChannel.setId("T.".concat(twitchUser.getName()));
         streamChannel.setMember(member);
+        streamChannelService.saveStreamChannel(streamChannel);
         customUserDetailsService.saveMember(member);
 
         return new ResponseEntity(HttpStatus.OK);
