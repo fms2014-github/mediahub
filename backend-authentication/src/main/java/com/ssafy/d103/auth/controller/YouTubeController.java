@@ -99,8 +99,8 @@ public class YouTubeController {
         System.out.println("===================setToken=======================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         for(Auth a :member.getAuth()){
-            System.out.println(a.getAuth_provider());
-            if(a.getAuth_provider().equals("google")){
+            if(a.getAuth_provider().equals(AuthProvider.google.toString())){
+                System.out.println(a.getAuth_provider());
                 authService.deleteAuth(a);
             }
         }

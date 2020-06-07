@@ -14,6 +14,7 @@ public class AuthService {
     private AuthRepository authRepository;
     public void deleteAuth(Auth auth){
         authRepository.delete(auth);
+        System.out.println("auth delete");
         authRepository.flush();
     }
 }
