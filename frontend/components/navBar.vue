@@ -1,6 +1,5 @@
 <template>
     <div id="nav-bar">
-        <button id="logo" @click="logo">로고</button>
         <button @click="logout"><img src="../assets/icon/logout.png" /></button>
         <button @click="alarmCheck = !alarmCheck">
             <span id="alarm-icon" class="material-icons">
@@ -15,6 +14,10 @@
             <button id="youtube-sync" @click="syncYoutube">
                 <img src="../assets/icon/YouTube.png" />
                 <span>YouTube</span>
+            </button>
+            <button id="tiwtch-sync" @click="syncTwitch">
+                <img src="../assets/icon/Twitch.png" />
+                <span>Twitch</span>
             </button>
         </div>
         <div v-if="alarmCheck" class="alarm-div">
@@ -61,6 +64,7 @@ export default {
                 console.log(res.status)
             })
         },
+        syncTwitch() {},
     },
 }
 </script>
@@ -77,11 +81,7 @@ export default {
     min-width: calc(1280px);
     height: $nav-bar-height;
     background-color: white;
-    z-index: 9999;
-    #logo {
-        position: absolute;
-        left: 0px;
-    }
+    z-index: 9998;
     button,
     button:active,
     button:visited,
@@ -117,7 +117,7 @@ export default {
     }
     #reSync {
         width: 200px;
-        height: 82px;
+        height: 122px;
         position: absolute;
         top: 58px;
         right: 0px;
@@ -140,7 +140,7 @@ export default {
             height: 32px;
             margin: 0px;
             position: absolute;
-            top: calc(50% + 10px);
+            top: calc(50% - 10px);
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
             background-color: $youtube-color;
@@ -158,6 +158,33 @@ export default {
                     weight: 700;
                 }
                 color: rgb(230, 230, 230);
+            }
+            border: {
+                width: 0px;
+                radius: 10px;
+            }
+        }
+        #tiwtch-sync {
+            background-color: $twitch-color;
+            margin: 0px;
+            position: absolute;
+            top: calc(50% + 30px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 130px;
+            height: 32px;
+            img {
+                margin: 0 8px;
+                vertical-align: middle;
+                width: 20px;
+            }
+            span {
+                vertical-align: middle;
+                font: {
+                    size: 0.9rem;
+                    weight: 700;
+                }
+                color: rgb(30, 30, 30);
             }
             border: {
                 width: 0px;

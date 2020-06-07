@@ -28,6 +28,9 @@ export default function({ $axios, store }, inject) {
         'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
         'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',
         'AIzaSyBLdqVb-uUmLn7V0b04OjR7RlKsZbFel8c',
+        'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
+        'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
+        'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
@@ -40,7 +43,7 @@ export default function({ $axios, store }, inject) {
                     eventType: 'live',
                     q: channelName,
                     type: 'video',
-                    key: apiKey[timeInMs % 9],
+                    key: apiKey[timeInMs % apiKey.length],
                 },
             })
             .then((res) => {
@@ -52,7 +55,7 @@ export default function({ $axios, store }, inject) {
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
@@ -62,7 +65,7 @@ export default function({ $axios, store }, inject) {
     const youtubeSearchApi = ({ channelId, eventType, type }) => {
         return youtubeApiKey.get('search', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet',
                 channelId,
                 eventType,
@@ -74,7 +77,7 @@ export default function({ $axios, store }, inject) {
     const youtubeliveChatApi = ({ liveChatId, pageToken, pollingIntervalMillis }) => {
         return youtubeApiKey.get('liveChat/messages', {
             params: {
-                key: apiKey[timeInMs % 9],
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'id,snippet,authorDetails',
                 liveChatId,
                 pageToken,
