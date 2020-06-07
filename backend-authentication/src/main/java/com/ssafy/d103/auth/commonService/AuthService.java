@@ -13,8 +13,6 @@ public class AuthService {
     @Autowired
     private AuthRepository authRepository;
     public void deleteAuth(Auth auth){
-        authRepository.delete(auth);
-        System.out.println("auth delete");
-        authRepository.flush();
+        authRepository.deleteAuthById(auth.getId());
     }
 }
