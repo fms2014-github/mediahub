@@ -85,7 +85,7 @@ export default function({ $axios, store }, inject) {
     const youtubeliveChatInsertApi = ({ liveChatId, msg }) => {
         return backendAxios.post('/chating', {
             liveChatId,
-            msg,
+            messageText: msg,
         })
     }
 
