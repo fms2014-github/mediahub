@@ -4,6 +4,7 @@ import com.google.api.services.youtube.YouTube;
 
 import com.google.api.services.youtube.model.*;
 import com.google.gson.Gson;
+import com.ssafy.d103.auth.commonService.AuthService;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.dto.ChannelDto;
@@ -46,6 +47,7 @@ public class YouTubeController {
     private final CustomUserDetailsService customUserDetailsService;
     private final LabelService labelService;
     private final ChannelService channelService;
+    private final AuthService authService;
 
     @ApiOperation(value = "Google 인증 주소 요청")
     @GetMapping(value = "/token-url")
@@ -96,6 +98,11 @@ public class YouTubeController {
                                                 @CurrentUser UserPrincipal userPrincipal) {
         System.out.println("===================setToken=======================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
+        for(Auth a :member.getAuth()){
+            if(a.getAuth_provider().equals("google")){
+                authService.deleteAuth(a.getId());
+            }
+        }
         System.out.println(retGoogleAuth.getAccessToken());
         Auth auth = new Auth();
         auth.setAuth_provider(AuthProvider.google.toString());
