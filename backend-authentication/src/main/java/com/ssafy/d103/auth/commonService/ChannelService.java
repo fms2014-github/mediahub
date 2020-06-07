@@ -27,6 +27,11 @@ public class ChannelService {
         channelRepository.deleteById(channelId);
     }
 
+    public void deleteAllChannel(List<Channel> channels){
+        channelRepository.deleteAll(channels);
+    }
+
+
     public Channel saveChannel(Channel channel){
         return channelRepository.save(channel);
     }

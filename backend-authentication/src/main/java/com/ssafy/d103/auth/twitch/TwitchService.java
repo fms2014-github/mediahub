@@ -179,9 +179,11 @@ public class TwitchService {
         Optional<Member> member = memberRepository.findByEmail(email);
         List<Auth> authList = (List) member.get().getAuth();
         String refreshToken = null;
+        Auth updateAuth = null;
         for(Auth auth : authList){
-            if(auth.getAuth_provider().equals("twitch"))
+            if(auth.getAuth_provider().equals("twitch")) {
                 refreshToken = auth.getRefresh_token();
+            }
         }
 
         HttpHeaders headers = new HttpHeaders();

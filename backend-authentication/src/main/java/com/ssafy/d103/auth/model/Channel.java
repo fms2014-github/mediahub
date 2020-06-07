@@ -3,7 +3,6 @@ package com.ssafy.d103.auth.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "channel")
-public class Channel {
+public class Channel implements Comparable<Channel> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
@@ -56,5 +55,10 @@ public class Channel {
                 ", displayName='" + displayName + '\'' +
                 ", provider='" + provider + '\'' +
                 "}\n";
+    }
+
+    @Override
+    public int compareTo(Channel o) {
+        return this.name.compareTo(o.getName());
     }
 }

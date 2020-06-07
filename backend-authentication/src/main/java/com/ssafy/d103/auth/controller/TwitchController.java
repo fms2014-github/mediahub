@@ -5,6 +5,7 @@ import com.ssafy.d103.auth.commonService.LabelService;
 import com.ssafy.d103.auth.commonService.MemberService;
 import com.ssafy.d103.auth.commonService.StreamChannelService;
 import com.ssafy.d103.auth.dto.ChannelDto;
+import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
 import com.ssafy.d103.auth.security.CurrentUser;
 import com.ssafy.d103.auth.security.CustomUserDetailsService;
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -165,5 +168,74 @@ public class TwitchController {
             return new ResponseEntity(HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiOperation(value = "회원가입말고 로그인시 트위치 동기화")
+    @PutMapping("/channel/synchronization")
+    public ResponseEntity twitchLoginSynchronization(@CurrentUser UserPrincipal userPrincipal){
+        long id = userPrincipal.getId();
+        Member member = customUserDetailsService.loadMemberById(id);
+        String twitchUserId = null;
+
+        for(Auth a : member.getAuth()){
+            if(a.getAuth_provider().equals("twitch")){
+                twitchUserId = Long.toString(a.getUserId());
+            }
+        }
+        List<FollowsDto> channelList = twitchService.getTwitchAllChannelsByUser(twitchUserId);
+        Label rootLabel = labelService.getLabelById(member.getRootLabelId());
+        List<Channel> channelsInDB = new LinkedList<>();
+        List<Channel> twitchChannels = new LinkedList<>();
+        LinkedList<Label> queue = new LinkedList<>();
+        queue.add(rootLabel);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i=0; i<size; i++){
+                Label temp = queue.poll();
+                channelsInDB.addAll(temp.getChannels());
+                queue.addAll(temp.getSubLabels());
+            }
+        }
+        for(int i=0; i<channelsInDB.size(); i++){
+            Channel temp = channelsInDB.get(i);
+            if (temp.getProvider().equals("twitch")){
+                twitchChannels.add(temp);
+            }
+        }
+        List<Channel> channels = channelList.stream()
+                .map(follow -> {
+                    Channel channel = new Channel();
+                    channel.setLabel(rootLabel);
+                    channel.setProvider(AuthProvider.twitch.toString());
+                    channel.setChannelId(follow.getChannel().get_id());
+                    channel.setName(follow.getChannel().getName());
+                    channel.setDescription(follow.getChannel().getDisplay_name());
+                    channel.setProfileImg(follow.getChannel().getLogo());
+                    channel.setFollower(follow.getChannel().getFollowers());
+                    channel.setSubscriber(follow.getChannel().getFollowers());
+                    channel.setDescription(follow.getChannel().getDescription());
+                    return channel;
+                }).collect(Collectors.toList());
+
+        Collections.sort(twitchChannels);
+        Collections.sort(channels);
+        for(int i=0; i<channels.size(); i++){
+            String channelName = channels.get(i).getName();
+            for(int j=0; j<twitchChannels.size(); j++){
+                if(twitchChannels.get(j).getName().equals(channelName)){
+                    channels.remove(i);
+                    twitchChannels.remove(j);
+                    i--;
+                    break;
+                }
+            }
+        }
+        for(int i=0; i<channels.size(); i++){
+            channels.get(i).setLabel(rootLabel);
+        }
+        channelService.saveAll(channels);
+        channelService.deleteAllChannel(twitchChannels);
+        return new ResponseEntity(HttpStatus.OK);
+
     }
 }
