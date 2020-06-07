@@ -54,7 +54,7 @@ export default function({ $axios, store }, inject) {
     }
 
     const twitchSynchronization = () => {
-        return backendAxios.get('/tiwtch/synchronization')
+        return backendAxios.put('/twitch/channel/synchronization')
     }
 
     const backendScript = {
