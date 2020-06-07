@@ -83,10 +83,10 @@ export default {
             height: 98%;
         }
         #img-y:hover {
-            border: 3px solid #ff000085;
+            border: 4px solid #da0000be;
         }
         #img-t:hover {
-            border: 3px solid #9147ff85;
+            border: 4px solid #9147ffef;
         }
         .img-icon {
             position: absolute;
