@@ -326,7 +326,7 @@ public class YouTubeController {
 
     @ApiOperation(value = "channelId 요청할시 insert")
     @PostMapping(value = "/chating")
-    public YouTube.LiveChatMessages.Insert insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+    public LiveChatMessage insertChat(@RequestBody ChatingMassege msg, @CurrentUser UserPrincipal userPrincipal) throws IOException{
         System.out.println(msg);
         System.out.println("=========================채팅 Insert=======================");
         long id = userPrincipal.getId();
@@ -341,15 +341,16 @@ public class YouTubeController {
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
         LiveChatMessage liveChatMessage = new LiveChatMessage();
         LiveChatMessageSnippet snippet = new LiveChatMessageSnippet();
-        LiveChatTextMessageDetails details = new LiveChatTextMessageDetails();
-        details.setMessageText(msg.getMessageText());
         snippet.setLiveChatId(msg.getLiveChatId());
+
+        LiveChatTextMessageDetails textMessageDetails = new LiveChatTextMessageDetails();
+        textMessageDetails.setMessageText(msg.getMessageText());
+
         snippet.setType("textMessageEvent");
-        snippet.setTextMessageDetails(details);
+        snippet.setTextMessageDetails(textMessageDetails);
         liveChatMessage.setSnippet(snippet);
-        YouTube.LiveChatMessages.Insert result = youTube.liveChatMessages().insert("snippet",liveChatMessage);
-        System.out.println(result.getPart());
+        LiveChatMessage result = youTube.liveChatMessages().insert("snippet",liveChatMessage).execute();
         System.out.println("=========================채팅=======================");
-        return youTube.liveChatMessages().insert("snippet",liveChatMessage);
+        return result;
     }
 }
