@@ -5,6 +5,7 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
+    layout: 'cover',
     mounted() {
         const fragmentString = window.location.search.replace('?', '')
         // Parse query string to see if page request is coming from OAuth 2.0 server.
@@ -35,9 +36,11 @@ export default {
                     tokenType: res.data.token_type,
                 })
                 if (status === 200) {
-                    const { data } = await this.$backendAxios.addFirstLogin()
-                    this.checkRequireSync()
-                    this.$router.push('/subsync')
+                    const { status } = await this.$backendAxios.addFirstLogin()
+                    if (status === 200) {
+                        this.checkRequireSync()
+                        this.$router.push('/subsync')
+                    }
                 }
             })
         // const testaxios = this.$axios.create({

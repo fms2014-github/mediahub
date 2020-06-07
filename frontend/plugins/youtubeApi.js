@@ -17,7 +17,6 @@ export default function({ $axios, store }, inject) {
     //     headers: { Authorization: `Bearer ${accessToken}` },
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
-    console.log('aaweewjwt')
     const apiKey = [
         'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
         'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
@@ -31,6 +30,12 @@ export default function({ $axios, store }, inject) {
         'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
         'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
         'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
+        'AIzaSyCbdrUK6qc6PigMBDTHXc0--GpfGUJNOME',
+        'AIzaSyBTgmHOxDaWurmnbwZfXS1r5AIqFvikuLc',
+        'AIzaSyBHrgowLrb9pikeBRKqRxkeZtM8P5lwjrQ',
+        'AIzaSyD6L7D9vmQezoiVsmARGFvRSUsrbNn07Qs',
+        'AIzaSyAc6ZuKkihmURSjcfeL8PcNB6tRwIzsn8s',
+        'AIzaSyC9g5hODYWetX520NyaRjanPhd9zApEDa0',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
@@ -55,7 +60,8 @@ export default function({ $axios, store }, inject) {
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                key: apiKey[timeInMs % apiKey.length],
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
@@ -70,9 +76,32 @@ export default function({ $axios, store }, inject) {
                 channelId,
                 eventType,
                 type,
-                // pageToken,
-                // maxResults: 50,
-                // order,
+            },
+        })
+    }
+
+    const youtubeSearchVideoApi = ({ channelId, pageToken, order }) => {
+        return youtubeApiKey.get('search', {
+            params: {
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                part: 'snippet',
+                channelId,
+                pageToken,
+                maxResults: 48,
+                order,
+                type: 'video',
+            },
+        })
+    }
+
+    const youtubeChannelApi = (channelId) => {
+        return youtubeApiKey.get('channels', {
+            params: {
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                part: 'snippet,statistics,brandingSettings',
+                channelId,
             },
         })
     }
@@ -140,6 +169,7 @@ export default function({ $axios, store }, inject) {
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
+        youtubeSearchVideoApi: ({ channelId, pageToken, order }) => youtubeSearchVideoApi({ channelId, pageToken, order }),
         youtubeliveChatApi: (liveChatId) => youtubeliveChatApi(liveChatId),
         // isSubscribeApi: (channelId) => isSubscribeApi(channelId),
         // insertSubscribeApi: (cId) => insertSubscribeApi(cId),
@@ -147,6 +177,7 @@ export default function({ $axios, store }, inject) {
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
         synchronization: () => synchronization(),
         youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
+        youtubeChannelApi: (channelId) => youtubeChannelApi(channelId),
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)

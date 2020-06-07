@@ -1,23 +1,28 @@
 <template>
     <div id="nav-bar">
-        <button @click="logout"><img src="../assets/icon/logout.png" /></button>
+        <button @click="logout">
+            <span id="logout-icon" class="material-icons">
+                meeting_room
+            </span>
+        </button>
         <button @click="alarmCheck = !alarmCheck">
             <span id="alarm-icon" class="material-icons">
                 notifications
             </span>
         </button>
+
         <button @click="help">
-            <img id="sync-icon" src="../assets/icon/sync.png" />
+            <span id="sync-icon" class="material-icons">
+                cached
+            </span>
         </button>
         <div v-if="reSyncClick" id="reSync">
             <h3>구독 목록 재 동기화</h3>
             <button id="youtube-sync" @click="syncYoutube">
-                <img src="../assets/icon/YouTube.png" />
-                <span>YouTube</span>
+                <img src="../assets/icon/youtubeBtn.png" />
             </button>
             <button id="tiwtch-sync" @click="syncTwitch">
-                <img src="../assets/icon/Twitch.png" />
-                <span>Twitch</span>
+                <img src="../assets/icon/twitchBtn.png" />
             </button>
         </div>
         <div v-if="alarmCheck" class="alarm-div">
@@ -64,7 +69,11 @@ export default {
                 console.log(res.status)
             })
         },
-        syncTwitch() {},
+        syncTwitch() {
+            this.$backendAxios.twitchSynchronization().then((res) => {
+                console.log(res.status)
+            })
+        },
     },
 }
 </script>
@@ -99,12 +108,9 @@ export default {
         margin: 0px 12px;
     }
     #sync-icon {
-        margin-right: 24px;
+        margin-right: 30px;
     }
     button {
-        span {
-            font-size: 32px;
-        }
         img {
             width: 32px;
         }
@@ -143,29 +149,19 @@ export default {
             top: calc(50% - 10px);
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
-            background-color: $youtube-color;
+            background-color: rgba(255, 0, 0, 0.7);
             img {
-                background-color: rgb(255, 255, 255);
-                padding: 4px;
                 margin: 0 8px;
                 vertical-align: middle;
-                width: 20px;
+                width: 100px;
             }
-            span {
-                vertical-align: middle;
-                font: {
-                    size: 0.9rem;
-                    weight: 700;
-                }
-                color: rgb(230, 230, 230);
-            }
+
             border: {
                 width: 0px;
-                radius: 10px;
             }
         }
         #tiwtch-sync {
-            background-color: $twitch-color;
+            background-color: rgba(145, 71, 255, 0.7);
             margin: 0px;
             position: absolute;
             top: calc(50% + 30px);
@@ -176,24 +172,13 @@ export default {
             img {
                 margin: 0 8px;
                 vertical-align: middle;
-                width: 20px;
+                width: 100px;
             }
-            span {
-                vertical-align: middle;
-                font: {
-                    size: 0.9rem;
-                    weight: 700;
-                }
-                color: rgb(30, 30, 30);
-            }
+
             border: {
                 width: 0px;
-                radius: 10px;
             }
         }
     }
-}
-img {
-    width: 32px;
 }
 </style>
