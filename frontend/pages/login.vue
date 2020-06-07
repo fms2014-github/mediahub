@@ -1,5 +1,9 @@
 <template>
     <div id="login-page">
+        <video id="background-video" preload="auto" autoplay="true" loop="loop" muted="muted" volume="0">
+            <source src="/login-background.mp4" />
+        </video>
+        <div id="background-video-overlay"></div>
         <transition name="animate" enter-active-class="animated zoomInDown" leave-active-class="animated zoomOutDonw">
             <div v-if="animate" v-show="loading" id="login-page-modal">
                 <h1>동영상 통합 관리 서비스</h1>
@@ -64,23 +68,51 @@ export default {
 
 <style lang="scss" scoped>
 #login-page {
+    position: relative;
     font-family: 'S-CoreDream-3Light';
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 100vh;
-
+    overflow: hidden;
+    #background-video {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: auto;
+        height: auto;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -3;
+        overflow: hidden;
+    }
+    #background-video-overlay {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: auto;
+        height: auto;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+        background-color: rgba(255, 255, 255, 0.6);
+        overflow: hidden;
+        //background-color: rgba(0, 0, 0, 0.6);
+    }
     #login-page-modal {
         transition: all 1s;
         width: 80%;
-        max-width: 800px;
+        min-width: 400px;
+        max-width: 560px;
         height: 45%;
-        max-height: 480px;
+        max-height: 338px;
+        min-height: 225px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        background-color: white;
         box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
         h1 {
             margin-bottom: 3%;
