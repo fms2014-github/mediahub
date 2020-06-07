@@ -37,7 +37,7 @@ export default {
             }
         }
         this.requireSync = this.getRequireSync()
-        console.log(this.requireSync)
+        // console.log(this.requireSync)
     },
     methods: {
         ...mapGetters({ getRequireSync: 'login/getRequireSync' }),

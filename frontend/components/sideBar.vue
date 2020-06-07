@@ -25,13 +25,13 @@ export default {
             while (myNode.firstChild) {
                 myNode.removeChild(myNode.firstChild)
             }
-            console.log('awaaef', v)
+            // console.log('awaaef', v)
             let rootLabelId
             for (const i in v) {
-                // console.log('id', v[i].id)
-                // console.log('memberId', v[i].memberId)
-                // console.log('labelName', v[i].labelName)
-                // console.log('superId', v[i].superId)
+                // // console.log('id', v[i].id)
+                // // console.log('memberId', v[i].memberId)
+                // // console.log('labelName', v[i].labelName)
+                // // console.log('superId', v[i].superId)
                 if (v[i].superId === -1) {
                     rootLabelId = v[i].id
                 }
@@ -46,7 +46,7 @@ export default {
                 button1.appendChild(document.createTextNode('+'))
                 button1.addEventListener('click', (e) => {
                     const name = prompt('라벨 이름을 적어주세요')
-                    console.log(name)
+                    // console.log(name)
                     if (name !== null) {
                         this.$axios
                             .post(
@@ -58,10 +58,10 @@ export default {
                                 { headers: { Authorization: 'Bearer ' + this.getJwt() } },
                             )
                             .then((res) => {
-                                console.log(res)
+                                // console.log(res)
                                 this.init()
                             })
-                        console.log(button1.parentNode.parentNode)
+                        // console.log(button1.parentNode.parentNode)
                     }
                 })
                 button2.setAttribute('class', 'delete-child-label')
@@ -70,14 +70,14 @@ export default {
                     'click',
                     (e) => {
                         const labelId = e.target.parentNode.parentNode.dataset.labelId
-                        console.log(labelId)
+                        // console.log(labelId)
                         this.$axios
                             .delete('https://k02d1031.p.ssafy.io:8081/v1/member/label?labelId=' + labelId, {
                                 headers: { Authorization: 'Bearer ' + this.getJwt() },
                                 params: {},
                             })
                             .then((res) => {
-                                console.log(res.status)
+                                // console.log(res.status)
                                 this.init()
                             })
                     },
@@ -122,8 +122,8 @@ export default {
                         dropCapWrap.addEventListener('drop', (e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            console.log('drop1target', e.target)
-                            console.log('drop1', e.target.children[1])
+                            // console.log('drop1target', e.target)
+                            // console.log('drop1', e.target.children[1])
                             const channelId = e.dataTransfer.getData('targetId')
                             e.target.children[1].appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
                             const labelId = e.target.children[1].dataset.labelId
@@ -136,7 +136,7 @@ export default {
                                     },
                                 )
                                 .then((res) => {
-                                    console.log(res.status)
+                                    // console.log(res.status)
                                 })
                         })
                         span2.addEventListener(
@@ -144,8 +144,8 @@ export default {
                             (e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
-                                console.log('drop2target', e.target)
-                                console.log('drop2', e.target.parentNode)
+                                // console.log('drop2target', e.target)
+                                // console.log('drop2', e.target.parentNode)
                                 // node.parentNode.removeEventListener('drop', dropEvent1)
                                 const channelId = e.dataTransfer.getData('targetId')
                                 e.target.parentNode.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
@@ -159,7 +159,7 @@ export default {
                                         },
                                     )
                                     .then((res) => {
-                                        console.log(res.status)
+                                        // console.log(res.status)
                                     })
                             },
                             true,
@@ -190,7 +190,7 @@ export default {
                         span.setAttribute('droppable', 'false')
                         node.appendChild(span)
                         node.setAttribute('class', 'child-label2')
-                        console.log('aawwddff', document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel') == null)
+                        // console.log('aawwddff', document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel') == null)
                         parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel'))
                         node.setAttribute('droppable', 'true')
                         span.addEventListener(
@@ -198,8 +198,8 @@ export default {
                             (e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
-                                console.log('drop2target', e.target)
-                                console.log('drop2', e.target.parentNode)
+                                // console.log('drop2target', e.target)
+                                // console.log('drop2', e.target.parentNode)
                                 // node.parentNode.removeEventListener('drop', dropEvent1)
                                 const channelId = e.dataTransfer.getData('targetId')
                                 e.target.parentNode.appendChild(document.querySelector('div[data-channel-id="' + channelId + '"]'))
@@ -213,7 +213,7 @@ export default {
                                         },
                                     )
                                     .then((res) => {
-                                        console.log(res.status)
+                                        // console.log(res.status)
                                     })
                             },
                             true,
@@ -229,7 +229,7 @@ export default {
                     }
                 }
                 for (const k in v[i].channels) {
-                    // console.log(k, v[i].channels[k])
+                    // // console.log(k, v[i].channels[k])
 
                     const channel = document.createElement('div')
                     const parentLabel = document.querySelector(`div[data-label-id='${v[i].channels[k].labelId}']`)
@@ -260,7 +260,7 @@ export default {
                     // )
                     parentLabel.appendChild(channel)
                     channel.addEventListener('dragstart', (e) => {
-                        console.log('dragstart', channel)
+                        // console.log('dragstart', channel)
                         e.dataTransfer.setData('targetId', channel.dataset.channelId)
                     })
                 }
@@ -310,7 +310,7 @@ export default {
     methods: {
         ...mapGetters({ getJwt: 'login/getJwt' }),
         async init() {
-            console.log('jwt', this.getJwt())
+            // console.log('jwt', this.getJwt())
             const Info = (
                 await this.$axios.get('https://k02d1031.p.ssafy.io:8081/v1/member/information', {
                     headers: { Authorization: 'Bearer ' + this.getJwt() },

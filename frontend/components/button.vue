@@ -44,7 +44,7 @@ export default {
             this.twitch.userId = this.auth[i].userId
         }
         this.twitch.rootLabelId = this.labels[0].id
-        console.log(this.labels)
+        // console.log(this.labels)
         for (const d of this.labels) {
             const i = d.channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
             if (i >= 0) {

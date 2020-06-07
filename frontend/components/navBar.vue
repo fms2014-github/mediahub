@@ -61,12 +61,12 @@ export default {
         },
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
-                console.log(res.status)
+                // console.log(res.status)
             })
         },
         syncTwitch() {
             this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status)
+                // console.log(res.status)
             })
         },
     },
