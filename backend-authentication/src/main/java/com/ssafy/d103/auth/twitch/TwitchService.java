@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ssafy.d103.auth.commonService.AuthService;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.ChannelRepository;
@@ -29,7 +30,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class TwitchService {
-    private final ChannelRepository channelRepository;
     private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
     private final Environment env;
@@ -166,7 +166,7 @@ public class TwitchService {
      * &client_id=<your client ID>
      * &client_secret=<your client secret>
      *
-     * @param email user email
+     * @param id user pk
      * @return Twitch Access Token 재발급 요청한 결과 RetTwitchAuth
      *
      * 1. email 인자로 받음
@@ -175,14 +175,13 @@ public class TwitchService {
      * 4. 실패시 Return null
      * 5. 성공시 Return RetTwitchAuth
      */
-    public RetTwitchAuth getTwitchAccessTokenWithRefreshToken(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
+    public Auth getTwitchAccessTokenWithRefreshToken(long id) {
+        Optional<Member> member = memberRepository.findById(id);
         List<Auth> authList = (List) member.get().getAuth();
-        String refreshToken = null;
         Auth updateAuth = null;
         for(Auth auth : authList){
             if(auth.getAuth_provider().equals("twitch")) {
-                refreshToken = auth.getRefresh_token();
+                updateAuth = auth;
             }
         }
 
@@ -191,7 +190,7 @@ public class TwitchService {
         // Set parameter
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
-        params.add("refresh_token", refreshToken);
+        params.add("refresh_token", updateAuth.getRefresh_token());
         params.add("client_id", twitchClientId);
         params.add("client_secret", twitchClientSecret);
 
@@ -200,10 +199,12 @@ public class TwitchService {
         ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token").concat("--data-urlencode"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             RetTwitchAuth retTwitchAuth = gson.fromJson(response.getBody(), RetTwitchAuth.class);
+            updateAuth.setAccess_token(retTwitchAuth.getAccess_token());
+            updateAuth.setRefresh_token(retTwitchAuth.getRefresh_token());
             System.out.println("getTwitchTokenIfo : " + retTwitchAuth);
-            return retTwitchAuth;
+            return updateAuth;
         }
-        return null;
+        return updateAuth;
     }
 
     /**

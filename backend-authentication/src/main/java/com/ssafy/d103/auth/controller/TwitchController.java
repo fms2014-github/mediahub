@@ -108,7 +108,7 @@ public class TwitchController {
         for(Auth a : member.getAuth()){
             if(a.getAuth_provider().equals("twitch")){
                 twitchUserId = Long.toString(a.getUserId());
-            accessToken = a.getAccess_token();
+                accessToken = a.getAccess_token();
             }
         }
 
@@ -236,6 +236,12 @@ public class TwitchController {
         channelService.saveAll(channels);
         channelService.deleteAllChannel(twitchChannels);
         return new ResponseEntity(HttpStatus.OK);
+    }
 
+    @ApiOperation(value = "access token 재발급 및 토큰 정보 요청")
+    @GetMapping("/access-token")
+    public ResponseEntity refreshingAccessToken(@CurrentUser UserPrincipal userPrincipal){
+        long id = userPrincipal.getId();
+        return new ResponseEntity(twitchService.getTwitchAccessTokenWithRefreshToken(id).getAccess_token(), HttpStatus.OK);
     }
 }

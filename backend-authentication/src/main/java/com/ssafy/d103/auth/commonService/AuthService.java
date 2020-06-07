@@ -14,4 +14,6 @@ public class AuthService {
     public void deleteAuth(Auth auth){
         authRepository.deleteById(auth.getId());
     }
+
+    public Auth saveAuth(Auth auth) { return authRepository.save(auth);}
 }
