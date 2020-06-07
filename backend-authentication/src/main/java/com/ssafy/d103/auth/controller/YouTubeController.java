@@ -101,7 +101,7 @@ public class YouTubeController {
         for(Auth a :member.getAuth()){
             System.out.println(a.getAuth_provider());
             if(a.getAuth_provider().equals("google")){
-                authService.deleteAuth(a.getId());
+                authService.deleteAuth(a);
             }
         }
         System.out.println(retGoogleAuth.getAccessToken());
