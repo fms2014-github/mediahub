@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.ssafy.d103.auth.commonService.AuthService;
 import com.ssafy.d103.auth.commonService.ChannelService;
 import com.ssafy.d103.auth.commonService.LabelService;
+import com.ssafy.d103.auth.commonService.StreamChannelService;
 import com.ssafy.d103.auth.dto.ChannelDto;
 import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
@@ -50,6 +51,7 @@ public class YouTubeController {
     private final LabelService labelService;
     private final ChannelService channelService;
     private final AuthService authService;
+    private final StreamChannelService streamChannelService;
 
     @ApiOperation(value = "Google 인증 주소 요청")
     @GetMapping(value = "/token-url")
@@ -95,9 +97,16 @@ public class YouTubeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /***
+     * front 에서 token 정보를 받아온다.
+     * 유저 채널 정보를 가져와서 DB에 저장한다.
+     * @param retGoogleAuth
+     * @param userPrincipal
+     * @return
+     */
     @PostMapping(value = "/setToken")
     public ResponseEntity<?> redirectCodeGoogle(@RequestBody RetGoogleAuth retGoogleAuth,
-                                                @CurrentUser UserPrincipal userPrincipal) {
+                                                @CurrentUser UserPrincipal userPrincipal) throws IOException {
         System.out.println("===================setToken=======================");
         Member member = customUserDetailsService.loadMemberById(userPrincipal.getId());
         boolean check = false;
@@ -125,7 +134,13 @@ public class YouTubeController {
             member.getAuth().add(auth);
         }
         System.out.println(retGoogleAuth.getAccessToken());
-
+        YouTube youTube = YouTubeDataAPI.getYouTubeService(retGoogleAuth.getRefreshToken());
+        ChannelListResponse mySnippet = youTube.channels().list("snippet").setMine(true).execute();
+        String myChannelId = mySnippet.getItems().get(0).getId();
+        StreamChannel streamChannel = new StreamChannel();
+        streamChannel.setId("Y.".concat(myChannelId));
+        streamChannel.setMember(member);
+        streamChannelService.saveStreamChannel(streamChannel);
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
     }
