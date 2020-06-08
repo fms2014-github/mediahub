@@ -5,11 +5,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.commonService.AuthService;
+import com.ssafy.d103.auth.exception.AuthException;
 import com.ssafy.d103.auth.exception.InvalidAccessTokenException;
 import com.ssafy.d103.auth.exception.MemberNotFoundException;
 import com.ssafy.d103.auth.exception.MemberRefreshTokenNotFoundException;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.repository.AuthRepository;
 import com.ssafy.d103.auth.repository.ChannelRepository;
 import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.twitch.dto.TwitchChannelDto;
@@ -35,6 +37,7 @@ import java.util.Optional;
 public class TwitchService {
     private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
+    private final AuthRepository authRepository;
     private final Environment env;
     private final Gson gson;
     @Value("${social.base_url}")
@@ -181,11 +184,11 @@ public class TwitchService {
     public Auth getTwitchAccessTokenWithRefreshToken(long id) {
         Member member = memberRepository.findById(id).orElseThrow(()-> new MemberNotFoundException(id));
         List<Auth> authList = (List) member.getAuth();
-        Auth updateAuth = null;
+        long authId = 0;
         String refreshToken = null;
         for(Auth auth : authList){
             if(auth.getAuth_provider().equals("twitch")) {
-                updateAuth = auth;
+                authId = auth.getId();
                 refreshToken = auth.getRefresh_token();
             }
         }
@@ -208,12 +211,12 @@ public class TwitchService {
         ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             RetTwitchAuth retTwitchAuth = gson.fromJson(response.getBody(), RetTwitchAuth.class);
-            updateAuth.setAccess_token(retTwitchAuth.getAccess_token());
-            updateAuth.setRefresh_token(retTwitchAuth.getRefresh_token());
-            System.out.println("getTwitchTokenIfo : " + retTwitchAuth);
-            return updateAuth;
+            Auth auth = authRepository.findById(authId).get();
+            auth.setAccess_token(retTwitchAuth.getAccess_token());
+            auth.setRefresh_token(retTwitchAuth.getRefresh_token());
+            return auth;
         }
-        return updateAuth;
+        return null;
     }
 
     /**
