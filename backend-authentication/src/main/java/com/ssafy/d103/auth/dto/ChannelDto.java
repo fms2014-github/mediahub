@@ -27,7 +27,7 @@ public class ChannelDto {
         this.labelId = channel.getLabel().getId();
         this.provider = channel.getProvider();
         this.channelId = channel.getChannelId();
-        this.name = channel.getDisplayName();
+        this.name = channel.getName();
         this.displayName = channel.getDisplayName();
         this.profileImg = channel.getProfileImg();
         this.follower = channel.getFollower();
