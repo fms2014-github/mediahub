@@ -2,7 +2,7 @@
     <div id="channel">
         <div>
             <figure class="snip1504">
-                <img v-if="streamer.bannerImg !== null" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
+                <img v-if="streamer.bannerImg" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
                 <img v-else class="banner-img" src="../../assets/images/banner.png" alt="bannerImg" />
                 <figcaption>
                     <div id="profile-descrip">{{ streamer.description }}</div>
@@ -75,7 +75,8 @@ export default {
             // key: 'AIzaSyBc27Pc5zyPqNrwPKnCv7HaV6S8hGa5xDw',
             // key: 'AIzaSyA_4PVT4iLvL92YcMpYrxx_905xfsScqlU',
             // key: 'AIzaSyCcWNyY_KtbSDxlVXgieCK2wjWo2nerdqM',
-            key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+            // key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+            key: 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs',
             channelId: '',
             yChannelId: '',
             tChannelId: '',
