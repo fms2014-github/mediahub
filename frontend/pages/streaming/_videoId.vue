@@ -1,0 +1,78 @@
+<template>
+    <div id="streaming">
+        <div id="live-component">
+            <client-only placeholder="loading...">
+                <live-video :video-id="videoId"></live-video>
+            </client-only>
+        </div>
+        <hr />
+        <h1>스트리머 A의 다른 영상</h1>
+        <video-form />
+    </div>
+</template>
+
+<script>
+import liveVideo from '@/components/liveVideo.vue'
+import videoForm from '@/components/main/videoForm.vue'
+
+export default {
+    components: {
+        liveVideo,
+        videoForm,
+    },
+    asyncData({ params }) {
+        const videoId = params.videoId
+        return { videoId }
+    },
+    async beforeMount() {
+        if (localStorage.getItem('auth') !== null) {
+            console.log(localStorage.getItem('auth'))
+            const temp = JSON.parse(localStorage.getItem('auth'))
+            console.log('before::', temp)
+            const twitchInfo = temp.find((i) => i.provider === 'twitch')
+            if (temp.find((i) => i.provider === 'twitch') !== undefined) {
+                const { data } = await this.$backendAxios.twitchTokerRefresh()
+                twitchInfo.access_token = data
+                console.log(data)
+                temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
+                console.log('after::', temp)
+            }
+        }
+    },
+}
+</script>
+
+<style lang="scss" scoped>
+#router-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: calc(100% - 58px);
+    #live-component {
+        margin-top: 20px;
+        width: 156.25vh;
+        padding-right: 300px;
+    }
+    hr {
+        width: 100%;
+        margin: 1%;
+        box-shadow: 0px 0px 2px 1px rgb(180, 180, 180);
+        background-color: rgb(180, 180, 180);
+        border: {
+            width: 0px;
+        }
+        height: 1px;
+        clear: both;
+        flex-grow: 100;
+    }
+    h1 {
+        margin: 20px 0 10px 20px;
+        font: {
+            weight: 800;
+            size: 2rem;
+        }
+        flex-wrap: wrap;
+    }
+}
+</style>

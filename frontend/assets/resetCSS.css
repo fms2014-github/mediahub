@@ -2,7 +2,7 @@
   v2.0 | 20110126
   License: none (public domain)
 */
-
+@import url("https://cdn.jsdelivr.net/gh/moonspam/NanumBarunGothic@latest/nanumbarungothicsubset.css");
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -19,6 +19,7 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
+  font-family: 'NanumBarunGothic';
   font-size: 12pt;
   font-weight: 400;
   vertical-align: baseline;
@@ -45,4 +46,27 @@ q:before, q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+a,
+a:link,
+a:active,
+a:focus,
+a:visited,
+a:hover{
+  outline: none;
+  text-decoration: none;
+  color: black;
+}
+button,
+button:link,
+button:active,
+button:focus,
+button:visited,
+button:hover{
+  outline: none;
+  text-decoration: none;
+  color: black;
+  border-width: 0px;
+  background-color: white;
 }

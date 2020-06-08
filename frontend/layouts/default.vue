@@ -3,7 +3,7 @@
         <nav-bar />
         <div id="content">
             <side-bar />
-            <nuxt />
+            <nuxt id="router-view" :key="$route.fullPath" />
         </div>
     </div>
 </template>
@@ -16,13 +16,19 @@ export default {
         navBar,
         sideBar,
     },
+    mounted() {
+        console.log('updated::', 'Page Update!!!')
+    },
 }
 </script>
 
 <style lang="scss" scoped>
 #app {
-    #content {
-        display: flex;
+    width: 100%;
+    min-width: calc(1280px + 74px);
+    background-color: rgb(240, 240, 240);
+    #router-view {
+        margin: 0 0 0 74px;
     }
 }
 </style>
