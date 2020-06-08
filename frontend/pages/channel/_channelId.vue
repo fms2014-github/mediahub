@@ -2,7 +2,7 @@
     <div id="channel">
         <div>
             <figure class="snip1504">
-                <img v-if="streamer.bannerImg !== null" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
+                <img v-if="streamer.bannerImg" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
                 <img v-else class="banner-img" src="../../assets/images/banner.png" alt="bannerImg" />
                 <figcaption>
                     <div id="profile-descrip">{{ streamer.description }}</div>

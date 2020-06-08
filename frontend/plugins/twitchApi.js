@@ -23,7 +23,11 @@ export default function({ $axios }, inject) {
         })
     }
     const twitchVideosApi = (channelId) => {
-        return twitchApi.get(`channels/${channelId}/videos`)
+        return twitchApi.get(`channels/${channelId}/videos`, {
+            params: {
+                limit: 100,
+            },
+        })
     }
 
     const twitchStreamsApi = (token) => {
