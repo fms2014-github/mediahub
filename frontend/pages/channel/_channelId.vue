@@ -254,7 +254,6 @@ export default {
                         JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
                     )
                 ).data.clips
-                console.log(this.vData1)
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
                     this.videoList.game = this.vData1[i].game
