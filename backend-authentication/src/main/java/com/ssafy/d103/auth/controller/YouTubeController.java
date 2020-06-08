@@ -331,6 +331,7 @@ public class YouTubeController {
     @ApiOperation(value = "channel table의 pk로 요청할시 delete")
     @DeleteMapping(value = "/subscription/{channelPrimaryKey}")
     public ResponseEntity<?> deleteSubscriptions(@PathVariable Long channelPrimaryKey, @CurrentUser UserPrincipal userPrincipal) throws IOException{
+        System.out.println("========================channel delete =========================");
 
         long id = userPrincipal.getId();
         Member member = customUserDetailsService.loadMemberById(id);
@@ -343,7 +344,7 @@ public class YouTubeController {
             }
         }
         YouTube youTube = YouTubeDataAPI.getYouTubeService(refreshToken);
-        youTube.subscriptions().delete(channel.getSubscriptionId());
+        youTube.subscriptions().delete(channel.getSubscriptionId()).execute();
 
         channelService.deleteChannel(channelPrimaryKey);
         return ResponseEntity.ok("");
