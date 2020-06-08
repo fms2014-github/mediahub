@@ -26,7 +26,6 @@
         width: 100%;
         overflow: hidden;
         .drop-cap {
-
             display: inline-block;
             margin: 4px 0px;
             text-align: center;
@@ -35,10 +34,9 @@
                 style: solid;
                 color: rgba(0, 0, 0, 0);
                 radius: 6px;
-                
             }
             background-color: rgba(221, 205, 220, 0.486);
-            box-shadow: 0 1px 2px black;
+            box-shadow: 0 1px 2px rgb(148, 148, 148);
             white-space: nowrap;
             .drop-cap-char {
                 display: inline-block;
@@ -47,7 +45,7 @@
                 transform: translateY(-50%);
                 text-align: center;
                 font: {
-                    size:15px;
+                    size:14px;
                     weight: 600;
                 }
             }
@@ -59,9 +57,9 @@
             vertical-align: top;
             position: absolute;
             right: -154px;
-            background-color: white;
+            background-color: rgb(255, 255, 255);
             white-space: nowrap;
-            box-shadow: 0px 0px 3px 1px rgb(240,240,240);
+            box-shadow: 0px 0px 3px 1px rgb(139, 139, 139);
             border: {
                 width: 1px 1px 1px 0px;
                 style: solid;
@@ -69,27 +67,36 @@
             }
         }
         .child-label2{
-            margin: 2px 0 0 10px;
-            background-color: rgba(221, 205, 220, 0.486);
+            margin: 2px 0 0 0;
+            background-color: rgba(236, 234, 236, 0.486);
         }
         .label-title{
             display: inline-block;
-            margin: 4px -10px;
+            margin: 4px -18px;
+            font-size: 13px;
         }
     }
     .add-shadow {
         box-shadow: 0px 0px 3px 2px rgba(0,0,0,0.4);
     }
+    .add-child-label {
+        background-color: rgba(182, 13, 13, 0.664);
+    }
+    .delete-child-label {
+        background-color: rgba(177, 122, 122, 0.664);
+
+    }
+    .add-child-label:hover,.delete-child-label:hover {
+        background-color: rgba(90, 7, 7, 0.897);
+    }
     .add-child-label,
     .add-child-label:active,
     .add-child-label:visited,
     .add-child-label:focus,
-    .add-child-label:hover,
     .delete-child-label,
     .delete-child-label:active,
     .delete-child-label:visited,
-    .delete-child-label:focus,
-    .delete-child-label:hover{
+    .delete-child-label:focus {
         border: {
             width: 1px;
             color: rgba(68, 68, 68, 0);
@@ -97,7 +104,7 @@
             radius: 10px;
         }
         box-shadow: 0px 1px 2px rgba(0,0,0,0.4);
-        background-color: rgba(182, 21, 21, 0.664);
+        // background-color: rgba(182, 21, 21, 0.664);
         color:white;
         width: 14px;
         padding: 0px;

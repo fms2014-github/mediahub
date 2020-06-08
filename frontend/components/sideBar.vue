@@ -1,6 +1,6 @@
 <template>
     <div id="side-bar">
-        <button id="logo" @click="logo">로고</button>
+        <button id="logo" @click="logo"><img src="../assets/icon/mediaHub.png" alt="logo" /></button>
         <div id="tree"></div>
     </div>
 </template>
@@ -388,6 +388,9 @@ export default {
         background-color: white;
         outline: none;
         cursor: pointer;
+        img {
+            width: 40px;
+        }
     }
 }
 </style>
