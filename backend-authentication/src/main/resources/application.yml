@@ -166,7 +166,7 @@ spring:
 #            userInfoUri: https://id.twitch.tv/
 social:
   base_url: https://k02d1031.p.ssafy.io:8081
-  front_base_url : http://127.0.0.1:3000
+  front_base_url : https://k02d1031.p.ssafy.io
   google:
     client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
     client_secret: XHhA4GlqOVJZkVmhHHuP1uxj

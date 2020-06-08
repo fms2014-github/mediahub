@@ -1,9 +1,6 @@
 package com.ssafy.d103.auth.controller;
 
-import com.ssafy.d103.auth.commonService.ChannelService;
-import com.ssafy.d103.auth.commonService.LabelService;
-import com.ssafy.d103.auth.commonService.MemberService;
-import com.ssafy.d103.auth.commonService.StreamChannelService;
+import com.ssafy.d103.auth.commonService.*;
 import com.ssafy.d103.auth.dto.ChannelDto;
 import com.ssafy.d103.auth.dto.LabelDto;
 import com.ssafy.d103.auth.model.*;
@@ -39,6 +36,7 @@ public class TwitchController {
     private final MemberService memberService;
     private final LabelService labelService;
     private final ChannelService channelService;
+    private final AuthService authService;
 
     @ApiOperation(value = "Twitch 인증 주소 요청")
     @GetMapping(value = "/token-url")
@@ -242,6 +240,8 @@ public class TwitchController {
     @GetMapping("/access-token")
     public ResponseEntity refreshingAccessToken(@CurrentUser UserPrincipal userPrincipal){
         long id = userPrincipal.getId();
-        return new ResponseEntity(twitchService.getTwitchAccessTokenWithRefreshToken(id).getAccess_token(), HttpStatus.OK);
+        Auth auth = twitchService.getTwitchAccessTokenWithRefreshToken(id);
+        authService.saveAuth(auth);
+        return new ResponseEntity(auth.getAccess_token(), HttpStatus.OK);
     }
 }
