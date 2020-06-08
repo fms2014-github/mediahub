@@ -12,8 +12,8 @@
     #root-label-wrap{
         #root-label {
             display: inline-block;
-            width: 34px;
-            height: 34px;
+            width: 20px;
+            height: 20px;
             margin: 8px 0px;
             border: {
                 width: 0px;
@@ -28,15 +28,17 @@
         .drop-cap {
 
             display: inline-block;
-            
             margin: 4px 0px;
             text-align: center;
             border: {
                 width: 1px;
                 style: solid;
-                color: black;
-                radius: 4px;
+                color: rgba(0, 0, 0, 0);
+                radius: 6px;
+                
             }
+            background-color: rgba(221, 205, 220, 0.486);
+            box-shadow: 0 1px 2px black;
             white-space: nowrap;
             .drop-cap-char {
                 display: inline-block;
@@ -45,7 +47,8 @@
                 transform: translateY(-50%);
                 text-align: center;
                 font: {
-                    weight: 800;
+                    size:15px;
+                    weight: 600;
                 }
             }
 
@@ -62,19 +65,16 @@
             border: {
                 width: 1px 1px 1px 0px;
                 style: solid;
-                color: rgba(150, 150, 150, 0.45);
+                color: rgba(177, 175, 175, 0.45);
             }
         }
         .child-label2{
-            border: {
-                width: 0 0 0 2px;
-                style: solid;
-                color:rgb(150,150,150);
-            }
+            margin: 2px 0 0 10px;
+            background-color: rgba(221, 205, 220, 0.486);
         }
         .label-title{
             display: inline-block;
-            margin: 4px 0px;
+            margin: 4px -10px;
         }
     }
     .add-shadow {
@@ -92,14 +92,17 @@
     .delete-child-label:hover{
         border: {
             width: 1px;
-            color: black;
+            color: rgba(68, 68, 68, 0);
             style: solid;
+            radius: 10px;
         }
-        background-color: white;
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.4);
+        background-color: rgba(182, 21, 21, 0.664);
+        color:white;
         width: 14px;
         padding: 0px;
-        margin: 1px;
-        line-height: 9pt
+        margin: 2px;
+        line-height: 9pt;
     }
     .expand-list {
         overflow: unset;

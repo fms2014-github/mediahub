@@ -40,7 +40,7 @@ export default function({ $axios, store }, inject) {
         // 'AIzaSyCxC5jQOsADyLvGV1hWZUIF5DOqAT84vT4',
         // 'AIzaSyCdLSLyEiMk5XfCR35V-QqSGmnYdLbGehk',
         // 'AIzaSyCLoCXdFFpWUkH_L2ImTSl5auvkUEuanNU',
-        'AIzaSyD7u00MnrMb8_QWSbc6gOg314cxElG87bM',
+        'AIzaSyBc27Pc5zyPqNrwPKnCv7HaV6S8hGa5xDw',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
