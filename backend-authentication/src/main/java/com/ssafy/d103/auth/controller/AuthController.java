@@ -2,12 +2,12 @@ package com.ssafy.d103.auth.controller;
 
 import com.ssafy.d103.auth.exception.BadRequestException;
 import com.ssafy.d103.auth.model.AuthProvider;
-import com.ssafy.d103.auth.model.MemberEntity;
+import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.payload.ApiResponse;
 import com.ssafy.d103.auth.payload.AuthResponse;
 import com.ssafy.d103.auth.payload.LoginRequest;
 import com.ssafy.d103.auth.payload.SignUpRequest;
-import com.ssafy.d103.auth.repository.UserRepository;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import com.ssafy.d103.auth.security.TokenProvider;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -32,7 +35,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,16 +66,16 @@ public class AuthController {
         }
 
         // Creating user's account
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setName(signUpRequest.getName());
-        memberEntity.setEmail(signUpRequest.getEmail());
-        memberEntity.setPassword(signUpRequest.getPassword());
-        memberEntity.setProvider(AuthProvider.local);
+        Member member = new Member();
+        member.setName(signUpRequest.getName());
+        member.setEmail(signUpRequest.getEmail());
+        member.setPassword(signUpRequest.getPassword());
+        member.setProvider(AuthProvider.local);
         //user.setRole(RoleType.USER.toString());
 
-        memberEntity.setPassword(passwordEncoder.encode(memberEntity.getPassword()));
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
 
-        MemberEntity result = userRepository.save(memberEntity);
+        Member result = userRepository.save(member);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user/me")

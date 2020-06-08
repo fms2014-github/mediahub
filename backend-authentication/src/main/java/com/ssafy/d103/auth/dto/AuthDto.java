@@ -4,10 +4,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
-//@Builder
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthDto {
     private String access_token;
     private String provider;
+    private String userId;
 }

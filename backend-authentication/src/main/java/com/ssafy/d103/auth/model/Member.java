@@ -6,16 +6,16 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@Builder // builder를 사용할수 있게 합니다.
 @Entity // jpa entity임을 알립니다.
 @Getter // user 필드값의 getter를 자동으로 생성합니다.
 @Setter
 @NoArgsConstructor // 인자없는 생성자를 자동으로 생성합니다.
 @AllArgsConstructor // 인자를 모두 갖춘 생성자를 자동으로 생성합니다.
-@Table(name = "member") // 'user' 테이블과 매핑됨을 명시
-public class MemberEntity{
+@Table(name = "member")
+public class Member {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -44,23 +44,25 @@ public class MemberEntity{
     @ColumnDefault(value = "0")
     private Integer firstLogin;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false,length=20)
+    private RoleType role;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Auth> auth = new ArrayList<Auth>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<RoleType> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<StreamChannel> streamChannel = new ArrayList<StreamChannel>();
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "auth_id")
-    private List<AuthEntity> auth;
+    @Column
+    private Long rootLabelId;
 
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(name = "label_id")
-    private List<LabelEntity> labelList;
+    public Member(String name, String email, AuthProvider provider, int firstLogin){
+        this.name = name;
+        this.email = email;
+        this.provider = provider;
+        this.firstLogin = firstLogin;
+    }
 
 
 }

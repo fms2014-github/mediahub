@@ -1,10 +1,34 @@
 import React, { Component } from 'react';
 import './Profile.css';
+import { getTwitchCodeURL, getYoutubeURL } from '../../util/APIUtils';
+import Alert from 'react-s-alert';
 
 class Profile extends Component {
+    state = {
+        accessToken: 'test',
+        channelId: 'channelId',
+        refreshToken: 'refresh',
+        code: 'code'
+    }
     constructor(props) {
         super(props);
         console.log(props);
+    }
+    handlerTwitchCodeUrl(){
+        getTwitchCodeURL()
+        .then(res=>{
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+    handlerYoutubeCodeUrl(){
+        getYoutubeURL()
+        .then(res=>{
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        })
     }
     render() {
         return (
@@ -27,6 +51,16 @@ class Profile extends Component {
                            <p className="profile-email">{this.props.currentUser.email}</p>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <button onClick={this.handlerTwitchCodeUrl}> twitch token </button>                    
+                </div>
+                <div>
+                    <input type="text" value={this.state.code}></input>
+                    <button>code</button>
+                </div>
+                <div>
+                    <button onClick={this.handlerYoutubeCodeUrl}> youtube token </button>
                 </div>
             </div>
         );
