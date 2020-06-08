@@ -80,14 +80,17 @@ export default function({ $axios, store }, inject) {
         })
     }
 
-    const youtubeSearchVideoApi = ({ channelId, pageToken, order }) => {
+    const youtubeSearchVideoApi = ({ channelId, pageToken = ' ', order, maxResults = 4 }) => {
+        console.log('maxResults', maxResults)
+        console.log('channelId', channelId)
+        console.log('pageToken', pageToken)
         return youtubeApiKey.get('search', {
             params: {
                 key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet',
                 channelId,
                 pageToken,
-                maxResults: 48,
+                maxResults,
                 order,
                 type: 'video',
             },
@@ -167,7 +170,7 @@ export default function({ $axios, store }, inject) {
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
-        youtubeSearchVideoApi: ({ channelId, pageToken, order }) => youtubeSearchVideoApi({ channelId, pageToken, order }),
+        youtubeSearchVideoApi: ({ channelId, pageToken, order, maxResults }) => youtubeSearchVideoApi({ channelId, pageToken, order, maxResults }),
         youtubeliveChatApi: (liveChatId) => youtubeliveChatApi(liveChatId),
         // isSubscribeApi: (channelId) => isSubscribeApi(channelId),
         // insertSubscribeApi: (cId) => insertSubscribeApi(cId),

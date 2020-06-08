@@ -70,28 +70,29 @@ export default {
             }
         },
     },
-    async mounted() {
-        const labels = JSON.parse(localStorage.getItem('labels'))
-        for (const label of labels) {
-            for (const item of label.channels) {
-                if (item.provider === 'twitch') continue
-                const data = await this.$youtubeApi.youtubuLiveVideoApi(item.channelId, item.name)
-                if (data.items.length === 0) continue
-                this.liveList.push({ kind: 'google', id: data.items[0].id.videoId })
-                if (this.liveList.length === 5) break
+    mounted() {
+        setTimeout(async () => {
+            const labels = JSON.parse(localStorage.getItem('labels'))
+            for (const label of labels) {
+                for (const item of label.channels) {
+                    if (item.provider === 'twitch') continue
+                    const data = await this.$youtubeApi.youtubuLiveVideoApi(item.channelId, item.name)
+                    if (data.items.length === 0) continue
+                    this.liveList.push({ kind: 'google', id: data.items[0].id.videoId })
+                    if (this.liveList.length === 5) break
+                }
             }
-        }
-        const auth = JSON.parse(localStorage.getItem('auth'))
-        const i = auth.findIndex((i) => i.provider === 'twitch')
-        if (i >= 0) {
-            const lives = (await this.$twitchApi.twitchStreamsApi(auth[i].access_token)).data.streams
-            for (const item of lives) {
-                this.liveList.push({ kind: 'twitch', id: item.channel.name })
-                if (this.liveList.length === 10) break
+            const auth = JSON.parse(localStorage.getItem('auth'))
+            const i = auth.findIndex((i) => i.provider === 'twitch')
+            if (i >= 0) {
+                const lives = (await this.$twitchApi.twitchStreamsApi(auth[i].access_token)).data.streams
+                for (const item of lives) {
+                    this.liveList.push({ kind: 'twitch', id: item.channel.name })
+                    if (this.liveList.length === 10) break
+                }
+                console.log('lives', lives)
             }
-            console.log('lives', lives)
-        }
-        setTimeout(() => {
+
             console.log('liveList', this.liveList)
             if (this.liveList.length === 0) {
                 this.loaded()

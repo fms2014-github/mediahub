@@ -2,7 +2,7 @@
     <div id="channel">
         <div>
             <figure class="snip1504">
-                <img v-if="streamer.bannerImg !== null" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
+                <img v-if="streamer.bannerImg" class="banner-img" :src="streamer.bannerImg" alt="bannerImg" />
                 <img v-else class="banner-img" src="../../assets/images/banner.png" alt="bannerImg" />
                 <figcaption>
                     <div id="profile-descrip">{{ streamer.description }}</div>
@@ -152,23 +152,15 @@ export default {
             // this.streamer.viewCount = streamer.items[0].statistics.viewCount
             // this.streamer.bannerImg = streamer.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
 
-            await axios
-                .get(`https://www.googleapis.com/youtube/v3/channels`, {
-                    params: {
-                        key: this.key,
-                        part: 'snippet,statistics,brandingSettings',
-                        id: this.channelId,
-                    },
-                })
-                .then((res) => {
-                    this.streamer.name = res.data.items[0].snippet.title
-                    this.streamer.description = res.data.items[0].snippet.description
-                    this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
-                    this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
-                    this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
-                    this.streamer.viewCount = res.data.items[0].statistics.viewCount
-                    this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
-                })
+            await this.$youtubeApi.youtubeChannelApi(this.channelId).then((res) => {
+                this.streamer.name = res.data.items[0].snippet.title
+                this.streamer.description = res.data.items[0].snippet.description
+                this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
+                this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
+                this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
+                this.streamer.viewCount = res.data.items[0].statistics.viewCount
+                this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
+            })
         } else {
             const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             this.streamer.name = streamer.display_name
@@ -190,6 +182,7 @@ export default {
                     channelId: this.channelId,
                     pageToken: this.nextPageToken,
                     order: this.order,
+                    maxResults: 48,
                 }
                 this.vData1 = (await this.$youtubeApi.youtubeSearchVideoApi(data)).data
                 this.nextPageToken = this.vData1.nextPageToken

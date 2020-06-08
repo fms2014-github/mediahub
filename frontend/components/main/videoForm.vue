@@ -9,6 +9,7 @@
                             <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
                             <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
                             <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
+			    <img v-if="l.curator" id="clip" src="../../assets/icon/clip.png" alt="" class="img-icon" />
                         </div>
                     </nuxt-link>
                     <nuxt-link v-else :to="'/uploaded/clip/' + l.videoId + '?id=' + l.channelId">
@@ -108,6 +109,13 @@ export default {
             height: 30px;
             z-index: 10;
         }
+        #clip {
+            position: absolute;
+            right: 10px;
+            top: -13px;
+            // width: 35px;
+            // height: 35px;
+        }
     }
 
     .profile {
@@ -154,7 +162,7 @@ export default {
     .profile-content {
         font-size: 12px;
         color: rgb(102, 102, 102);
-        margin-bottom: 1.5px;
+        margin-bottom: 2px;
     }
     .live-icon {
         width: 40px;

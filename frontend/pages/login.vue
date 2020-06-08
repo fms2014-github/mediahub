@@ -6,7 +6,7 @@
         <div id="background-video-overlay"></div>
         <transition name="animate" enter-active-class="animated zoomInDown" leave-active-class="animated zoomOutDonw">
             <div v-if="animate" v-show="loading" id="login-page-modal">
-                <h1>동영상 통합 관리 서비스</h1>
+                <h1 id="title">MEDIA HUB</h1>
                 <div id="login-button-wrap">
                     <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
                     <div class="border"></div>
@@ -68,8 +68,8 @@ export default {
 
 <style lang="scss" scoped>
 #login-page {
+    font-family: 'Arita-dotum-Medium';
     position: relative;
-    font-family: 'S-CoreDream-3Light';
     display: flex;
     justify-content: center;
     align-items: center;
@@ -114,30 +114,18 @@ export default {
         align-items: center;
         background-color: white;
         box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
-        h1 {
-            margin-bottom: 3%;
-            font: {
-                size: 2rem;
-                weight: 600;
-            }
-        }
-        h2 {
-            margin-bottom: 6%;
-            font: {
-                size: 1.5rem;
-                weight: 400;
-            }
+        #title {
+            margin-bottom: 10% !important;
         }
         #login-button-wrap {
             position: relative;
-            width: 70%;
+            width: 50%;
             z-index: 100;
-
             text-align: center;
             border: {
                 width: 1px;
                 style: solid;
-                color: rgb(180, 180, 180);
+                color: rgb(238, 238, 238);
             }
             z-index: 100;
             #border-animate,
@@ -147,12 +135,12 @@ export default {
             #border-animate:visited {
                 width: 100%;
                 height: 100%;
-                padding: 20px;
+                padding: 15px;
                 vertical-align: middle;
-                color: black;
+                color: rgb(31, 31, 31);
                 text-decoration: none;
                 border-width: 0px;
-                background-color: white;
+                background-color: rgba(255, 255, 255, 0.774);
                 img {
                     width: 32px;
                     height: 32px;
@@ -168,7 +156,7 @@ export default {
                 border: {
                     width: 2px;
                     style: solid;
-                    color: rgb(0, 0, 0);
+                    color: rgba(236, 217, 168, 0.363);
                     radius: 2px;
                 }
                 z-index: 1;
@@ -209,7 +197,7 @@ export default {
                     padding-bottom: 0px;
                 }
                 to {
-                    padding-bottom: 74px;
+                    padding-bottom: 64px;
                 }
             }
             @keyframes borderBottomToTop {
@@ -219,7 +207,7 @@ export default {
                 }
                 to {
                     top: -2px;
-                    padding-top: 74px;
+                    padding-top: 64px;
                 }
             }
             @keyframes borderLeftToRight {

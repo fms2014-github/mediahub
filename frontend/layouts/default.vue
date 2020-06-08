@@ -3,7 +3,7 @@
         <nav-bar />
         <div id="content">
             <side-bar />
-            <nuxt id="router-view" />
+            <nuxt id="router-view" :key="$route.fullPath" />
         </div>
     </div>
 </template>
@@ -15,6 +15,9 @@ export default {
     components: {
         navBar,
         sideBar,
+    },
+    mounted() {
+        console.log('updated::', 'Page Update!!!')
     },
 }
 </script>
