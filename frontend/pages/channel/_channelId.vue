@@ -28,8 +28,12 @@
                     </div>
                 </div>
                 <div id="btns-div">
-                    <sub-button v-if="youtubeButton.channelId !== ''" :play-info="youtubeButton" />
-                    <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
+                    <div id="youtube-btn">
+                        <sub-button v-if="youtubeButton.channelId !== ''" :play-info="youtubeButton" />
+                    </div>
+                    <div id="twitch-btn">
+                        <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
+                    </div>
                     <!-- <div id="profile-btns">
                         <button id="sub-btn" class="profile-btn">구독</button>
                         <button id="follow-btn" class="profile-btn">팔로우</button>
@@ -119,7 +123,7 @@ export default {
 
     async mounted() {
         const channelInfo = this.channelId.split(',')
-        const yi = channelInfo.findIndex((i) => i === 'youtube')
+        const yi = channelInfo.findIndex((i) => i === 'google')
         if (yi >= 0) {
             console.log('channelId/y', channelInfo[yi + 1])
             this.youtubeButton.channelId = channelInfo[yi + 1]
@@ -345,8 +349,10 @@ export default {
     }
 
     #btns-div {
-        min-width: 34vw;
-        max-width: 35vw;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
     }
     #profile-btns {
         float: right;
@@ -483,6 +489,16 @@ export default {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         opacity: 1;
+    }
+    #youtube-btn {
+        display: inline-flex;
+        width: 100px;
+        height: 35px;
+    }
+    #twitch-btn {
+        display: inline-flex;
+        width: 100px;
+        height: 35px;
     }
 }
 </style>
