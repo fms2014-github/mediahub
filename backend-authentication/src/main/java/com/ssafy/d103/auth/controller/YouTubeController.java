@@ -231,7 +231,8 @@ public class YouTubeController {
             for (int j = 0; j<channels.size(); j++){
                 if(memberChannels.get(i).getChannelId().equals(channels.get(j).getChannelId())){
                     if(!memberChannels.get(i).getProfileImg().equals(channels.get(j).getProfileImg())){
-                        memberChannels.get(i).setProfileImg(channels.get(j).getProfileImg());
+                        Channel c = channelService.findById(memberChannels.get(i).getId());
+                        c.setProfileImg(channels.get(j).getProfileImg());
                     }
                     memberChannels.remove(i);
                     channels.remove(j);
