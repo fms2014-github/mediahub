@@ -143,8 +143,8 @@ public class MemberController {
     @GetMapping("/stream-channel")
     public ResponseEntity getStreamChannelByChannelIdOrChannelName(@RequestParam String channelId, @RequestParam String provider){
         StreamChannel streamChannel = null;
-        if(provider.equals("youtube")){
-            streamChannel = streamChannelService.findById("Y.".concat(channelId));
+        if(provider.equals("google")){
+            streamChannel = streamChannelService.findById("G.".concat(channelId));
         }else if(provider.equals("twitch")){
             streamChannel = streamChannelService.findById("T.".concat(channelId));
         }
@@ -154,8 +154,8 @@ public class MemberController {
             List<StreamChannelDto> list = member.getStreamChannel().stream()
                     .map(StreamChannel -> {
                         StreamChannelDto streamChannelDto = new StreamChannelDto();
-                        if(StreamChannel.getId().charAt(0) == 'Y'){
-                            streamChannelDto.setProvider("youtube");
+                        if(StreamChannel.getId().charAt(0) == 'G'){
+                            streamChannelDto.setProvider("google");
                         }else if(StreamChannel.getId().charAt(0) == 'T'){
                             streamChannelDto.setProvider("twitch");
                         }
