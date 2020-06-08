@@ -62,9 +62,7 @@ export default {
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
-            console.log(localStorage.getItem('auth'))
             const temp = JSON.parse(localStorage.getItem('auth'))
-            console.log('before::', temp)
             const twitchInfo = temp.find((i) => i.provider === 'twitch')
             if (temp.find((i) => i.provider === 'twitch') !== undefined) {
                 const { data } = await this.$backendAxios.twitchTokerRefresh()
@@ -178,7 +176,7 @@ export default {
             }
             return nCnt
         },
-        ...mapGetters({ jwt: 'login/getJwt' }),
+        ...mapGetters({ getJwt: 'login/getJwt' }),
     },
 }
 </script>
