@@ -61,7 +61,7 @@ export default function({ $axios, store }, inject) {
         return youtubeApiKey.get('videos', {
             params: {
                 // key: apiKey[timeInMs % apiKey.length],
-                key: 'AIzaSyA_4PVT4iLvL92YcMpYrxx_905xfsScqlU',
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
@@ -76,9 +76,32 @@ export default function({ $axios, store }, inject) {
                 channelId,
                 eventType,
                 type,
-                // pageToken,
-                // maxResults: 50,
-                // order,
+            },
+        })
+    }
+
+    const youtubeSearchVideoApi = ({ channelId, pageToken, order }) => {
+        return youtubeApiKey.get('search', {
+            params: {
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                part: 'snippet',
+                channelId,
+                pageToken,
+                maxResults: 48,
+                order,
+                type: 'video',
+            },
+        })
+    }
+
+    const youtubeChannelApi = (channelId) => {
+        return youtubeApiKey.get('channels', {
+            params: {
+                // key: apiKey[timeInMs % apiKey.length],
+                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                part: 'snippet,statistics,brandingSettings',
+                channelId,
             },
         })
     }
@@ -146,6 +169,7 @@ export default function({ $axios, store }, inject) {
     const youtubeScript = {
         youtubeVideosApi: (videoId) => youtubeVideosApi(videoId),
         youtubeSearchApi: ({ channelId, eventType, type }) => youtubeSearchApi({ channelId, eventType, type }),
+        youtubeSearchVideoApi: ({ channelId, pageToken, order }) => youtubeSearchVideoApi({ channelId, pageToken, order }),
         youtubeliveChatApi: (liveChatId) => youtubeliveChatApi(liveChatId),
         // isSubscribeApi: (channelId) => isSubscribeApi(channelId),
         // insertSubscribeApi: (cId) => insertSubscribeApi(cId),
@@ -153,6 +177,7 @@ export default function({ $axios, store }, inject) {
         youtubuLiveVideoApi: (channel, channelName) => youtubuLiveVideoApi(channel, channelName),
         synchronization: () => synchronization(),
         youtubeliveChatInsertApi: ({ liveChatId, msg }) => youtubeliveChatInsertApi({ liveChatId, msg }),
+        youtubeChannelApi: (channelId) => youtubeChannelApi(channelId),
     }
     // Inject to context as $api
     inject('youtubeApi', youtubeScript)
