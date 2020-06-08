@@ -2,7 +2,7 @@
     <div id="streaming">
         <div id="live-component">
             <client-only placeholder="loading...">
-                <live-video :video-id="videoId"></live-video>
+                <live-video v-if="liveId !== ''" :video-id="liveId"></live-video>
             </client-only>
         </div>
         <hr />
@@ -59,6 +59,7 @@ export default {
     },
     async mounted() {
         this.info = this.videoId.split(',')
+        const live = this.videoId.split(',')
         this.provider = this.info[0]
         if (this.provider === 'google') {
             this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
@@ -92,12 +93,14 @@ export default {
                     this.channel.push(streamer)
                     this.info.push('twitch')
                     this.info.push(res[i].channelId)
+                    live.push('twitch')
+                    live.push(res[i].name)
                 }
             } catch (error) {}
+            this.liveId = live.join(',')
         } else {
             this.labels = JSON.parse(localStorage.getItem('labels'))
             for (const d of this.labels) {
-                console.log(d)
                 const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
                 if (i >= 0) {
                     this.channelId = d.channels[i].id
@@ -136,10 +139,16 @@ export default {
                     this.channel.push(streamer)
                     this.info.unshift(res[i].channelId)
                     this.info.unshift('google')
+
+                    const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
+                    if (liveInfo.items.length !== 0) {
+                        live.unshift(liveInfo.items[0].id.videoId)
+                        live.unshift('google')
+                    }
                 }
             } catch (error) {}
+            this.liveId = live.join(',')
         }
-        this.liveId = this.info.join(',')
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
