@@ -102,8 +102,8 @@ export default {
             moreVideo: true,
             videoList: [
                 {
-                    game: '',
-                    curator: '',
+                    game: null,
+                    curator: null,
                     viewCnt: 0,
                 },
             ],
