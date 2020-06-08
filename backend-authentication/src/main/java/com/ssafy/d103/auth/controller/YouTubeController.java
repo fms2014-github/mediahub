@@ -218,7 +218,9 @@ public class YouTubeController {
                 queue.addAll(temp.getSubLabels());
                 label.add(new LabelDto(temp));
                 temp.getChannels().forEach(channel -> {
-                   memberChannels.add(channel);
+                    if(channel.getProvider().equals("google")){
+                        memberChannels.add(channel);
+                    }
                 });
             }
         }
