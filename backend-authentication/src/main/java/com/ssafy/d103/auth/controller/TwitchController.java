@@ -119,7 +119,7 @@ public class TwitchController {
                     channel.setProvider(AuthProvider.twitch.toString());
                     channel.setChannelId(follow.getChannel().get_id());
                     channel.setName(follow.getChannel().getName());
-                    channel.setDescription(follow.getChannel().getDisplay_name());
+                    channel.setDisplayName(follow.getChannel().getDisplay_name());
                     channel.setProfileImg(follow.getChannel().getLogo());
                     channel.setFollower(follow.getChannel().getFollowers());
                     channel.setSubscriber(follow.getChannel().getFollowers());
