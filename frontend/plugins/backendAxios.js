@@ -57,6 +57,10 @@ export default function({ $axios, store }, inject) {
         return backendAxios.put('/twitch/channel/synchronization')
     }
 
+    const twitchTokerRefresh = () => {
+        return backendAxios.get('/twitch/access-token')
+    }
+
     const backendScript = {
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
@@ -66,6 +70,7 @@ export default function({ $axios, store }, inject) {
         addFirstLogin: () => addFirstLogin(),
         subFirstLogin: () => subFirstLogin(),
         twitchSynchronization: () => twitchSynchronization(),
+        twitchTokerRefresh: () => twitchTokerRefresh(),
     }
 
     // Inject to context as $api

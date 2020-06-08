@@ -47,3 +47,26 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+a,
+a:link,
+a:active,
+a:focus,
+a:visited,
+a:hover{
+  outline: none;
+  text-decoration: none;
+  color: black;
+}
+button,
+button:link,
+button:active,
+button:focus,
+button:visited,
+button:hover{
+  outline: none;
+  text-decoration: none;
+  color: black;
+  border-width: 0px;
+  background-color: white;
+}
