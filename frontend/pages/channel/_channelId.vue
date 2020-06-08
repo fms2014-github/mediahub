@@ -95,7 +95,7 @@ export default {
             videoList: [
                 {
                     game: '',
-                    curator: '',
+                    curator: null,
                     viewCnt: 0,
                 },
             ],
@@ -223,7 +223,7 @@ export default {
                     this.videoList.game = ''
                     this.videoList.game = this.vData1[i].game
                     this.videoList.viewCnt = this.numChange(this.vData1[i].views) + '회'
-                    this.videoList.curator = ''
+                    this.videoList.curator = null
                     this.videoList.curator = this.vData1[i].curator.name
 
                     const data = {
