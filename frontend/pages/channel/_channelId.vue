@@ -28,10 +28,16 @@
                     </div>
                 </div>
                 <div id="btns-div">
-                    <div id="profile-btns">
+                    <div id="youtube-btn">
+                        <sub-button v-if="youtubeButton.channelId !== ''" :play-info="youtubeButton" />
+                    </div>
+                    <div id="twitch-btn">
+                        <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
+                    </div>
+                    <!-- <div id="profile-btns">
                         <button id="sub-btn" class="profile-btn">구독</button>
                         <button id="follow-btn" class="profile-btn">팔로우</button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -53,10 +59,12 @@
 
 <script>
 import axios from 'axios'
+import subButton from '~/components/button.vue'
 import videoForm from '@/components/main/videoForm.vue'
 export default {
     components: {
         videoForm,
+        subButton,
     },
     asyncData({ params }) {
         const channelId = params.channelId
@@ -94,16 +102,35 @@ export default {
             moreVideo: true,
             videoList: [
                 {
-                    game: '',
+                    game: null,
                     curator: null,
                     viewCnt: 0,
                 },
             ],
+            youtubeButton: {
+                kind: 'google',
+                channelId: '',
+            },
+            twitchButton: {
+                kind: 'twitch',
+                channelId: '',
+            },
         }
     },
 
     async mounted() {
         const channelInfo = this.channelId.split(',')
+        const yi = channelInfo.findIndex((i) => i === 'google')
+        if (yi >= 0) {
+            console.log('channelId/y', channelInfo[yi + 1])
+            this.youtubeButton.channelId = channelInfo[yi + 1]
+        }
+        const ti = channelInfo.findIndex((i) => i === 'twitch')
+        if (ti >= 0) {
+            console.log('channelId/t', channelInfo[ti + 1])
+            this.twitchButton.channelId = channelInfo[ti + 1]
+        }
+        console.log(channelInfo)
         this.provider = channelInfo[0]
         this.channelId = channelInfo[1]
         if (channelInfo.length === 4) {
@@ -351,8 +378,10 @@ export default {
     }
 
     #btns-div {
-        min-width: 34vw;
-        max-width: 35vw;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
     }
     #profile-btns {
         float: right;
@@ -489,6 +518,16 @@ export default {
         -webkit-transform: translateY(0);
         transform: translateY(0);
         opacity: 1;
+    }
+    #youtube-btn {
+        display: inline-flex;
+        width: 100px;
+        height: 35px;
+    }
+    #twitch-btn {
+        display: inline-flex;
+        width: 100px;
+        height: 35px;
     }
 }
 </style>

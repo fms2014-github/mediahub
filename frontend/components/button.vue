@@ -10,7 +10,7 @@
             <div v-else>
                 <div class="flex-container">
                     <div v-if="!isSubscribe" class="twitch button" @click="twitchInsert">팔로우</div>
-                    <divs v-else class="gray button" @click="twitchDelete">팔로잉</divs>
+                    <div v-else class="gray button" @click="twitchDelete">팔로잉</div>
                 </div>
             </div>
         </div>
@@ -107,6 +107,7 @@ export default {
 
 <style lang="scss" scoped>
 #button {
+    font-family: 'S-CoreDream-4Regular';
     #button-container {
         // background-color: rgb(40, 40, 40);
         display: inline-block;
@@ -120,11 +121,11 @@ export default {
 
             .button {
                 margin-left: 2%;
-                width: 8%;
+                width: 83px;
                 height: 35px;
                 text-align: center;
                 line-height: 35px;
-                font-weight: bold;
+                // font-weight: bold;
                 cursor: pointer;
                 font-size: 1rem;
             }
