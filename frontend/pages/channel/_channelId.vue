@@ -91,23 +91,20 @@ export default {
                 published: '',
                 viewCount: '',
                 bannerImg: '',
+                channelName: '',
             },
             nextPageToken: ' ',
             list: [],
             vData1: [],
             vData2: [],
-            viewCnt: 0,
+
             provider: '',
-            game: '',
             moreVideo: true,
             videoList: [
                 {
-                    videoId: '',
-                    title: '',
-                    published: '',
-                    url: '',
-                    live: '',
-                    provider: '',
+                    game: '',
+                    curator: '',
+                    viewCnt: 0,
                 },
             ],
             youtubeButton: {
@@ -173,7 +170,8 @@ export default {
                 })
         } else {
             const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
-            this.streamer.name = streamer.display_name // name도 추가할까?
+            this.streamer.name = streamer.display_name
+            this.streamer.channelName = streamer.name
             this.streamer.description = streamer.description
             this.streamer.img = streamer.logo
             this.streamer.tsubcnt = this.numChange(streamer.followers)
@@ -194,9 +192,7 @@ export default {
                 }
                 this.vData1 = (await this.$youtubeApi.youtubeSearchVideoApi(data)).data
                 this.nextPageToken = this.vData1.nextPageToken
-                console.log(this.vData1.nextPageToken)
                 if (!this.vData1.nextPageToken) {
-                    console.log('다음페이지없음')
                     this.moreVideo = false
                 }
                 const idList = []
@@ -218,7 +214,8 @@ export default {
                         viewCnt: this.numChange(this.vData2.items[i].statistics.viewCount),
                         channelName: this.streamer.name,
                         channelId: this.channelId,
-                        game: this.game,
+                        game: this.videoList.game,
+                        curator: this.videoList.curator,
                     }
                     this.list.push(data)
                 }
@@ -227,8 +224,9 @@ export default {
                 if (this.provider === 'google,twitch') this.channelId = this.tChannelId
                 this.vData1 = (await this.$twitchApi.twitchVideosApi(this.channelId)).data.videos
                 for (let i = 0; i < this.vData1.length; i++) {
-                    this.game = this.vData1[i].game
-                    this.viewCnt = this.numChange(this.vData1[i].views) + '회'
+                    this.videoList.game = ''
+                    this.videoList.game = this.vData1[i].game
+                    this.videoList.viewCnt = this.numChange(this.vData1[i].views) + '회'
                     const data = {
                         videoId: this.vData1[i]._id,
                         title: this.vData1[i].title,
@@ -241,10 +239,41 @@ export default {
                         viewCnt: this.viewCnt,
                         channelName: this.streamer.name,
                         channelId: this.channelId,
-                        game: this.game,
+                        game: this.videoList.game,
+                        curator: this.videoList.curator,
                     }
                     this.list.push(data)
                 }
+                this.vData1 = (await this.$twitchApi.twitchClipsByChannelApi(this.streamer.channelName)).data.clips
+                console.log(this.vData1)
+                for (let i = 0; i < this.vData1.length; i++) {
+                    this.videoList.game = ''
+                    this.videoList.game = this.vData1[i].game
+                    this.videoList.viewCnt = this.numChange(this.vData1[i].views) + '회'
+                    this.videoList.curator = ''
+                    this.videoList.curator = this.vData1[i].curator.name
+
+                    const data = {
+                        videoId: this.vData1[i].slug,
+                        title: this.vData1[i].title,
+                        publishedOrigin: this.vData1[i].created_at,
+                        published: this.vData1[i].created_at.substring(0, 10),
+                        thumbnail: this.vData1[i].thumbnails.medium,
+                        live: 'none',
+                        provider: 'twitch',
+                        profileImg: this.streamer.img,
+                        viewCnt: this.videoList.viewCnt,
+                        channelName: this.streamer.name,
+                        channelId: this.channelId,
+                        game: this.videoList.game,
+                        curator: this.videoList.curator,
+                    }
+                    this.list.push(data)
+                }
+                if (this.provider === 'google,twitch')
+                    this.list.sort((a, b) => {
+                        return Date.parse(b.publishedOrigin) - Date.parse(a.publishedOrigin)
+                    })
             }
             if (this.provider === 'google,twitch')
                 this.list.sort((a, b) => {
@@ -281,8 +310,8 @@ export default {
 
 <style lang="scss" scoped>
 #router-view {
-    // font-family: 'Arita-dotum-Medium';
-    font-family: 'S-CoreDream-4Regular';
+    font-family: 'Arita-dotum-Medium';
+    // font-family: 'S-CoreDream-4Regular';
     // font-family: 'KHNPHU';
     // font-family: 'HCRDotum';
     // font-family: 'YESGothic-Regular';
