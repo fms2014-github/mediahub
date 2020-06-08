@@ -7,6 +7,15 @@ export default function({ $axios, store }, inject) {
         baseURL: 'https://k02d1031.p.ssafy.io:8081/v1/',
     })
 
+    const getStreamChannel = (params) => {
+        return backendAxios.get('member/stream-channel', {
+            params: {
+                channelId: params.channelId,
+                provider: params.provider,
+            },
+        })
+    }
+
     const getMember = () => {
         return backendAxios.get('member/information')
     }
@@ -62,6 +71,7 @@ export default function({ $axios, store }, inject) {
     }
 
     const backendScript = {
+        getStreamChannel: (params) => getStreamChannel(params),
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
         deleteYoutubeChannel: (sId) => deleteYoutubeChannel(sId),
