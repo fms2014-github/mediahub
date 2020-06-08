@@ -2,8 +2,9 @@
     <div id="streaming">
         <div id="live-component">
             <client-only placeholder="loading...">
-                <live-video v-if="liveId !== ''" :video-id="liveId"></live-video>
+                <live-video v-if="liveId !== ''" :video-id="liveId" @load-complete="loading = true"></live-video>
             </client-only>
+            <div v-if="!loading" id="loading-page"></div>
         </div>
         <hr />
         <div v-for="(item, index) in channel" :key="item.id">
@@ -46,6 +47,7 @@ export default {
             channel: [],
             info: [],
             liveId: '',
+            loading: false,
         }
     },
     async mounted() {
@@ -197,6 +199,8 @@ export default {
         margin: 20px 0px;
         width: 156.25vh;
         padding-right: 300px;
+        #loading-page {
+        }
     }
     hr {
         width: 100%;
