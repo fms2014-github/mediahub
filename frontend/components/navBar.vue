@@ -96,7 +96,7 @@ export default {
     button:visited,
     button:focus,
     button:link {
-        color: black;
+        color: rgb(17, 17, 17);
         text-decoration: none;
         margin: 0px 15px;
         background-color: rgba(0, 0, 0, 0);
@@ -104,15 +104,12 @@ export default {
         border-width: 0px;
         cursor: pointer;
     }
-    #alarm-icon {
-        margin: 0px 12px;
-    }
     #sync-icon {
-        margin-right: 30px;
+        margin-right: 50px;
     }
     button {
-        img {
-            width: 32px;
+        span {
+            padding-top: 5px;
         }
     }
     .alarm-div {
@@ -122,23 +119,23 @@ export default {
         z-index: 10;
     }
     #reSync {
-        width: 200px;
+        width: 190px;
         height: 122px;
         position: absolute;
         top: 58px;
-        right: 0px;
-        background-color: white;
-        border: {
-            width: 1px;
-            style: solid;
-            color: rgb(180, 180, 180);
-        }
+        right: 5px;
+        background-color: rgba(255, 255, 255, 0.863);
+        box-shadow: 0 1px 2px rgb(122, 122, 122);
+        // border: {
+        //     width: 1px;
+        //     style: solid;
+        //     color: rgb(180, 180, 180);
+        // }
         h3 {
-            margin-top: 10px;
+            margin-top: 11px;
             text-align: center;
             font: {
                 size: 0.865rem;
-                weight: 700;
             }
         }
         #youtube-sync {

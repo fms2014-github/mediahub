@@ -1,8 +1,8 @@
 <template>
     <div id="subscription-sync">
         <div id="content-wrap">
-            <h1>미디어 허브에 오신 것을 환영합니다.</h1>
-            <h2>구독 정보를 동기화하시려면 아래 버튼을 눌러주세요.</h2>
+            <h3 id="title1">미디어 허브에 오신 것을 환영합니다.</h3>
+            <h3 id="title2">구독 정보를 동기화하시려면 아래 버튼을 눌러주세요.</h3>
             <div id="button-wrap">
                 <button id="youtube-sync" @click="syncYoutube">
                     <img src="../assets/icon/youtubeBtn.png" />
@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/commonMixin.scss';
 #subscription-sync {
-    font-family: 'S-CoreDream-3Light';
+    font-family: 'Arita-dotum-Medium';
     #content-wrap {
         display: flex;
         flex-direction: column;
@@ -69,18 +69,13 @@ export default {
         height: 100vh;
         width: 100vw;
         transform: translateY(-10%);
-        h1 {
+        #title1 {
             text-align: center;
-            font: {
-                size: 2.4rem;
-                weight: 700;
-            }
             margin-top: 30px;
             margin-bottom: 10px;
         }
-        h2 {
+        #title2 {
             text-align: center;
-            font-size: 1.56rem;
             margin-top: 20px;
             margin-bottom: 6px;
         }
