@@ -5,6 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.d103.auth.commonService.AuthService;
+import com.ssafy.d103.auth.exception.InvalidAccessTokenException;
+import com.ssafy.d103.auth.exception.MemberNotFoundException;
+import com.ssafy.d103.auth.exception.MemberRefreshTokenNotFoundException;
 import com.ssafy.d103.auth.model.Auth;
 import com.ssafy.d103.auth.model.Member;
 import com.ssafy.d103.auth.repository.ChannelRepository;
@@ -176,27 +179,33 @@ public class TwitchService {
      * 5. 성공시 Return RetTwitchAuth
      */
     public Auth getTwitchAccessTokenWithRefreshToken(long id) {
-        Optional<Member> member = memberRepository.findById(id);
-        List<Auth> authList = (List) member.get().getAuth();
+        Member member = memberRepository.findById(id).orElseThrow(()-> new MemberNotFoundException(id));
+        List<Auth> authList = (List) member.getAuth();
         Auth updateAuth = null;
+        String refreshToken = null;
         for(Auth auth : authList){
             if(auth.getAuth_provider().equals("twitch")) {
                 updateAuth = auth;
+                refreshToken = auth.getRefresh_token();
             }
         }
 
+        if(refreshToken == null){
+            throw new MemberRefreshTokenNotFoundException(member.getId());
+        }
+        System.out.println("********************** 리프레시 토큰 :: "+refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // Set parameter
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
-        params.add("refresh_token", updateAuth.getRefresh_token());
+        params.add("refresh_token", refreshToken);
         params.add("client_id", twitchClientId);
         params.add("client_secret", twitchClientSecret);
 
         // Set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token").concat("--data-urlencode"), request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("social.twitch.url.token"), request, String.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             RetTwitchAuth retTwitchAuth = gson.fromJson(response.getBody(), RetTwitchAuth.class);
             updateAuth.setAccess_token(retTwitchAuth.getAccess_token());
@@ -272,7 +281,7 @@ public class TwitchService {
     public boolean unFollowTwitchChannel(String channelId, String accessToken, String userId) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", accept);
-        headers.add("Client-ID", twitchClientId);
+                headers.add("Client-ID", twitchClientId);
         headers.set("Authorization", "OAuth ".concat(accessToken));
 
         StringBuilder url = new StringBuilder()
@@ -286,6 +295,8 @@ public class TwitchService {
         ResponseEntity<String> response = restTemplate.exchange(url.toString(), HttpMethod.DELETE, entity, String.class);
         if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
             return true;
+        }else if(response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            throw new InvalidAccessTokenException();
         }
 
         return false;
