@@ -138,8 +138,12 @@ public class YouTubeController {
         ChannelListResponse mySnippet = youTube.channels().list("snippet").setMine(true).execute();
         String myChannelId = mySnippet.getItems().get(0).getId();
         StreamChannel streamChannel = new StreamChannel();
-        streamChannel.setId("Y.".concat(myChannelId));
-        streamChannel.setMember(member);
+        try{
+            streamChannelService.findById(myChannelId);
+        }catch (Exception e){
+            streamChannel.setId("G.".concat(myChannelId));
+            streamChannel.setMember(member);
+        }
         streamChannelService.saveStreamChannel(streamChannel);
         customUserDetailsService.saveMember(member);
         return new ResponseEntity(HttpStatus.OK);
