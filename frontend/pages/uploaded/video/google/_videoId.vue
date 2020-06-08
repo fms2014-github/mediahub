@@ -55,7 +55,7 @@ export default {
             }
         }
     },
-    mounted() {
+    async mounted() {
         console.log(this.videoId)
         console.log('youtube', this.playInfo)
         this.playInfo.play = this.videoId

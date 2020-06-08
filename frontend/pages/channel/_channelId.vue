@@ -176,7 +176,12 @@ export default {
                 this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
             })
         } else {
-            const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
+            const streamer = (
+                await this.$twitchApi.twitchChannelApi(
+                    this.channelId,
+                    JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                )
+            ).data
             this.streamer.name = streamer.display_name
             this.streamer.channelName = streamer.name
             this.streamer.description = streamer.description
@@ -230,7 +235,12 @@ export default {
             }
             if (this.provider === 'twitch' || this.provider === 'google,twitch') {
                 if (this.provider === 'google,twitch') this.channelId = this.tChannelId
-                this.vData1 = (await this.$twitchApi.twitchVideosApi(this.channelId)).data.videos
+                this.vData1 = (
+                    await this.$twitchApi.twitchVideosApi(
+                        this.channelId,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.videos
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
                     this.videoList.game = this.vData1[i].game
@@ -252,7 +262,12 @@ export default {
                     }
                     this.list.push(data)
                 }
-                this.vData1 = (await this.$twitchApi.twitchClipsByChannelApi(this.streamer.channelName)).data.clips
+                this.vData1 = (
+                    await this.$twitchApi.twitchClipsByChannelApi(
+                        this.streamer.channelName,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.clips
                 console.log(this.vData1)
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''

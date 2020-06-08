@@ -84,75 +84,90 @@ export default {
         }
     },
     methods: {
-        async channelVidoe(provider, channelId) {
-            if (provider === 'google') {
-                const list = []
-                const channelInfo = await this.$youtubeApi.youtubeChannelApi(channelId)
-                console.log('qwgrf', channelInfo.data)
-                const searchVideosRes = await this.$youtubeApi.youtubeSearchVideoApi({ channelId, order: 'date' })
-                const idList = []
-                for (var i = 0; i < searchVideosRes.data.items.length; i++) {
-                    idList.push(searchVideosRes.data.items[i].id.videoId)
-                }
-                const idStr = idList.join(',')
-                const videoDetailRes = await this.$youtubeApi.youtubeVideosApi(idStr)
-                for (let i = 0; i < videoDetailRes.data.items.length; i++) {
-                    const data = {
-                        videoId: videoDetailRes.data.items[i].id,
-                        title: videoDetailRes.data.items[i].snippet.title,
-                        publishedOrigin: videoDetailRes.data.items[i].snippet.publishedAt,
-                        published: videoDetailRes.data.items[i].snippet.publishedAt.substring(0, 10),
-                        thumbnail: videoDetailRes.data.items[i].snippet.thumbnails.medium.url,
-                        provider: 'google',
-                        profileImg: channelInfo.data.items[0].snippet.thumbnails.medium.url,
-                        viewCnt: this.numChange(videoDetailRes.data.items[i].statistics.viewCount),
-                        channelName: channelInfo.data.items[0].snippet.title,
-                        channelId,
+        channelVidoe(provider, channelId) {
+            setTimeout(async () => {
+                if (provider === 'google') {
+                    const list = []
+                    const channelInfo = await this.$youtubeApi.youtubeChannelApi(channelId)
+                    console.log('qwgrf', channelInfo.data)
+                    const searchVideosRes = await this.$youtubeApi.youtubeSearchVideoApi({ channelId, order: 'date' })
+                    const idList = []
+                    for (var i = 0; i < searchVideosRes.data.items.length; i++) {
+                        idList.push(searchVideosRes.data.items[i].id.videoId)
                     }
-                    list.push(data)
-                }
-                this.subscriptionList.push({ channelName: channelInfo.data.items[0].snippet.title, provider, videoList: list })
-            } else {
-                const list = []
-                const channelInfo = await this.$twitchApi.twitchChannelApi(channelId)
-                const searchVideosRes = await this.$twitchApi.twitchVideosApi(channelId)
-                for (let i = 0; i < (searchVideosRes.data.videos.length >= 2 ? 2 : searchVideosRes.data.videos.length); i++) {
-                    const data = {
-                        videoId: searchVideosRes.data.videos[i]._id,
-                        title: searchVideosRes.data.videos[i].title,
-                        publishedOrigin: searchVideosRes.data.videos[i].created_at,
-                        published: searchVideosRes.data.videos[i].created_at.substring(0, 10),
-                        thumbnail: searchVideosRes.data.videos[i].preview.medium,
-                        live: 'none',
-                        provider: 'twitch',
-                        profileImg: channelInfo.data.logo,
-                        viewCnt: this.numChange(searchVideosRes.data.videos[i].views) + '회',
-                        channelName: channelInfo.data.display_name,
-                        channelId,
-                        game: searchVideosRes.data.videos[i].game,
+                    const idStr = idList.join(',')
+                    const videoDetailRes = await this.$youtubeApi.youtubeVideosApi(idStr)
+                    for (let i = 0; i < videoDetailRes.data.items.length; i++) {
+                        const data = {
+                            videoId: videoDetailRes.data.items[i].id,
+                            title: videoDetailRes.data.items[i].snippet.title,
+                            publishedOrigin: videoDetailRes.data.items[i].snippet.publishedAt,
+                            published: videoDetailRes.data.items[i].snippet.publishedAt.substring(0, 10),
+                            thumbnail: videoDetailRes.data.items[i].snippet.thumbnails.medium.url,
+                            provider: 'google',
+                            profileImg: channelInfo.data.items[0].snippet.thumbnails.medium.url,
+                            viewCnt: this.numChange(videoDetailRes.data.items[i].statistics.viewCount),
+                            channelName: channelInfo.data.items[0].snippet.title,
+                            channelId,
+                        }
+                        list.push(data)
                     }
-                    list.push(data)
-                }
-                const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.display_name)
-                for (let i = 0; i < clipRes.data.clips.length >= 2 ? 2 : clipRes.data.clips.length; i++) {
-                    const data = {
-                        videoId: clipRes.data.clips[i].slug,
-                        title: clipRes.data.clips[i].title,
-                        publishedOrigin: clipRes.data.clips[i].created_at,
-                        published: clipRes.data.clips[i].created_at.substring(0, 10),
-                        thumbnail: clipRes.data.clips[i].thumbnails.medium,
-                        live: 'none',
-                        provider: 'twitch',
-                        profileImg: channelInfo.data.logo,
-                        viewCnt: this.numChange(clipRes.data.clips[i].views) + '회',
-                        channelName: channelInfo.data.display_name,
+                    this.subscriptionList.push({ channelName: channelInfo.data.items[0].snippet.title, provider, videoList: list })
+                } else {
+                    const list = []
+                    const channelInfo = await this.$twitchApi.twitchChannelApi(
                         channelId,
-                        game: clipRes.data.clips[i].game,
-                        curator: clipRes.data.clips[i].curator.name,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                    console.log('channelInfo', channelInfo)
+                    const searchVideosRes = await this.$twitchApi.twitchVideosApi(
+                        channelId,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                    console.log('searchVideosRes', searchVideosRes)
+                    for (let i = 0; i < (searchVideosRes.data.videos.length >= 4 ? 4 : searchVideosRes.data.videos.length); i++) {
+                        const data = {
+                            videoId: searchVideosRes.data.videos[i]._id,
+                            title: searchVideosRes.data.videos[i].title,
+                            publishedOrigin: searchVideosRes.data.videos[i].created_at,
+                            published: searchVideosRes.data.videos[i].created_at.substring(0, 10),
+                            thumbnail: searchVideosRes.data.videos[i].preview.medium,
+                            live: 'none',
+                            provider: 'twitch',
+                            profileImg: channelInfo.data.logo,
+                            viewCnt: this.numChange(searchVideosRes.data.videos[i].views) + '회',
+                            channelName: channelInfo.data.display_name,
+                            channelId,
+                            game: searchVideosRes.data.videos[i].game,
+                        }
+                        list.push(data)
                     }
-                    list.push(data)
+                    // const clipRes = await this.$twitchApi.twitchClipsByChannelApi(
+                    //     channelInfo.data.name,
+                    //     JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    // )
+                    // console.log('clipRes', clipRes.data)
+                    // for (let i = 0; i < clipRes.data.clips.length >= 2 ? 2 : clipRes.data.clips.length; i++) {
+                    //     const data = {
+                    //         videoId: clipRes.data.clips[i].slug === undefined ? '' : clipRes.data.clips[i].slug,
+                    //         title: clipRes.data.clips[i].title,
+                    //         publishedOrigin: clipRes.data.clips[i].created_at,
+                    //         published: clipRes.data.clips[i].created_at.substring(0, 10),
+                    //         thumbnail: clipRes.data.clips[i].thumbnails.medium,
+                    //         live: 'none',
+                    //         provider: 'twitch',
+                    //         profileImg: channelInfo.data.logo,
+                    //         viewCnt: this.numChange(clipRes.data.clips[i].views) + '회',
+                    //         channelName: channelInfo.data.display_name,
+                    //         channelId,
+                    //         game: clipRes.data.clips[i].game,
+                    //         curator: clipRes.data.clips[i].curator.name,
+                    //     }
+                    //     list.push(data)
+                    // }
+                    this.subscriptionList.push({ channelName: channelInfo.data.display_name, provider, videoList: list })
                 }
-            }
+            }, 500)
         },
         numChange(n) {
             let cnt = n

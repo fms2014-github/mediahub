@@ -66,12 +66,14 @@ export default {
         },
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
-                console.log(res.status)
+                console.log(res.status, location.origin)
+                location.herf = location.origin
             })
         },
         syncTwitch() {
             this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status)
+                console.log(res.status, location.origin)
+                location.herf = location.origin
             })
         },
     },
