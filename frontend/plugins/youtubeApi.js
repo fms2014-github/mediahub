@@ -18,24 +18,25 @@ export default function({ $axios, store }, inject) {
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
     const apiKey = [
-        'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
-        'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
-        'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
-        'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
-        'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
-        'AIzaSyDYOg3oe_oZZ8hhm3Hj7dfLUTqc6fh8QMc',
-        'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
-        'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',
-        'AIzaSyBLdqVb-uUmLn7V0b04OjR7RlKsZbFel8c',
-        'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
-        'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
-        'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
-        'AIzaSyCbdrUK6qc6PigMBDTHXc0--GpfGUJNOME',
-        'AIzaSyBTgmHOxDaWurmnbwZfXS1r5AIqFvikuLc',
-        'AIzaSyBHrgowLrb9pikeBRKqRxkeZtM8P5lwjrQ',
-        'AIzaSyD6L7D9vmQezoiVsmARGFvRSUsrbNn07Qs',
-        'AIzaSyAc6ZuKkihmURSjcfeL8PcNB6tRwIzsn8s',
-        'AIzaSyC9g5hODYWetX520NyaRjanPhd9zApEDa0',
+        // 'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
+        // 'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
+        // 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
+        // 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
+        // 'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
+        // 'AIzaSyDYOg3oe_oZZ8hhm3Hj7dfLUTqc6fh8QMc',
+        // 'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
+        // 'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',
+        // 'AIzaSyBLdqVb-uUmLn7V0b04OjR7RlKsZbFel8c',
+        // 'AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg',
+        // 'AIzaSyCeARSMm_RcQDEwN8oJcS5WWVi-4Hd8ku8',
+        // 'AIzaSyB1QU_FPcTeZnXV3QtzZj5bE4qhVUza98Q',
+        // 'AIzaSyCbdrUK6qc6PigMBDTHXc0--GpfGUJNOME',
+        // 'AIzaSyBTgmHOxDaWurmnbwZfXS1r5AIqFvikuLc',
+        // 'AIzaSyBHrgowLrb9pikeBRKqRxkeZtM8P5lwjrQ',
+        // 'AIzaSyD6L7D9vmQezoiVsmARGFvRSUsrbNn07Qs',
+        // 'AIzaSyAc6ZuKkihmURSjcfeL8PcNB6tRwIzsn8s',
+        // 'AIzaSyC9g5hODYWetX520NyaRjanPhd9zApEDa0',
+        'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
@@ -60,8 +61,7 @@ export default function({ $axios, store }, inject) {
     const youtubeVideosApi = (videoId) => {
         return youtubeApiKey.get('videos', {
             params: {
-                // key: apiKey[timeInMs % apiKey.length],
-                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet,liveStreamingDetails,statistics',
                 id: videoId,
             },
@@ -83,8 +83,7 @@ export default function({ $axios, store }, inject) {
     const youtubeSearchVideoApi = ({ channelId, pageToken, order }) => {
         return youtubeApiKey.get('search', {
             params: {
-                // key: apiKey[timeInMs % apiKey.length],
-                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet',
                 channelId,
                 pageToken,
@@ -98,10 +97,9 @@ export default function({ $axios, store }, inject) {
     const youtubeChannelApi = (channelId) => {
         return youtubeApiKey.get('channels', {
             params: {
-                // key: apiKey[timeInMs % apiKey.length],
-                key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+                key: apiKey[timeInMs % apiKey.length],
                 part: 'snippet,statistics,brandingSettings',
-                channelId,
+                id: channelId,
             },
         })
     }
