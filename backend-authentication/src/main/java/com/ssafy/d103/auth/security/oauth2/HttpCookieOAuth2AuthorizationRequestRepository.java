@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpCookieOAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+
     private static final int cookieExpireSeconds = 180;
 
     @Override
@@ -27,14 +28,18 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     @Override
     //인증쿠키 저장
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("response===================");
+        System.out.println(response.getHeaderNames());
+        System.out.println(response.containsHeader("Vary"));
         if (authorizationRequest == null) {
             CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
             return;
         }
-        //System.out.println(authorizationRequest.getState());
+        System.out.println(authorizationRequest.getAttributes());
         CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
             CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
         }

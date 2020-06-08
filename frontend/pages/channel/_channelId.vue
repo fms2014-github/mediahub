@@ -75,7 +75,8 @@ export default {
             // key: 'AIzaSyBc27Pc5zyPqNrwPKnCv7HaV6S8hGa5xDw',
             // key: 'AIzaSyA_4PVT4iLvL92YcMpYrxx_905xfsScqlU',
             // key: 'AIzaSyCcWNyY_KtbSDxlVXgieCK2wjWo2nerdqM',
-            key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+            // key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
+            key: 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs',
             channelId: '',
             yChannelId: '',
             tChannelId: '',
@@ -117,7 +118,21 @@ export default {
             },
         }
     },
-
+    async beforeMount() {
+        if (localStorage.getItem('auth') !== null) {
+            console.log(localStorage.getItem('auth'))
+            const temp = JSON.parse(localStorage.getItem('auth'))
+            console.log('before::', temp)
+            const twitchInfo = temp.find((i) => i.provider === 'twitch')
+            if (temp.find((i) => i.provider === 'twitch') !== undefined) {
+                const { data } = await this.$backendAxios.twitchTokerRefresh()
+                twitchInfo.access_token = data
+                console.log(data)
+                temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
+                console.log('after::', temp)
+            }
+        }
+    },
     async mounted() {
         const channelInfo = this.channelId.split(',')
         const yi = channelInfo.findIndex((i) => i === 'google')
