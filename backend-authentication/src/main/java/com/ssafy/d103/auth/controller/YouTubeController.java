@@ -139,7 +139,7 @@ public class YouTubeController {
         String myChannelId = mySnippet.getItems().get(0).getId();
         StreamChannel streamChannel = new StreamChannel();
         try{
-            streamChannelService.findById(myChannelId);
+            streamChannelService.findById("G.".concat(myChannelId));
         }catch (Exception e){
             streamChannel.setId("G.".concat(myChannelId));
             streamChannel.setMember(member);
