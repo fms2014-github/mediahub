@@ -5,7 +5,12 @@
                 meeting_room
             </span>
         </button>
-        <button @click="alarmCheck = !alarmCheck">
+        <button
+            @click="
+                alarmCheck = !alarmCheck
+                reSyncClick = false
+            "
+        >
             <span id="alarm-icon" class="material-icons">
                 notifications
             </span>
@@ -33,7 +38,7 @@
 
 <script>
 // import loginIcon from '~/assets/icon/sign-in.svg?inline'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
@@ -53,6 +58,7 @@ export default {
     mounted() {},
     methods: {
         ...mapActions({ logoutapi: 'login/logoutapi' }),
+        ...mapMutations(['mutateLabelRefreshState']),
         logo() {
             this.$router.push('/')
         },
@@ -67,13 +73,13 @@ export default {
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
                 console.log(res.status, location.origin)
-                location.herf = location.origin
+                this.mutateLabelRefreshState()
             })
         },
         syncTwitch() {
             this.$backendAxios.twitchSynchronization().then((res) => {
                 console.log(res.status, location.origin)
-                location.herf = location.origin
+                this.mutateLabelRefreshState()
             })
         },
     },

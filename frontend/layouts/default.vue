@@ -2,19 +2,23 @@
     <div id="app">
         <nav-bar />
         <div id="content">
-            <side-bar />
+            <side-bar v-if="labelRefresh" />
             <nuxt id="router-view" :key="$route.fullPath" />
         </div>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import navBar from '@/components/navBar.vue'
 import sideBar from '@/components/sideBar.vue'
 export default {
     components: {
         navBar,
         sideBar,
+    },
+    computed: {
+        ...mapState(['labelRefresh']),
     },
     mounted() {
         console.log('updated::', 'Page Update!!!')
