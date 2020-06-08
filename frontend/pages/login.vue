@@ -107,7 +107,7 @@ export default {
         min-width: 100%;
         min-height: 100%;
         z-index: -1;
-        background-color: rgba(255, 255, 255, 0.55);
+        background-color: rgba(211, 211, 211, 0.493);
         overflow: hidden;
         //background-color: rgba(0, 0, 0, 0.6);
     }
@@ -152,7 +152,7 @@ export default {
                 animation: bounce 0.3s ease infinite alternate;
                 font-family: 'Titan One', cursive;
                 font-size: 40px;
-                color: rgb(78, 78, 78);
+                color: rgb(22, 22, 22);
                 text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc, 0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent,
                     0 8px 0 transparent, 0 9px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.4);
             }
