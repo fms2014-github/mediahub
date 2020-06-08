@@ -7,18 +7,18 @@
         </div>
         <hr />
         <div v-for="(item, index) in channel" :key="item.id">
-            <nuxt-link :to="'/channel/' + provider + ',' + channelId">
+            <nuxt-link :to="'/channel/' + info.join(',')">
                 <div :id="index" class="profile-div">
                     <div class="profile">
-                        <img class="profile-img" :src="streamer.img" />
+                        <img class="profile-img" :src="item.img" />
                         <div class="profile-content">
-                            <div class="profile-name">{{ streamer.name }}</div>
+                            <div class="profile-name">{{ item.name }}</div>
                             <div>
-                                <span v-if="streamer.ysubcnt != 0" class="subcnt profile-subcnt"
-                                    >구독자 <span class="cnt">{{ streamer.ysubcnt }}명</span></span
+                                <span v-if="item.ysubcnt != 0" class="subcnt profile-subcnt"
+                                    >구독자 <span class="cnt">{{ item.ysubcnt }}명</span></span
                                 >
-                                <span v-if="streamer.tsubcnt != 0" class="subcnt profile-subcnt"
-                                    >팔로워 <span class="cnt">{{ streamer.tsubcnt }}명</span></span
+                                <span v-if="item.tsubcnt != 0" class="subcnt profile-subcnt"
+                                    >팔로워 <span class="cnt">{{ item.tsubcnt }}명</span></span
                                 >
                             </div>
                         </div>
@@ -53,75 +53,93 @@ export default {
             provider: '',
             channelId: '',
             channel: [],
-            streamer: {
-                img: '',
-                name: '',
-                ysubcnt: 0,
-                tsubcnt: 0,
-                description: '',
-                published: '',
-                viewCount: '',
-                bannerImg: '',
-                channelName: '',
-            },
+            info: [],
+            liveId: '',
         }
     },
     async mounted() {
-        const info = this.videoId.split(',')
-        this.provider = info[0]
+        this.info = this.videoId.split(',')
+        this.provider = this.info[0]
         if (this.provider === 'google') {
-            console.log('구글')
-            this.channelId = (await this.$youtubeApi.youtubeVideosApi(info[1])).data.items[0].snippet.channelId
-            console.log(this.channelId)
+            this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
             const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
-            // console.log(this.channelId)
-            console.log('유튜브 streamer', data)
-            this.streamer.name = data.snippet.title
-            this.streamer.description = data.snippet.description
-            this.streamer.published = data.snippet.publishedAt.substring(0, 10)
-            this.streamer.img = data.snippet.thumbnails.medium.url
-            this.streamer.ysubcnt = this.numChange(data.statistics.subscriberCount)
-            this.streamer.viewCount = data.statistics.viewCount
-            this.streamer.bannerImg = data.brandingSettings.image.bannerTabletExtraHdImageUrl
+            const streamer = {
+                name: data.snippet.title,
+                img: data.snippet.thumbnails.medium.url,
+                ysubcnt: this.numChange(data.statistics.subscriberCount),
+                tsubcnt: 0,
+                bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
+            }
 
-            this.channel.push(this.streamer)
+            this.channel.push(streamer)
             try {
                 const res = (
                     await this.$backendAxios.getStreamChannel({
-                        channelId: 'UC9aktiWNGpSJKLshflga5yw',
+                        channelId: this.channelId,
                         provider: 'google',
                     })
                 ).data
-                console.log(res)
                 if (res.length > 1) {
                     const i = res.findIndex((i) => i.provider === 'twitch')
-                    const streamer = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
-                    console.log(streamer)
+                    const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
+                    const streamer = {
+                        name: data.display_name,
+                        img: data.logo,
+                        ysubcnt: 0,
+                        tsubcnt: this.numChange(data.followers),
+                        bannerImg: data.video_banner,
+                    }
+                    this.channel.push(streamer)
+                    this.info.push('twitch')
+                    this.info.push(res[i].channelId)
                 }
             } catch (error) {}
         } else {
-            console.log('트위치')
-            this.channelId = info[1]
-            try {
-                const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
-            } catch (error) {
-                console.log('캐치')
+            this.labels = JSON.parse(localStorage.getItem('labels'))
+            for (const d of this.labels) {
+                console.log(d)
+                const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
+                if (i >= 0) {
+                    this.channelId = d.channels[i].id
+                    break
+                }
             }
-            console.log('트위치 streamer', streamer)
-            this.streamer.name = streamer.display_name
-            this.streamer.channelName = streamer.name
-            this.streamer.description = streamer.description
-            this.streamer.img = streamer.logo
-            this.streamer.tsubcnt = this.numChange(streamer.followers)
-            this.streamer.published = streamer.created_at.substring(0, 10)
-            this.streamer.viewCount = streamer.views
-            this.streamer.bannerImg = streamer.video_banner
-            const res = await this.$backendAxios.getStreamChannel({
-                channelId: this.channelId,
-                provider: 'twitch',
-            })
-            console.log(res)
+
+            const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
+            const streamer = {
+                name: data.display_name,
+                img: data.logo,
+                ysubcnt: 0,
+                tsubcnt: this.numChange(data.followers),
+                bannerImg: data.video_banner,
+            }
+            this.channel.push(streamer)
+
+            try {
+                const res = (
+                    await this.$backendAxios.getStreamChannel({
+                        channelId: this.info[1],
+                        provider: 'twitch',
+                    })
+                ).data
+                if (res.length > 1) {
+                    const i = res.findIndex((i) => i.provider === 'google')
+                    const data = (await this.$youtubeApi.youtubeChannelApi(res[i].channelId)).data.items[0]
+                    const streamer = {
+                        name: data.snippet.title,
+                        img: data.snippet.thumbnails.medium.url,
+                        ysubcnt: this.numChange(data.statistics.subscriberCount),
+                        tsubcnt: 0,
+                        bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
+                    }
+
+                    this.channel.push(streamer)
+                    this.info.unshift(res[i].channelId)
+                    this.info.unshift('google')
+                }
+            } catch (error) {}
         }
+        this.liveId = this.info.join(',')
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
