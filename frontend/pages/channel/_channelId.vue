@@ -232,7 +232,12 @@ export default {
             }
             if (this.provider === 'twitch' || this.provider === 'google,twitch') {
                 if (this.provider === 'google,twitch') this.channelId = this.tChannelId
-                this.vData1 = (await this.$twitchApi.twitchVideosApi(this.channelId)).data.videos
+                this.vData1 = (
+                    await this.$twitchApi.twitchVideosApi(
+                        this.channelId,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.videos
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
                     this.videoList.game = this.vData1[i].game

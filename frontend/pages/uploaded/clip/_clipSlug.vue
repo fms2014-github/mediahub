@@ -66,8 +66,18 @@ export default {
         const m = regex.exec(fragmentString)
         this.playInfo.channelId = decodeURIComponent(m[2])
 
-        const streamer = (await this.$twitchApi.twitchChannelApi(this.playInfo.channelId)).data
-        const vData1 = (await this.$twitchApi.twitchVideosApi(this.playInfo.channelId)).data.videos
+        const streamer = (
+            await this.$twitchApi.twitchChannelApi(
+                this.playInfo.channelId,
+                JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+            )
+        ).data
+        const vData1 = (
+            await this.$twitchApi.twitchVideosApi(
+                this.playInfo.channelId,
+                JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+            )
+        ).data.videos
         for (let i = 0; i < vData1.length; i++) {
             const data = {
                 videoId: vData1[i]._id,
@@ -86,7 +96,12 @@ export default {
             }
             this.list.push(data)
         }
-        const vData2 = (await this.$twitchApi.twitchClipsByChannelApi(streamer.name)).data.clips
+        const vData2 = (
+            await this.$twitchApi.twitchClipsByChannelApi(
+                streamer.name,
+                JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+            )
+        ).data.clips
         for (let i = 0; i < vData2.length; i++) {
             const data = {
                 videoId: vData2[i].slug,

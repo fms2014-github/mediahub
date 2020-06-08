@@ -222,10 +222,6 @@ export default {
                         span.setAttribute('droppable', 'false')
                         node.appendChild(span)
                         node.setAttribute('class', 'child-label2')
-                        console.log('aawwddff1', document.querySelector(`div[data-label-id='${v[i].superId}']`))
-                        console.log('aawwddff2', v[i].superId)
-                        console.log('aawwddff3', node)
-                        console.log('aawwddff4', parentLabel)
                         parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + '>.channel'))
                         node.setAttribute('droppable', 'true')
                         span.addEventListener(

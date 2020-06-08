@@ -114,6 +114,7 @@ export default {
         },
         ready(e) {
             this.player = e.target
+            this.$emit('load-complete')
             document.querySelector('#youtube-video iframe').style.width = '100%'
             document.querySelector('#youtube-video iframe').style.height = '100%'
         },
