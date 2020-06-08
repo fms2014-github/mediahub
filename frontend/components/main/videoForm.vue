@@ -16,7 +16,7 @@
                                 <div class="profile-title">{{ l.title }}</div>
                                 <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">
                                     {{ l.channelName }}
-                                    <span v-if="!l.curator" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
+                                    <span v-if="l.curator" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
                                 </div>
                                 <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
                                 <div v-if="!l.game" id="profile-game" class="profile-content">{{ l.game }}</div>
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     </nuxt-link>
-                    <nuxt-link v-else :to="'../clip/' + l.videoId + '?id=' + l.channelId">
+                    <nuxt-link v-else :to="'../uploaded/clip/' + l.videoId + '?id=' + l.channelId">
                         <div class="img-wrap">
                             <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
                             <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
@@ -37,7 +37,7 @@
                                 <div class="profile-title">{{ l.title }}</div>
                                 <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">
                                     {{ l.channelName }}
-                                    <span v-if="!l.curator" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
+                                    <span v-if="l.curator" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
                                 </div>
                                 <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
                                 <div v-if="!l.game" id="profile-game" class="profile-content">{{ l.game }}</div>
