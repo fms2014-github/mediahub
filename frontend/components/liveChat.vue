@@ -131,7 +131,7 @@ export default {
                     pageToken: this.nextPageToken,
                     pollingIntervalMillis: this.pollingIntervalMillis,
                 })
-                console.log(data)
+                // console.log(data)
                 if (data.pageInfo.totalResults > 0) {
                     for (const i in data.items) {
                         this.messageList.push({
