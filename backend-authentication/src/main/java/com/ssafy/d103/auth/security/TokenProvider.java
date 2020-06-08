@@ -1,9 +1,13 @@
 package com.ssafy.d103.auth.security;
 
+import com.ssafy.d103.auth.commonService.MemberService;
 import com.ssafy.d103.auth.config.AppProperties;
+import com.ssafy.d103.auth.model.Member;
+import com.ssafy.d103.auth.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ import java.util.Date;
 
 @Service
 public class TokenProvider {
+    @Autowired
+    MemberRepository memberRepository;
 
     @Value("spring.security.oauth2.client.registration.google.clientSecret")
     private String secretKey;
@@ -35,13 +41,16 @@ public class TokenProvider {
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Claims claims = Jwts.claims().setSubject(Long.toString(userPrincipal.getId()));
-        claims.put("roles",userPrincipal.getAuthorities());
+        Member member = memberRepository.findByEmail(userPrincipal.getEmail()).get();
+
+        claims.put("role",userPrincipal.getAuthorities());
+        claims.put("firstLogin", member.getFirstLogin());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 
         return Jwts.builder()
-//                .setSubject(Long.toString(userPrincipal.getId()))
+                .setSubject(Long.toString(userPrincipal.getId()))
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

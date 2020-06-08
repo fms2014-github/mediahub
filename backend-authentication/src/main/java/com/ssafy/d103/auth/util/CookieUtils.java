@@ -10,9 +10,11 @@ import java.util.Optional;
 
 public class CookieUtils {
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
+        System.out.println("============cookie==================");
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
+                System.out.println(cookie.getName()+" : "+cookie.getValue());
                 if (cookie.getName().equals(name)) {
                     return Optional.of(cookie);
                 }

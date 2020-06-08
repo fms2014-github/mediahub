@@ -34,10 +34,6 @@
                     <div id="twitch-btn">
                         <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
                     </div>
-                    <!-- <div id="profile-btns">
-                        <button id="sub-btn" class="profile-btn">구독</button>
-                        <button id="follow-btn" class="profile-btn">팔로우</button>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -156,16 +152,6 @@ export default {
             this.channelId += ',' + channelInfo[3]
         }
         if (this.provider === 'google' || this.provider === 'google,twitch') {
-            // const streamer = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data
-            // console.log(streamer)
-            // this.streamer.name = streamer.items[0].snippet.title
-            // this.streamer.description = streamer.items[0].snippet.description
-            // this.streamer.published = streamer.items[0].snippet.publishedAt.substring(0, 10)
-            // this.streamer.img = streamer.items[0].snippet.thumbnails.medium.url
-            // this.streamer.ysubcnt = this.numChange(streamer.items[0].statistics.subscriberCount)
-            // this.streamer.viewCount = streamer.items[0].statistics.viewCount
-            // this.streamer.bannerImg = streamer.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
-
             await this.$youtubeApi.youtubeChannelApi(this.channelId).then((res) => {
                 this.streamer.name = res.data.items[0].snippet.title
                 this.streamer.description = res.data.items[0].snippet.description
@@ -334,10 +320,7 @@ export default {
 <style lang="scss" scoped>
 #router-view {
     font-family: 'Arita-dotum-Medium';
-    // font-family: 'S-CoreDream-4Regular';
-    // font-family: 'KHNPHU';
-    // font-family: 'HCRDotum';
-    // font-family: 'YESGothic-Regular';
+
     // width: calc(100% - $side-bar-width);
     width: calc(100% - 74px);
     #profile-div {
@@ -373,11 +356,24 @@ export default {
     #profile-descrip {
         font-size: 12.5px;
         margin-bottom: 15px;
-        width: 800px;
+        padding: 25px;
+        width: 50%;
         min-height: 30px;
         max-height: 120px;
         line-height: 20px;
         overflow-y: auto;
+    }
+    #profile-descrip::-webkit-scrollbar {
+        width: 8px;
+    }
+    #profile-descrip::-webkit-scrollbar {
+        width: 8px;
+    }
+    #profile-descrip::-webkit-scrollbar-track {
+        background-color: rgba(231, 231, 231, 0.61);
+    }
+    #profile-descrip::-webkit-scrollbar-thumb {
+        background-color: rgba(219, 202, 202, 0.61);
     }
     #profile-info {
         margin-top: 20px;

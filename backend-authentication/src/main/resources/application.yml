@@ -1,9 +1,124 @@
+server:
+  port: 8081
+  ssl:
+    enabled: true
+    key-alias: media-platform
+    key-store: media-platform.pkcs12
+    key-store-password: 02d103
+    trust-store: media-platform-trust.pkcs12
+    trust-store-password: 02d103
 spring:
+  profiles:
+  active: dev
   datasource:
     url: jdbc:mysql://K02D1031.p.ssafy.io:3306/auth_test?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: 02d103
+  jpa:
+    show-sql: true
+    format_sql: true
+    hibernate:
+      ddl-auto: create
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
+            clientSecret: XHhA4GlqOVJZkVmhHHuP1uxj
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+              - "https://www.googleapis.com/auth/youtube"
+          facebook:
+            clientId: 250967889352419
+            clientSecret: 921b243471998d35132e143b7068c429
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+          github:
+            clientId: Iv1.8c7c26c45dc6a8fb
+            clientSecret: e0106936012ad904567205a6e793efb0acdbff4c
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
 
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v7.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v7.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v7.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+
+social:
+  base_url: https://127.0.0.1:8080
+  front_base_url : http://127.0.0.1:3000
+  google:
+    client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
+    client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
+    api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
+    redirect: /v1/youtube/token-code
+    code_redirect: /youtube/code
+    token_redirect : /v1/youtube/token
+    code_result_redirect: /social/login/google/code/result
+    google_api_v2_scope: https://www.googleapis.com/auth/youtube
+    accept: application/x-www-form-urlencoded
+    youtube_data_api_v3: https://www.googleapis.com/youtube/v3/
+    url:
+      authorize: https://accounts.google.com/o/oauth2/v2/auth
+      token: https://oauth2.googleapis.com/token
+      refreshing_access_token: https://accounts.google.com/o/oauth2/auth
+  twitch:
+    client_id: db8sw2xqe82gk1x78mkubkr5xh545p
+    client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
+    redirect: /v1/twitch/token-code
+    code_redirect: /get
+    token_redirect: /v1/twitch/token-code
+    twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read
+    new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
+    url:
+      accept: application/vnd.twitchtv.v5+json
+      authorize: https://id.twitch.tv/oauth2/authorize
+      token: https://id.twitch.tv/oauth2/token
+      twitch_api_v5_user: https://api.twitch.tv/kraken/user
+      twitch_api_v5_users: https://api.twitch.tv/kraken/users
+
+app:
+  auth:
+    tokenSecret: C45FF95D3AE216CC621748587CE42
+    tokenExpirationMsec: 836000000
+  oauth2:
+    authorizedRedirectUris:
+      - https://k02d1031.p.ssafy.io/login
+      - https://k02d1031.p.ssafy.io/oauth2/redirect
+      - https://k02d1031.p.ssafy.io:3000/oauth2/redirect
+      - http://127.0.0.1:3000/oauth2/redirect
+      - http://localhost:3000/login
+
+--- # --------------------------------- 구분 ===================================
+server:
+  port: 8081
+  ssl:
+    enabled: true
+    key-alias: media-platform
+    key-store: media-platform.pkcs12
+    key-store-password: 02d103
+    trust-store: media-platform-trust.pkcs12
+    trust-store-password: 02d103
+
+spring:
+  address: 0.0.0.0
+  profiles: local
+  datasource:
+    url: jdbc:mysql://K02D1031.p.ssafy.io:3306/media_platform?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 02d103
   jpa:
     show-sql: true
     format_sql: true
@@ -39,12 +154,7 @@ spring:
             scope:
               - user:email
               - read:user
-#          twitch:
-#            clientId: db8sw2xqe82gk1x78mkubkr5xh545p
-#            clientSecret: bdweu354ghkwk1152bx5rmfdmmtib5
-#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
-#            scope:
-#              - user:read:email
+
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v7.0/dialog/oauth
@@ -54,10 +164,50 @@ spring:
 #            authorizationUri: https://id.twitch.tv/oauth2
 #            tokenUri: https://id.twitch.tv/validate
 #            userInfoUri: https://id.twitch.tv/
+social:
+  base_url: https://k02d1031.p.ssafy.io:8081
+  front_base_url : https://k02d1031.p.ssafy.io
+  google:
+    client_id: 412300629283-sd7m25vk2m7uijmt9lfpjkscvq3sr6vv.apps.googleusercontent.com
+    client_secret: XHhA4GlqOVJZkVmhHHuP1uxj
+    api_key: AIzaSyBpYWkhJbea6ATLXbF_EDRR1Cig5zhg8Zg
+    redirect: /v1/youtube/token-code
+    code_redirect: /youtube/code
+    token_redirect : /v1/youtube/token
+    code_result_redirect: /social/login/google/code/result
+    google_api_v2_scope: https://www.googleapis.com/auth/youtube
+    accept: application/x-www-form-urlencoded
+    youtube_data_api_v3: https://www.googleapis.com/youtube/v3/
+    url:
+      authorize: https://accounts.google.com/o/oauth2/v2/auth
+      token: https://oauth2.googleapis.com/token
+      refreshing_access_token: https://accounts.google.com/o/oauth2/auth
+  twitch:
+    client_id: db8sw2xqe82gk1x78mkubkr5xh545p
+    client_secret: f0xj2ce4fnpr7hxhyklodjem2r34hi
+    redirect: /twitch/token/code
+    code_redirect: /twitch/code
+    token_redirect : /v1/twitch/token-code
+    code_result_redirect: /social/login/twitch/code/result
+    twitch_api_v5_scope: channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
+    new_twitch_api_scope: analytics:read:extensions analytics:read:games bits:read channel:edit:commercial channel:read:subscriptions clips:edit user:edit user:edit:broadcast user:edit:follows user:read:broadcast user:read:email
+    url:
+      accept: application/vnd.twitchtv.v5+json
+      authorize: https://id.twitch.tv/oauth2/authorize
+      token: https://id.twitch.tv/oauth2/token
+      twitch_api_v5_user: https://api.twitch.tv/kraken/user
+      twitch_api_v5_users: https://api.twitch.tv/kraken/users
+
 app:
   auth:
     tokenSecret: C45FF95D3AE216CC621748587CE42
-    tokenExpirationMsec: 864000000
+    tokenExpirationMsec: 836000000
   oauth2:
     authorizedRedirectUris:
-      - http://localhost:3000/oauth2/redirect
+      - https://k02d1031.p.ssafy.io/login
+      - https://k02d1031.p.ssafy.io/oauth2/redirect
+      - https://k02d1031.p.ssafy.io:3000/oauth2/redirect
+      - http://127.0.0.1:3000/oauth2/redirect
+      - http://localhost:3000/login
+
+--- # Live
