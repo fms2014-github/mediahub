@@ -19,7 +19,7 @@
                     </h2>
                 </div>
                 <div id="login-button-wrap">
-                    <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
+                    <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login</button>
                     <div class="border"></div>
                     <div class="border"></div>
                     <div class="border"></div>
@@ -107,25 +107,31 @@ export default {
         min-width: 100%;
         min-height: 100%;
         z-index: -1;
-        background-color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.55);
         overflow: hidden;
         //background-color: rgba(0, 0, 0, 0.6);
     }
     #login-page-modal {
         position: absolute;
         transition: all 1s;
-        width: 80%;
-        min-width: 400px;
-        max-width: 560px;
-        height: 45%;
-        max-height: 338px;
-        min-height: 225px;
+        width: 390px;
+        height: 320px;
+        transform: rotate(-7.45deg);
+        top: 296px;
+        left: 613px;
+        border-radius: 27px;
+        // width: 80%;
+        // min-width: 400px;
+        // max-width: 560px;
+        // height: 45%;
+        // max-height: 338px;
+        // min-height: 225px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.829);
-        box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0);
+        //box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
         #login-title {
             @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
             width: 100%;
