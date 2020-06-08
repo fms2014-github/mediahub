@@ -57,8 +57,7 @@ public class GoogleService {
                 .append("&access_type=offline")
                 .append("&response_type=code")
                 .append("&approval_prompt=force")
-                .append("&client_id=").append(googleClientId)
-                .append("&client_id=").append(googleClientSecret);
+                .append("&client_id=").append(googleClientId);
         return url.toString();
     }
 
