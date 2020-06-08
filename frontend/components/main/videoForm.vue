@@ -13,7 +13,10 @@
                         <div><img class="profile-img" :src="l.profileImg" alt="" @click="goChannel(l.channelId, l.provider)" /></div>
                         <div class="profile-contents">
                             <div class="profile-title">{{ l.title }}</div>
-                            <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">{{ l.channelName }}</div>
+                            <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">
+                                {{ l.channelName }}
+                                <span v-if="l.curator !== null" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
+                            </div>
                             <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
                             <div v-if="l.game !== null" id="profile-game" class="profile-content">{{ l.game }}</div>
                             <img v-if="l.live === 'live'" src="../../assets/icon/live.png" alt="" class="live-icon" />
