@@ -55,7 +55,7 @@ export default {
             }
         }
     },
-    mounted() {
+    async mounted() {
         console.log(this.videoId)
         console.log('youtube', this.playInfo)
         this.playInfo.play = this.videoId
@@ -67,7 +67,7 @@ export default {
         this.playInfo.channelId = decodeURIComponent(m[2])
 
         const streamer = (await this.$youtubeApi.youtubeChannelApi(this.playInfo.channelId)).data.items[0].snippet
-        console.log('steramer', streamer)
+        console.log('streamer', streamer)
         const data = {
             channelId: this.playInfo.channelId,
             pageToken: '',
