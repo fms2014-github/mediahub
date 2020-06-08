@@ -20,9 +20,6 @@ export default {
     computed: {
         ...mapState(['labelRefresh']),
     },
-    mounted() {
-        console.log('updated::', 'Page Update!!!')
-    },
 }
 </script>
 

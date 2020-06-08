@@ -18,7 +18,7 @@ export default function({ $axios, store }, inject) {
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
     const apiKey = [
-        // 'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
+        'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
         // 'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
         // 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
         // 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
@@ -39,7 +39,7 @@ export default function({ $axios, store }, inject) {
         // 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs',
         // 'AIzaSyC0ZzFqPbQRQQ8dhq4oOAQAeKJ47ZRyV0E',
         // 'AIzaSyCIDdFPeD6YYJy8xRaSHN-fx4wFGYSbIQI',
-        'AIzaSyCKKG4T8qsGRsmoVWOKlEmTV9CUAvLossw',
+        // 'AIzaSyCKKG4T8qsGRsmoVWOKlEmTV9CUAvLossw',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
