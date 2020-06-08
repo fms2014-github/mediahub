@@ -26,15 +26,6 @@
                 </div>
             </nuxt-link>
         </div>
-
-        <!-- <div id="btns-div">
-                    <div id="youtube-btn">
-                        <sub-button v-if="youtubeButton.channelId !== ''" :play-info="youtubeButton" />
-                    </div>
-                    <div id="twitch-btn">
-                        <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
-                    </div>
-            </div> -->
     </div>
 </template>
 
@@ -71,8 +62,8 @@ export default {
                 tsubcnt: 0,
                 bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
             }
-
             this.channel.push(streamer)
+            this.info.splice(1, 1, this.channelId)
             try {
                 const res = (
                     await this.$backendAxios.getStreamChannel({
@@ -103,7 +94,7 @@ export default {
             for (const d of this.labels) {
                 const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
                 if (i >= 0) {
-                    this.channelId = d.channels[i].id
+                    this.channelId = d.channels[i].channelId
                     break
                 }
             }
@@ -117,11 +108,12 @@ export default {
                 bannerImg: data.video_banner,
             }
             this.channel.push(streamer)
+            this.info.splice(1, 1, this.channelId)
 
             try {
                 const res = (
                     await this.$backendAxios.getStreamChannel({
-                        channelId: this.info[1],
+                        channelId: this.videoId.split(',')[1],
                         provider: 'twitch',
                     })
                 ).data
