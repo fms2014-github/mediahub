@@ -67,7 +67,7 @@ export default function({ $axios, store }, inject) {
     }
 
     const twitchTokerRefresh = () => {
-        return backendAxios.get('/twitch/access-token')
+        return backendAxios.get('twitch/access-token')
     }
 
     const backendScript = {

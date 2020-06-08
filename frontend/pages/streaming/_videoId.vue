@@ -123,6 +123,21 @@ export default {
             console.log(res)
         }
     },
+    async beforeMount() {
+        if (localStorage.getItem('auth') !== null) {
+            console.log(localStorage.getItem('auth'))
+            const temp = JSON.parse(localStorage.getItem('auth'))
+            console.log('before::', temp)
+            const twitchInfo = temp.find((i) => i.provider === 'twitch')
+            if (temp.find((i) => i.provider === 'twitch') !== undefined) {
+                const { data } = await this.$backendAxios.twitchTokerRefresh()
+                twitchInfo.access_token = data
+                console.log(data)
+                temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
+                console.log('after::', temp)
+            }
+        }
+    },
     methods: {
         numChange(n) {
             let cnt = n

@@ -40,6 +40,21 @@ export default {
         }
     },
     created() {},
+    async beforeMount() {
+        if (localStorage.getItem('auth') !== null) {
+            console.log(localStorage.getItem('auth'))
+            const temp = JSON.parse(localStorage.getItem('auth'))
+            console.log('before::', temp)
+            const twitchInfo = temp.find((i) => i.provider === 'twitch')
+            if (temp.find((i) => i.provider === 'twitch') !== undefined) {
+                const { data } = await this.$backendAxios.twitchTokerRefresh()
+                twitchInfo.access_token = data
+                console.log(data)
+                temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
+                console.log('after::', temp)
+            }
+        }
+    },
     async mounted() {
         console.log(this.videoId)
         console.log('youtube', this.playInfo)
@@ -52,7 +67,7 @@ export default {
         this.playInfo.channelId = decodeURIComponent(m[2])
 
         const streamer = (await this.$youtubeApi.youtubeChannelApi(this.playInfo.channelId)).data.items[0].snippet
-        console.log('steramer', streamer)
+        console.log('streamer', streamer)
         const data = {
             channelId: this.playInfo.channelId,
             pageToken: '',
