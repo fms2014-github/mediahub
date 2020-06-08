@@ -92,8 +92,40 @@ export default {
                     wrap.appendChild(button1)
                     img.setAttribute('id', 'root-label')
                     img.setAttribute('src', '/tree-strcuture.png')
+                    img.setAttribute('droppable', 'true')
                     node.appendChild(wrap)
                     tree.appendChild(node)
+                    img.addEventListener('drop', (e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log('roottarget', e.target)
+                        console.log('root', e.target.parentNode)
+                        const channelId = e.dataTransfer.getData('targetId')
+                        e.target.parentNode.parentNode.insertBefore(
+                            document.querySelector('div[data-channel-id="' + channelId + '"]'),
+                            document.querySelector('#label-wrap>.channel'),
+                        )
+                        const labelId = e.target.parentNode.parentNode.dataset.labelId
+                        this.$axios
+                            .put(
+                                `https://k02d1031.p.ssafy.io:8081/v1/member/channel?channelId=${channelId}&labelId=${labelId}`,
+                                {},
+                                {
+                                    headers: { Authorization: 'Bearer ' + this.getJwt() },
+                                },
+                            )
+                            .then((res) => {
+                                console.log(res.status)
+                            })
+                    })
+                    img.addEventListener(
+                        'dragover',
+                        (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                        },
+                        true,
+                    )
                 } else {
                     const parentLabel = document.querySelector(`div[data-label-id='${v[i].superId}']`)
                     if (rootLabelId === v[i].superId) {
@@ -190,8 +222,11 @@ export default {
                         span.setAttribute('droppable', 'false')
                         node.appendChild(span)
                         node.setAttribute('class', 'child-label2')
-                        console.log('aawwddff', document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel') == null)
-                        parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + ' .channel'))
+                        console.log('aawwddff1', document.querySelector(`div[data-label-id='${v[i].superId}']`))
+                        console.log('aawwddff2', v[i].superId)
+                        console.log('aawwddff3', node)
+                        console.log('aawwddff4', parentLabel)
+                        parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + '>.channel'))
                         node.setAttribute('droppable', 'true')
                         span.addEventListener(
                             'drop',

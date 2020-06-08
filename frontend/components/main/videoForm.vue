@@ -47,7 +47,6 @@
                         </div>
                     </nuxt-link>
                 </div>
-                <button @click="go()">리스트test</button>
             </div>
         </div>
     </div>
