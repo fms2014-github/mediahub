@@ -77,7 +77,7 @@ export default {
         const labels = JSON.parse(localStorage.getItem('labels'))
         for (const i in labels) {
             for (const j in labels[i].channels) {
-                // this.channelVidoe(labels[i].channels[j].provider, labels[i].channels[j].channelId)
+                this.channelVidoe(labels[i].channels[j].provider, labels[i].channels[j].channelId)
             }
         }
     },
@@ -114,7 +114,7 @@ export default {
                 const list = []
                 const channelInfo = await this.$twitchApi.twitchChannelApi(channelId)
                 const searchVideosRes = await this.$twitchApi.twitchVideosApi(channelId)
-                for (let i = 0; i < (searchVideosRes.data.videos.length >= 2 ? 2 : searchVideosRes.data.videos.length); i++) {
+                for (let i = 0; i < 2; i++) {
                     const data = {
                         videoId: searchVideosRes.data.videos[i]._id,
                         title: searchVideosRes.data.videos[i].title,
@@ -125,33 +125,33 @@ export default {
                         provider: 'twitch',
                         profileImg: channelInfo.data.logo,
                         viewCnt: this.numChange(searchVideosRes.data.videos[i].views) + '회',
-                        channelName: channelInfo.data.display_name,
+                        channelName: channelInfo.data.name,
                         channelId,
                         game: searchVideosRes.data.videos[i].game,
                     }
                     list.push(data)
                 }
-                const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.display_name)
-                setTimeout(() => {
-                    for (let i = 0; i < clipRes.data.clips.length >= 2 ? 2 : clipRes.data.clips.length; i++) {
-                        const data = {
-                            videoId: clipRes.data.clips[i].slug,
-                            title: clipRes.data.clips[i].title,
-                            publishedOrigin: clipRes.data.clips[i].created_at,
-                            published: clipRes.data.clips[i].created_at.substring(0, 10),
-                            thumbnail: clipRes.data.clips[i].thumbnails.medium,
-                            live: 'none',
-                            provider: 'twitch',
-                            profileImg: channelInfo.data.logo,
-                            viewCnt: this.numChange(clipRes.data.clips[i].views) + '회',
-                            channelName: channelInfo.data.display_name,
-                            channelId,
-                            game: clipRes.data.clips[i].game,
-                            curator: clipRes.data.clips[i].curator.name,
-                        }
-                        list.push(data)
+                const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.name)
+                for (let i = 0; i < 2; i++) {
+                    console.log(clipRes.data.clips[i] === undefined)
+                    const data = {
+                        videoId: clipRes.data.clips[i].slug,
+                        title: clipRes.data.clips[i].title,
+                        publishedOrigin: clipRes.data.clips[i].created_at,
+                        published: clipRes.data.clips[i].created_at.substring(0, 10),
+                        thumbnail: clipRes.data.clips[i].thumbnails.medium,
+                        live: 'none',
+                        provider: 'twitch',
+                        profileImg: channelInfo.data.logo,
+                        viewCnt: this.numChange(clipRes.data.clips[i].views) + '회',
+                        channelName: channelInfo.data.name,
+                        channelId,
+                        game: clipRes.data.clips[i].game,
+                        curator: clipRes.data.clips[i].curator.name,
                     }
-                }, 500)
+                    list.push(data)
+                }
+                this.subscriptionList.push({ channelName: channelInfo.data.display_name, provider, videoList: list })
             }
         },
         numChange(n) {

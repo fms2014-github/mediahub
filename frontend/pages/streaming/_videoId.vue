@@ -145,20 +145,19 @@ export default {
                         bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
                     }
 
-                        this.channel.push(streamer)
-                        this.info.unshift(res[i].channelId)
-                        this.info.unshift('google')
+                    this.channel.push(streamer)
+                    this.info.unshift(res[i].channelId)
+                    this.info.unshift('google')
 
-                        const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
-                        if (liveInfo.items.length !== 0) {
-                            live.unshift(liveInfo.items[0].id.videoId)
-                            live.unshift('google')
-                        }
+                    const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
+                    if (liveInfo.items.length !== 0) {
+                        live.unshift(liveInfo.items[0].id.videoId)
+                        live.unshift('google')
                     }
-                } catch (error) {}
-                this.liveId = live.join(',')
-            }
-        } catch (err) {}
+                }
+            } catch (error) {}
+            this.liveId = live.join(',')
+        }
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {

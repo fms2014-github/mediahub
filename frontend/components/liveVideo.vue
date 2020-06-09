@@ -70,6 +70,7 @@ export default {
                         this.twitchPlayer = new Twitch.Player('twitch-video', options)
                         // eslint-disable-next-line no-undef
                         this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                            this.$emit('load-complete')
                             document.querySelector('#twitch-video iframe').style.width = '100%'
                             document.querySelector('#twitch-video iframe').style.height = '100%'
                         })
