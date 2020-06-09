@@ -100,6 +100,7 @@ export default {
                         // eslint-disable-next-line no-undef
                         this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
                             document.querySelector('#twitch-video iframe').style.width = '100%'
+                            this.$emit('load-complete')
                             document.querySelector('#twitch-video iframe').style.height = '100%'
                         })
                         if (this.twitchId !== '' && this.youtubeId !== '') {
