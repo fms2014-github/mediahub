@@ -1,7 +1,7 @@
 <template>
     <div id="login-page">
         <video id="background-video" preload="auto" autoplay="true" loop="loop" muted="muted" volume="0">
-            <source src="/login-background.mp4" />
+            <source src="/login-background.webm" />
         </video>
         <div id="background-video-overlay"></div>
         <transition name="animate" enter-active-class="animated zoomInDown" leave-active-class="animated zoomOutDonw">
@@ -80,45 +80,42 @@ export default {
 <style lang="scss" scoped>
 #login-page {
     font-family: 'Arita-dotum-Medium';
-    position: fixed;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background-color: #350901;
+    z-index: -5;
     #background-video {
         position: absolute;
-        top: 0px;
+        top: -30px;
         left: 0px;
-        width: auto;
-        height: auto;
-        min-width: 100%;
-        min-height: 100%;
         z-index: -3;
-        overflow: hidden;
+        background-color: #350901;
     }
     #background-video-overlay {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: auto;
-        height: auto;
-        min-width: 100%;
-        min-height: 100%;
+        position: fixed;
+        right: 0px;
+        bottom: 0px;
+        width: 100vw;
+        height: 100vh;
         z-index: -1;
         background-color: rgba(255, 255, 255, 0.55);
-        overflow: hidden;
         //background-color: rgba(0, 0, 0, 0.6);
     }
     #login-page-modal {
         position: absolute;
         transition: all 1s;
-        width: 390px;
-        height: 320px;
-        transform: rotate(-7.45deg);
-        top: 296px;
-        left: 613px;
+        width: 520px;
+        height: 430px;
+        transform: rotate(-7.7deg);
+        top: 320px;
+        left: 753px;
         border-radius: 27px;
         // width: 80%;
         // min-width: 400px;
@@ -131,7 +128,7 @@ export default {
         justify-content: center;
         align-items: center;
         background-color: rgba(0, 0, 0, 0);
-        //box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
+        // box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
         #login-title {
             @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
             width: 100%;

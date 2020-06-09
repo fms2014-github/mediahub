@@ -77,9 +77,11 @@ export default {
             })
         },
         syncTwitch() {
-            this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status, location.origin)
-                this.mutateLabelRefreshState()
+            this.$backendAxios
+                .twitchSynchronization()
+                .then((res) => {
+                    console.log(res.status, location.origin)
+                    this.mutateLabelRefreshState()
                     console.log(res.status)
                 })
                 // eslint-disable-next-line handle-callback-err
