@@ -76,7 +76,11 @@ export default {
                     }, 100)
                 } else if (this.videoId.split(',')[0] === 'google') {
                     this.youtubeId = this.videoId.split(',')[1]
-                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    try {
+                        this.liveChatId = (
+                            await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
+                        ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    } catch (err) {}
                     console.log('123qweasdzcx', this.liveChatId)
                 }
             } else {
@@ -107,7 +111,11 @@ export default {
                 }
                 if (this.videoId.split(',')[0] === 'google') {
                     this.youtubeId = this.videoId.split(',')[1]
-                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    try {
+                        this.liveChatId = (
+                            await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
+                        ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    } catch (err) {}
                     console.log('123qweasdzcx', this.liveChatId)
                 }
             }

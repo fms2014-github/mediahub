@@ -2,9 +2,9 @@
     <div id="streaming">
         <div id="live-component">
             <client-only placeholder="loading...">
-                <live-video v-if="liveId !== ''" :video-id="liveId" @load-complete="loading = true"></live-video>
+                <live-video v-if="liveId !== ''" :video-id="liveId" @load-complete="loading"></live-video>
             </client-only>
-            <div v-if="!loading" id="loading-page"></div>
+            <div v-if="invisibleLoading" :class="{ 'not-load-complete': !isLoading, 'loading-page': invisibleLoading }"></div>
         </div>
         <hr />
         <div v-for="(item, index) in channel" :key="item.id">
@@ -47,7 +47,8 @@ export default {
             channel: [],
             info: [],
             liveId: '',
-            loading: false,
+            isLoading: false,
+            invisibleLoading: true,
         }
     },
     async mounted() {
@@ -91,17 +92,42 @@ export default {
                     live.push('twitch')
                     live.push(res[i].name)
                 }
-            } catch (error) {}
-            this.liveId = live.join(',')
-        } else {
-            this.labels = JSON.parse(localStorage.getItem('labels'))
-            for (const d of this.labels) {
-                const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
-                if (i >= 0) {
-                    this.channelId = d.channels[i].channelId
-                    break
+                this.channel.push(streamer)
+                this.info.splice(1, 1, this.channelId)
+                try {
+                    const res = (
+                        await this.$backendAxios.getStreamChannel({
+                            channelId: this.channelId,
+                            provider: 'google',
+                        })
+                    ).data
+                    if (res.length > 1) {
+                        const i = res.findIndex((i) => i.provider === 'twitch')
+                        const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
+                        const streamer = {
+                            name: data.display_name,
+                            img: data.logo,
+                            ysubcnt: 0,
+                            tsubcnt: this.numChange(data.followers),
+                            bannerImg: data.video_banner,
+                        }
+                        this.channel.push(streamer)
+                        this.info.push('twitch')
+                        this.info.push(res[i].channelId)
+                        live.push('twitch')
+                        live.push(res[i].name)
+                    }
+                } catch (error) {}
+                this.liveId = live.join(',')
+            } else {
+                this.labels = JSON.parse(localStorage.getItem('labels'))
+                for (const d of this.labels) {
+                    const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
+                    if (i >= 0) {
+                        this.channelId = d.channels[i].channelId
+                        break
+                    }
                 }
-            }
 
             const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             const streamer = {
@@ -134,19 +160,20 @@ export default {
                         bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
                     }
 
-                    this.channel.push(streamer)
-                    this.info.unshift(res[i].channelId)
-                    this.info.unshift('google')
+                        this.channel.push(streamer)
+                        this.info.unshift(res[i].channelId)
+                        this.info.unshift('google')
 
-                    const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
-                    if (liveInfo.items.length !== 0) {
-                        live.unshift(liveInfo.items[0].id.videoId)
-                        live.unshift('google')
+                        const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
+                        if (liveInfo.items.length !== 0) {
+                            live.unshift(liveInfo.items[0].id.videoId)
+                            live.unshift('google')
+                        }
                     }
-                }
-            } catch (error) {}
-            this.liveId = live.join(',')
-        }
+                } catch (error) {}
+                this.liveId = live.join(',')
+            }
+        } catch (err) {}
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
@@ -188,6 +215,12 @@ export default {
             }
             return nCnt
         },
+        loading() {
+            this.isLoading = true
+            setTimeout(() => {
+                this.invisibleLoading = false
+            }, 500)
+        },
     },
 }
 </script>
@@ -200,10 +233,31 @@ export default {
     flex-wrap: wrap;
     height: calc(100% - 58px);
     #live-component {
+        position: relative;
         margin: 20px 0px;
         width: 156.25vh;
         padding-right: 300px;
-        #loading-page {
+        .loading-page {
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 350;
+            background-color: #f0f0f0;
+            opacity: 0;
+            transition: opacity 0.55s;
+        }
+        .not-load-complete {
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 350;
+            background-color: #f0f0f0;
+            opacity: 1;
+            transition: opacity 0.55s;
         }
     }
     hr {

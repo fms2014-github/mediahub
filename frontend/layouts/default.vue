@@ -28,6 +28,7 @@ export default {
     width: 100%;
     min-width: calc(1280px + 74px);
     background-color: rgb(240, 240, 240);
+    overflow: auto;
     #router-view {
         margin: 0 0 0 74px;
     }
