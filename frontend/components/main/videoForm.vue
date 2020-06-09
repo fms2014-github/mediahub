@@ -64,8 +64,8 @@ export default {
     },
     methods: {
         go() {
-            console.log('gogolist출력')
-            console.log(this.vlist)
+            // console.log('gogolist출력')
+            // console.log(this.vlist)
         },
         goVideo(videoId, provider) {
             alert('provider, videoId:: ' + provider + ',' + videoId)

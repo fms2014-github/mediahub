@@ -48,7 +48,7 @@ export default {
         let m
         while ((m = regex.exec(fragmentString))) {
             if (decodeURIComponent(m[1]) === 'token') {
-                console.log('awefwaef')
+                // console.log('awefwaef')
                 await this.$store.dispatch('login/loginapi', decodeURIComponent(m[2]))
                 this.$router.push('/subSync')
             }

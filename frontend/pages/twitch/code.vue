@@ -19,14 +19,14 @@ export default {
             headers: { Authorization: 'Bearer ' + this.$store.getters['login/getJwt'] },
         })
         twitchAuth.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/token-code?code=' + params.code).then(async (res) => {
-            console.log('code', res.data)
+            // console.log('code', res.data)
             const { status } = await twitchAuth.get('https://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization')
             if (status === 200) {
                 this.checkRequireSync()
                 this.$router.push('/subsync')
             }
         })
-        // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization'))
+        // // console.log('synchronization', await testaxios.get('http://k02d1031.p.ssafy.io:8081/v1/twitch/synchronization'))
     },
     methods: {
         ...mapActions({ checkRequireSync: 'login/checkRequireSync' }),

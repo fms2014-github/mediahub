@@ -67,7 +67,7 @@ export default {
     },
     async mounted() {
         this.host = location.hostname
-        console.log('chat twitch', this.twitch)
+        // console.log('chat twitch', this.twitch)
         const objDiv = document.getElementById('message-list')
         if (this.twitch !== '') {
             this.tmi = require('tmi.js')
@@ -89,8 +89,8 @@ export default {
                     return
                 } // Ignore messages from the bot
                 // Remove whitespace from chat message
-                // console.log('this scope', this.messageList)
-                // console.log(context, msg)
+                // // console.log('this scope', this.messageList)
+                // // console.log(context, msg)
                 this.messageList.push({
                     profileImage: 'https://via.placeholder.com/24',
                     textMessage: msg,
@@ -101,7 +101,7 @@ export default {
                     objDiv.scrollTop = objDiv.scrollHeight + 1000
                 }, 100)
                 // const commandName = msg.trim()
-                // console.log(commandName)
+                // // console.log(commandName)
             })
             this.client.on('connected', onConnectedHandler)
             // Connect to Twitch:
@@ -110,7 +110,7 @@ export default {
             // Called every time the bot connects to Twitch chat
             // eslint-disable-next-line no-inner-declarations
             function onConnectedHandler(addr, port) {
-                console.log(`* Connected to ${addr}:${port}`)
+                // console.log(`* Connected to ${addr}:${port}`)
             }
         }
         if (this.youtube !== '') {
@@ -133,7 +133,7 @@ export default {
                     pageToken: this.nextPageToken,
                     pollingIntervalMillis: this.pollingIntervalMillis,
                 })
-                // console.log(data)
+                // // console.log(data)
                 if (data.pageInfo.totalResults > 0) {
                     for (const i in data.items) {
                         this.messageList.push({
@@ -169,13 +169,13 @@ export default {
                     selector[i].classList.toggle('platform-disable')
                 }
                 this.sendSelect = document.querySelector('.platform-disable').textContent
-                console.log(this.sendSelect)
+                // console.log(this.sendSelect)
             }
         },
         sendMessage(platform) {
-            console.log(this.message)
+            // console.log(this.message)
             this.$youtubeApi.youtubeliveChatInsertApi({ liveChatId: this.liveChatId, msg: this.message }).then((res) => {
-                console.log(res)
+                // console.log(res)
             })
             this.message = ''
         },

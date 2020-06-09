@@ -50,15 +50,15 @@ export default {
     },
     mounted() {
         this.init()
-        console.log(this.twitchId !== '' && this.youtubeId !== '')
+        // console.log(this.twitchId !== '' && this.youtubeId !== '')
 
-        console.log(this.videoId.split(',').length)
+        // console.log(this.videoId.split(',').length)
     },
     methods: {
         async init() {
             if (this.videoId.split(',').length !== 4) {
                 if (this.videoId.split(',')[0] === 'twitch') {
-                    console.log(this.videoId.split(',')[1])
+                    // console.log(this.videoId.split(',')[1])
                     this.twitchId = this.videoId.split(',')[1]
                     setTimeout(() => {
                         const options = {
@@ -82,13 +82,13 @@ export default {
                             await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
                         ).data.items[0].liveStreamingDetails.activeLiveChatId
                     } catch (err) {}
-                    console.log('123qweasdzcx', this.liveChatId)
+                    // console.log('123qweasdzcx', this.liveChatId)
                 }
             } else {
-                console.log(this.videoId)
+                // console.log(this.videoId)
                 if (this.videoId.split(',')[2] === 'twitch') {
                     this.twitchId = this.videoId.split(',')[3]
-                    console.log('qawsedrf', this.twitchId)
+                    // console.log('qawsedrf', this.twitchId)
                     setTimeout(() => {
                         const options = {
                             width: 0,
@@ -118,7 +118,7 @@ export default {
                             await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
                         ).data.items[0].liveStreamingDetails.activeLiveChatId
                     } catch (err) {}
-                    console.log('123qweasdzcx', this.liveChatId)
+                    // console.log('123qweasdzcx', this.liveChatId)
                 }
             }
         },

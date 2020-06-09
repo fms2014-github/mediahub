@@ -112,16 +112,16 @@ export default {
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
-            console.log(localStorage.getItem('auth'))
+            // console.log(localStorage.getItem('auth'))
             const temp = JSON.parse(localStorage.getItem('auth'))
-            console.log('before::', temp)
+            // console.log('before::', temp)
             const twitchInfo = temp.find((i) => i.provider === 'twitch')
             if (temp.find((i) => i.provider === 'twitch') !== undefined) {
                 const { data } = await this.$backendAxios.twitchTokerRefresh()
                 twitchInfo.access_token = data
-                console.log(data)
+                // console.log(data)
                 temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
-                console.log('after::', temp)
+                // console.log('after::', temp)
             }
         }
     },
@@ -129,12 +129,12 @@ export default {
         const channelInfo = this.channelId.split(',')
         const yi = channelInfo.findIndex((i) => i === 'google')
         if (yi >= 0) {
-            console.log('channelId/y', channelInfo[yi + 1])
+            // console.log('channelId/y', channelInfo[yi + 1])
             this.youtubeButton.channelId = channelInfo[yi + 1]
         }
         const ti = channelInfo.findIndex((i) => i === 'twitch')
         if (ti >= 0) {
-            console.log('channelId/t', channelInfo[ti + 1])
+            // console.log('channelId/t', channelInfo[ti + 1])
             this.twitchButton.channelId = channelInfo[ti + 1]
         }
         this.provider = channelInfo[0]

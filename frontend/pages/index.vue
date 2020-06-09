@@ -67,9 +67,9 @@ export default {
             if (temp.find((i) => i.provider === 'twitch') !== undefined) {
                 const { data } = await this.$backendAxios.twitchTokerRefresh()
                 twitchInfo.access_token = data
-                console.log(data)
+                // console.log(data)
                 temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
-                console.log('after::', temp)
+                // console.log('after::', temp)
             }
         }
     },
@@ -86,7 +86,7 @@ export default {
             if (provider === 'google') {
                 const list = []
                 const channelInfo = await this.$youtubeApi.youtubeChannelApi(channelId)
-                console.log('qwgrf', channelInfo.data)
+                // console.log('qwgrf', channelInfo.data)
                 const searchVideosRes = await this.$youtubeApi.youtubeSearchVideoApi({ channelId, order: 'date' })
                 const idList = []
                 for (var i = 0; i < searchVideosRes.data.items.length; i++) {
@@ -133,7 +133,7 @@ export default {
                 }
                 const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.name)
                 for (let i = 0; i < 2; i++) {
-                    console.log(clipRes.data.clips[i] === undefined)
+                    // console.log(clipRes.data.clips[i] === undefined)
                     const data = {
                         videoId: clipRes.data.clips[i].slug,
                         title: clipRes.data.clips[i].title,

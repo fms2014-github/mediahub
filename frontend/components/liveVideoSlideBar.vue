@@ -99,11 +99,11 @@ export default {
                 this.liveList.push({ kind: 'twitch', id: item.channel.name })
                 if (this.liveList.length === 10) break
             }
-            console.log('lives', lives)
+            // console.log('lives', lives)
         }
 
         setTimeout(() => {
-            console.log('liveList', this.liveList)
+            // console.log('liveList', this.liveList)
             if (this.liveList.length === 0) {
                 this.loaded()
             } else {

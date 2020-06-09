@@ -31,7 +31,7 @@ export default {
     },
     created() {},
     mounted() {
-        // console.log(await this.$twitchApi.twitchClipsByChannelApi(this.playInfo.channelId))
+        // // console.log(await this.$twitchApi.twitchClipsByChannelApi(this.playInfo.channelId))
         // if (this.playInfo.kind === 'twitch') {
         //     const options = {
         //         width: '100%',
@@ -58,7 +58,7 @@ export default {
     methods: {
         ready(event) {
             this.loaded()
-            // console.log(event)
+            // // console.log(event)
         },
         playing(event) {
             this.Info = event.target

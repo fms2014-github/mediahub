@@ -18,9 +18,9 @@ export const getters = {
 
 export const mutations = {
     SET_USER(state, user) {
-        console.log('SET_USER', user)
+        // console.log('SET_USER', user)
         state.authUser = user
-        console.log('state.authUser', state.authUser)
+        // console.log('state.authUser', state.authUser)
     },
     checkRequireSync(state) {
         state.authUser.firstLogin++

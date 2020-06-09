@@ -103,8 +103,8 @@ export default {
                 }
             } catch (error) {}
             this.liveId = live.join(',')
-            console.log(this.info)
-            console.log(live)
+            // console.log(this.info)
+            // console.log(live)
         } else {
             for (const d of this.labels) {
                 const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
@@ -158,22 +158,22 @@ export default {
                 }
             } catch (error) {}
             this.liveId = live.join(',')
-            console.log(this.info)
-            console.log(live)
+            // console.log(this.info)
+            // console.log(live)
         }
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
-            console.log(localStorage.getItem('auth'))
+            // console.log(localStorage.getItem('auth'))
             const temp = JSON.parse(localStorage.getItem('auth'))
-            console.log('before::', temp)
+            // console.log('before::', temp)
             const twitchInfo = temp.find((i) => i.provider === 'twitch')
             if (temp.find((i) => i.provider === 'twitch') !== undefined) {
                 const { data } = await this.$backendAxios.twitchTokerRefresh()
                 twitchInfo.access_token = data
-                console.log(data)
+                // console.log(data)
                 temp[temp.indexOf(temp.find((i) => i.provider === 'twitch'))] = twitchInfo
-                console.log('after::', temp)
+                // console.log('after::', temp)
             }
         }
     },
