@@ -1,0 +1,19 @@
+package com.ssafy.d103.auth.commonService;
+
+import com.ssafy.d103.auth.model.Auth;
+import com.ssafy.d103.auth.repository.AuthRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+    @Autowired
+    private AuthRepository authRepository;
+    public void deleteAuth(Auth auth){
+        authRepository.deleteById(auth.getId());
+    }
+
+    public Auth saveAuth(Auth auth) { return authRepository.save(auth);}
+}

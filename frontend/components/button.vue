@@ -10,7 +10,7 @@
             <div v-else>
                 <div class="flex-container">
                     <div v-if="!isSubscribe" class="twitch button" @click="twitchInsert">팔로우</div>
-                    <divs v-else class="gray button" @click="twitchDelete">팔로잉</divs>
+                    <div v-else class="gray button" @click="twitchDelete">팔로잉</div>
                 </div>
             </div>
         </div>
@@ -107,6 +107,7 @@ export default {
 
 <style lang="scss" scoped>
 #button {
+    font-family: 'S-CoreDream-4Regular';
     #button-container {
         // background-color: rgb(40, 40, 40);
         display: inline-block;
@@ -120,27 +121,35 @@ export default {
 
             .button {
                 margin-left: 2%;
-                width: 8%;
+                width: 80px;
                 height: 35px;
                 text-align: center;
                 line-height: 35px;
-                font-weight: bold;
                 cursor: pointer;
-                font-size: 1rem;
+                border-radius: 2px;
+                font-size: 13px;
+                color: white;
+                box-shadow: 0 1px 2px rgb(97, 97, 97);
             }
             .youtube-red {
-                background-color: #e24821;
-                border: 1px solid red;
-                color: white;
+                background-color: red;
+            }
+            .youtube-red:hover {
+                background-color: #9b0f0f;
             }
             .gray {
                 background-color: #ddd;
-                border: 1px solid #ddd;
                 color: gray;
             }
+            .gray:hover {
+                background-color: rgb(172, 172, 172);
+                color: white;
+            }
             .twitch {
-                background-color: #d6c7ff;
-                border: 1px solid #d6c7ff;
+                background-color: #9147ff;
+            }
+            .twitch:hover {
+                background-color: rgb(66, 31, 119);
             }
         }
     }

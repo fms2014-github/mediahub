@@ -1,23 +1,33 @@
 <template>
     <div id="nav-bar">
-        <button @click="logout"><img src="../assets/icon/logout.png" /></button>
-        <button @click="alarmCheck = !alarmCheck">
+        <button @click="logout">
+            <span id="logout-icon" class="material-icons">
+                meeting_room
+            </span>
+        </button>
+        <button
+            @click="
+                alarmCheck = !alarmCheck
+                reSyncClick = false
+            "
+        >
             <span id="alarm-icon" class="material-icons">
                 notifications
             </span>
         </button>
+
         <button @click="help">
-            <img id="sync-icon" src="../assets/icon/sync.png" />
+            <span id="sync-icon" class="material-icons">
+                cached
+            </span>
         </button>
         <div v-if="reSyncClick" id="reSync">
             <h3>구독 목록 재 동기화</h3>
             <button id="youtube-sync" @click="syncYoutube">
-                <img src="../assets/icon/YouTube.png" />
-                <span>YouTube</span>
+                <img src="../assets/icon/youtubeBtn.png" />
             </button>
             <button id="tiwtch-sync" @click="syncTwitch">
-                <img src="../assets/icon/Twitch.png" />
-                <span>Twitch</span>
+                <img src="../assets/icon/twitchBtn.png" />
             </button>
         </div>
         <div v-if="alarmCheck" class="alarm-div">
@@ -28,7 +38,7 @@
 
 <script>
 // import loginIcon from '~/assets/icon/sign-in.svg?inline'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
@@ -48,6 +58,7 @@ export default {
     mounted() {},
     methods: {
         ...mapActions({ logoutapi: 'login/logoutapi' }),
+        ...mapMutations(['mutateLabelRefreshState']),
         logo() {
             this.$router.push('/')
         },
@@ -61,13 +72,25 @@ export default {
         },
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
-                console.log(res.status)
+                console.log(res.status, location.origin)
+                this.reSyncClick = !this.reSyncClick
+                this.mutateLabelRefreshState()
             })
         },
         syncTwitch() {
-            this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status)
-            })
+            this.$backendAxios
+                .twitchSynchronization()
+                .then((res) => {
+                    console.log(res.status, location.origin)
+                    this.mutateLabelRefreshState()
+                    this.reSyncClick = !this.reSyncClick
+                    console.log(res.status)
+                })
+                // eslint-disable-next-line handle-callback-err
+                .catch((err) => {
+                    location.href =
+                        'https://id.twitch.tv/oauth2/authorize?client_id=db8sw2xqe82gk1x78mkubkr5xh545p&response_type=code&scope=channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read&redirect_uri=http://localhost:3000/twitch/code'
+                })
         },
     },
 }
@@ -91,7 +114,7 @@ export default {
     button:visited,
     button:focus,
     button:link {
-        color: black;
+        color: rgb(17, 17, 17);
         text-decoration: none;
         margin: 0px 15px;
         background-color: rgba(0, 0, 0, 0);
@@ -99,18 +122,12 @@ export default {
         border-width: 0px;
         cursor: pointer;
     }
-    #alarm-icon {
-        margin: 0px 12px;
-    }
     #sync-icon {
-        margin-right: 24px;
+        margin-right: 50px;
     }
     button {
         span {
-            font-size: 32px;
-        }
-        img {
-            width: 32px;
+            padding-top: 5px;
         }
     }
     .alarm-div {
@@ -120,23 +137,23 @@ export default {
         z-index: 10;
     }
     #reSync {
-        width: 200px;
+        width: 190px;
         height: 122px;
         position: absolute;
         top: 58px;
-        right: 0px;
-        background-color: white;
-        border: {
-            width: 1px;
-            style: solid;
-            color: rgb(180, 180, 180);
-        }
+        right: 5px;
+        background-color: rgba(255, 255, 255, 0.863);
+        box-shadow: 0 1px 2px rgb(122, 122, 122);
+        // border: {
+        //     width: 1px;
+        //     style: solid;
+        //     color: rgb(180, 180, 180);
+        // }
         h3 {
-            margin-top: 10px;
+            margin-top: 11px;
             text-align: center;
             font: {
                 size: 0.865rem;
-                weight: 700;
             }
         }
         #youtube-sync {
@@ -147,29 +164,19 @@ export default {
             top: calc(50% - 10px);
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
-            background-color: $youtube-color;
+            background-color: rgba(255, 0, 0, 0.7);
             img {
-                background-color: rgb(255, 255, 255);
-                padding: 4px;
                 margin: 0 8px;
                 vertical-align: middle;
-                width: 20px;
+                width: 100px;
             }
-            span {
-                vertical-align: middle;
-                font: {
-                    size: 0.9rem;
-                    weight: 700;
-                }
-                color: rgb(230, 230, 230);
-            }
+
             border: {
                 width: 0px;
-                radius: 10px;
             }
         }
         #tiwtch-sync {
-            background-color: $twitch-color;
+            background-color: rgba(145, 71, 255, 0.7);
             margin: 0px;
             position: absolute;
             top: calc(50% + 30px);
@@ -180,24 +187,13 @@ export default {
             img {
                 margin: 0 8px;
                 vertical-align: middle;
-                width: 20px;
+                width: 100px;
             }
-            span {
-                vertical-align: middle;
-                font: {
-                    size: 0.9rem;
-                    weight: 700;
-                }
-                color: rgb(30, 30, 30);
-            }
+
             border: {
                 width: 0px;
-                radius: 10px;
             }
         }
     }
-}
-img {
-    width: 32px;
 }
 </style>

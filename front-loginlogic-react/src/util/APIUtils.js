@@ -29,7 +29,7 @@ export function getCurrentUser() {
     }
 
     return request({
-        url: API_BASE_URL + "/user/me",
+        url: API_BASE_URL + "/v1/member/information",
         method: 'GET'
     });
 }
@@ -48,4 +48,15 @@ export function signup(signupRequest) {
         method: 'POST',
         body: JSON.stringify(signupRequest)
     });
+}
+/////////////////////////////////////////
+export function getTwitchCodeURL(){
+    return request({
+        url: API_BASE_URL + "/v1/twitch/token-url"
+    })
+}
+export function getYoutubeURL(){
+    return request({
+        url: API_BASE_URL + "/v1/youtube/token-url"
+    })
 }

@@ -7,6 +7,15 @@ export default function({ $axios, store }, inject) {
         baseURL: 'https://k02d1031.p.ssafy.io:8081/v1/',
     })
 
+    const getStreamChannel = (params) => {
+        return backendAxios.get('member/stream-channel', {
+            params: {
+                channelId: params.channelId,
+                provider: params.provider,
+            },
+        })
+    }
+
     const getMember = () => {
         return backendAxios.get('member/information')
     }
@@ -57,7 +66,12 @@ export default function({ $axios, store }, inject) {
         return backendAxios.put('/twitch/channel/synchronization')
     }
 
+    const twitchTokerRefresh = () => {
+        return backendAxios.get('twitch/access-token')
+    }
+
     const backendScript = {
+        getStreamChannel: (params) => getStreamChannel(params),
         getMember: () => getMember(),
         insertYoutubeChannel: (params) => insertYoutubeChannel(params),
         deleteYoutubeChannel: (sId) => deleteYoutubeChannel(sId),
@@ -66,6 +80,7 @@ export default function({ $axios, store }, inject) {
         addFirstLogin: () => addFirstLogin(),
         subFirstLogin: () => subFirstLogin(),
         twitchSynchronization: () => twitchSynchronization(),
+        twitchTokerRefresh: () => twitchTokerRefresh(),
     }
 
     // Inject to context as $api

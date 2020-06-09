@@ -2,25 +2,48 @@
     <div id="videoForm-container">
         <div class="video-div">
             <div class="video-list">
-                <div v-for="l in vlist" :key="l.videoId" class="video-form" @click="goVideo(l.videoId, l.provider)">
-                    <div class="img-wrap">
-                        <img v-if="l.provider === 'youtube'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
-                        <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
-                        <img v-if="l.provider === 'youtube'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
-                        <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
-                    </div>
-                    <div class="profile">
-                        <div><img class="profile-img" :src="l.profileImg" alt="" @click="goChannel(l.channelId, l.provider)" /></div>
-                        <div class="profile-contents">
-                            <div class="profile-title">{{ l.title }}</div>
-                            <div id="profile-nickname" class="profile-content" @click="goChannel(l.channelId, l.provider)">{{ l.channelName }}</div>
-                            <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
-                            <div v-if="l.game !== null" id="profile-game" class="profile-content">{{ l.game }}</div>
-                            <img v-if="l.live !== 'none'" src="../../assets/icon/live.png" alt="" class="live-icon" />
+                <div v-for="l in vlist" :key="l.id" class="video-form">
+                    <nuxt-link v-if="l.live === 'live'" :to="'/streaming/' + l.provider + ',' + l.videoId">
+                        <div class="img-wrap">
+                            <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                            <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
                         </div>
-                    </div>
+                    </nuxt-link>
+                    <nuxt-link v-else-if="!l.curator" :to="'/uploaded/video/' + l.provider + '/' + l.videoId + '?id=' + l.channelId">
+                        <div class="img-wrap">
+                            <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                            <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
+                        </div>
+                    </nuxt-link>
+                    <nuxt-link v-else :to="'/uploaded/clip/' + l.videoId + '?id=' + l.channelId">
+                        <div class="img-wrap">
+                            <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                            <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
+                            <img v-if="l.curator !== ''" id="clip" src="../../assets/icon/clip.png" alt="" class="img-icon" />
+                        </div>
+                    </nuxt-link>
+                    <nuxt-link :to="'/channel/' + l.provider + ',' + l.channelId">
+                        <div class="profile">
+                            <div><img class="profile-img" :src="l.profileImg" alt="" /></div>
+                            <div class="profile-contents">
+                                <div class="profile-title">{{ l.title }}</div>
+                                <div id="profile-nickname" class="profile-content">
+                                    {{ l.channelName }}
+                                    <span v-if="l.curator" id="profile-curator" class="profile-content">ㆍ클립제작 {{ l.curator }}</span>
+                                </div>
+                                <div id="profile-hits-date" class="profile-content">조회수 {{ l.viewCnt }}ㆍ{{ l.published }}</div>
+                                <div v-if="!l.game" id="profile-game" class="profile-content">{{ l.game }}</div>
+                                <img v-if="l.live === 'live'" src="../../assets/icon/live.png" alt="" class="live-icon" />
+                            </div>
+                        </div>
+                    </nuxt-link>
                 </div>
-                <button @click="go()">리스트test</button>
             </div>
         </div>
     </div>
@@ -31,9 +54,7 @@ export default {
     props: {
         vlist: {
             type: Array,
-            default: null,
-            // type: Array,
-            // default: new Array(),
+            required: true,
         },
     },
     data: () => {
@@ -41,8 +62,6 @@ export default {
             viewCnt: '',
         }
     },
-
-    created() {},
     methods: {
         go() {
             console.log('gogolist출력')
@@ -87,16 +106,23 @@ export default {
             height: 98%;
         }
         #img-y:hover {
-            border: 3px solid #ff000085;
+            border: 4px solid #da0000be;
         }
         #img-t:hover {
-            border: 3px solid #9147ff85;
+            border: 4px solid #9147ffef;
         }
         .img-icon {
             position: absolute;
             width: 30px;
             height: 30px;
             z-index: 10;
+        }
+        #clip {
+            position: absolute;
+            right: 10px;
+            top: -13px;
+            // width: 35px;
+            // height: 35px;
         }
     }
 
@@ -144,7 +170,7 @@ export default {
     .profile-content {
         font-size: 12px;
         color: rgb(102, 102, 102);
-        margin-bottom: 1.5px;
+        margin-bottom: 2px;
     }
     .live-icon {
         width: 40px;
