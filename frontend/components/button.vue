@@ -96,7 +96,6 @@ export default {
                 const i = this.labels[idx].channels.findIndex((i) => i.channelId === this.playInfo.channelId && i.provider === this.playInfo.kind)
                 if (i >= 0) {
                     this.labels[idx].channels.splice(i, 1)
-                    console.log('안들어오나')
                     break
                 }
             }

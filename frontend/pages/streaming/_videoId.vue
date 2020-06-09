@@ -47,6 +47,7 @@ export default {
             channel: [],
             info: [],
             liveId: '',
+            labels: [],
             isLoading: false,
             invisibleLoading: true,
         }
@@ -55,6 +56,7 @@ export default {
         this.info = this.videoId.split(',')
         const live = this.videoId.split(',')
         this.provider = this.info[0]
+        this.labels = JSON.parse(localStorage.getItem('labels'))
         if (this.provider === 'google') {
             this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
             const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
@@ -75,9 +77,17 @@ export default {
                         provider: 'google',
                     })
                 ).data
+
                 if (res.length > 1) {
                     const i = res.findIndex((i) => i.provider === 'twitch')
-                    const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
+                    for (const d of this.labels) {
+                        const idx = d.channels.findIndex((idx) => idx.name === res[i].channelId && idx.provider === 'twitch')
+                        if (idx >= 0) {
+                            this.channelId = d.channels[idx].channelId
+                            break
+                        }
+                    }
+                    const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
                     const streamer = {
                         provider: 'twitch',
                         name: data.display_name,
@@ -88,47 +98,22 @@ export default {
                     }
                     this.channel.push(streamer)
                     this.info.push('twitch')
-                    this.info.push(res[i].channelId)
+                    this.info.push(this.channelId)
                     live.push('twitch')
-                    live.push(res[i].name)
+                    live.push(res[i].channelId)
                 }
-                this.channel.push(streamer)
-                this.info.splice(1, 1, this.channelId)
-                try {
-                    const res = (
-                        await this.$backendAxios.getStreamChannel({
-                            channelId: this.channelId,
-                            provider: 'google',
-                        })
-                    ).data
-                    if (res.length > 1) {
-                        const i = res.findIndex((i) => i.provider === 'twitch')
-                        const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
-                        const streamer = {
-                            name: data.display_name,
-                            img: data.logo,
-                            ysubcnt: 0,
-                            tsubcnt: this.numChange(data.followers),
-                            bannerImg: data.video_banner,
-                        }
-                        this.channel.push(streamer)
-                        this.info.push('twitch')
-                        this.info.push(res[i].channelId)
-                        live.push('twitch')
-                        live.push(res[i].name)
-                    }
-                } catch (error) {}
-                this.liveId = live.join(',')
-            } else {
-                this.labels = JSON.parse(localStorage.getItem('labels'))
-                for (const d of this.labels) {
-                    const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
-                    if (i >= 0) {
-                        this.channelId = d.channels[i].channelId
-                        break
-                    }
+            } catch (error) {}
+            this.liveId = live.join(',')
+            console.log(this.info)
+            console.log(live)
+        } else {
+            for (const d of this.labels) {
+                const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
+                if (i >= 0) {
+                    this.channelId = d.channels[i].channelId
+                    break
                 }
-
+            }
             const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             const streamer = {
                 provider: 'twitch',
