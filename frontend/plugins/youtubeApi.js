@@ -18,9 +18,9 @@ export default function({ $axios, store }, inject) {
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
     const apiKey = [
-        'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
+        // 'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
         // 'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
-        // 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
+        'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
         // 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
         // 'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
         // 'AIzaSyDYOg3oe_oZZ8hhm3Hj7dfLUTqc6fh8QMc',
@@ -43,8 +43,32 @@ export default function({ $axios, store }, inject) {
         // 'AIzaSyC0ZzFqPbQRQQ8dhq4oOAQAeKJ47ZRyV0E',
         // 'AIzaSyCFYU8aHseyqBrKxmvRG5jiqCoJStfuukw',
         // 'AIzaSyBOYRUZK713uw5jdG2cx4beUPz0hxtTwQQ',
-        // 'AIzaSyCS7W3j1NSf_K2CcGybSEYJwlab16f5utE',
-        // 'AIzaSyB_fod3GpqOZ8AwD8mplSQOu1_Vsk8kO5M',
+        // 'AIzaSyCS7W3j1NSf_K2CcGybSEYJwlab16f5utE', //o 거의새거
+        // 'AIzaSyB_fod3GpqOZ8AwD8mplSQOu1_Vsk8kO5M', //새거(쭈욱 밑으로 새거)
+        // 'AIzaSyC1_TBeJjkVbmUfDSHJXHKH_OiONFJ9rbo',
+        // 'AIzaSyBPu-yVmzLjPgiR2qoZzFOTSc72OjfpAmo',
+        // 'AIzaSyCwDqtxRqNuutfKr9n_s_pxL3XONtNbvMo',
+        // 'AIzaSyBRb4cNJ3DIPIZwjkYDFyE4VRLxe1TbwFg',
+        // 'AIzaSyDXaF0D9sK9rWdZ2zm3Md6a-pkw6bHqHg0',
+        // 'AIzaSyC8ROwNrZiDKwo_Zi2zOcgmfVZ_l1icEK4',
+        // 'AIzaSyB7pfr2oaFaaCTER-Q8q7fbgsR3k34mZg0',
+        // 'AIzaSyBRX1pHPzfzxl6kP5whR2KGwSQkQygdYT8',
+        // 'AIzaSyDWMo7DL1oi-_3AoaA7JDcpDAwqgu9_fcw',
+        // 'AIzaSyAZfyxKuSjO3kpdmncZQy7d2uWtfvfR6uI',
+        // 'AIzaSyC2zVKmdfp2mh4GdTHiGWqS85NndXSyXhg',
+        // 'AIzaSyAzq8Iah35XhyiaLP3NJyohLfeT14DxDoY',
+        // 'AIzaSyDyJ8Czzgrlr0PiYxyjSYPpz4FqxsxMXkg',
+        // 'AIzaSyBT67y0AvvkIJhjPNTe0UQ8r9i5C7zKX0w',
+        // 'AIzaSyDgJfIT5cIz7vMUYB0l2gDdNiN0mfIJkOw',
+        // 'AIzaSyAz_ZTLDo0dFTwcSUec8QTrnzNvAQ0iGt0',
+        // 'AIzaSyCwWOSPc9DzQKjPkVxc9nDIEEnnRZRByts',
+        // 'AIzaSyCTdSK1LEGKXRnmusxqrnA24Q6cwQ9Utoc',
+        // 'AIzaSyCId51LperO-JYgvGqATrHdIBJMet7nP6M',
+        // 'AIzaSyDQwFasJLfSxKo1wTKkZ6ut1k-a8Uoq_9E',
+        // 'AIzaSyDEyEmK2-kDWR0vs5FzorJJHHpPXCTULrw',
+        // 'AIzaSyAKEnE5YdWlYlQ8SUpNALyCb8Y1JFhpqvo',
+        // 'AIzaSyC2iEZJek9ttaogaVZ14VmwZVGs4GfhvAA',
+        // 'AIzaSyDkL5T4LkkZ4OY8yGbni-b8XdCGQJZumyg',
     ]
 
     const youtubuLiveVideoApi = async (channel, channelName) => {
