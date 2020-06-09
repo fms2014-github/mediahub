@@ -259,8 +259,13 @@ export default {
                     }
                     this.list.push(data)
                 }
-                this.vData2 = (await this.$twitchApi.twitchClipsByChannelApi(this.streamer.channelName)).data.clips
-                for (let i = 0; i < this.vData2.length; i++) {
+                this.vData1 = (
+                    await this.$twitchApi.twitchClipsByChannelApi(
+                        this.streamer.channelName,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.clips
+                for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
                     this.videoList.game = this.vData2[i].game
                     this.videoList.viewCnt = this.numChange(this.vData2[i].views) + '회'

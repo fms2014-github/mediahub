@@ -9,7 +9,7 @@
         <hr />
         <div v-for="(item, index) in channel" :key="item.id">
             <nuxt-link :to="'/channel/' + info.join(',')">
-                <div :id="index" class="profile-div">
+                <div :id="index" :class="'profile-div ' + item.provider">
                     <div class="profile">
                         <img class="profile-img" :src="item.img" />
                         <div class="profile-content">
@@ -58,6 +58,7 @@ export default {
             this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
             const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
             const streamer = {
+                provider: 'google',
                 name: data.snippet.title,
                 img: data.snippet.thumbnails.medium.url,
                 ysubcnt: this.numChange(data.statistics.subscriberCount),
@@ -77,6 +78,7 @@ export default {
                     const i = res.findIndex((i) => i.provider === 'twitch')
                     const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
                     const streamer = {
+                        provider: 'twitch',
                         name: data.display_name,
                         img: data.logo,
                         ysubcnt: 0,
@@ -103,6 +105,7 @@ export default {
 
             const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             const streamer = {
+                provider: 'twitch',
                 name: data.display_name,
                 img: data.logo,
                 ysubcnt: 0,
@@ -123,6 +126,7 @@ export default {
                     const i = res.findIndex((i) => i.provider === 'google')
                     const data = (await this.$youtubeApi.youtubeChannelApi(res[i].channelId)).data.items[0]
                     const streamer = {
+                        provider: 'google',
                         name: data.snippet.title,
                         img: data.snippet.thumbnails.medium.url,
                         ysubcnt: this.numChange(data.statistics.subscriberCount),
@@ -222,6 +226,13 @@ export default {
         }
         flex-wrap: wrap;
     }
+
+    .google:hover {
+        border: 4px solid #da0000be;
+    }
+    .twitch:hover {
+        border: 4px solid #9147ffef;
+    }
     .profile-div {
         width: 90%;
         height: 200px;
@@ -230,6 +241,7 @@ export default {
         background-color: rgb(255, 255, 255);
         box-shadow: 0px 1px 1px 0px rgb(184, 184, 184);
         display: inline-block;
+        box-sizing: border-box;
 
         .profile {
             height: 100px;

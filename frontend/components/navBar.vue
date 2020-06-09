@@ -73,13 +73,17 @@ export default {
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
                 console.log(res.status, location.origin)
+                this.reSyncClick = !this.reSyncClick
                 this.mutateLabelRefreshState()
             })
         },
         syncTwitch() {
-            this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status, location.origin)
-                this.mutateLabelRefreshState()
+            this.$backendAxios
+                .twitchSynchronization()
+                .then((res) => {
+                    console.log(res.status, location.origin)
+                    this.mutateLabelRefreshState()
+                    this.reSyncClick = !this.reSyncClick
                     console.log(res.status)
                 })
                 // eslint-disable-next-line handle-callback-err
