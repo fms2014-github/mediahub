@@ -100,7 +100,7 @@ export default {
                 display: inline-block;
                 position: absolute;
                 width: 100%;
-                height: 500px;
+                height: 510px;
                 top: 50%;
                 transform: translateY(-50%);
                 box-shadow: 1px 1px 10px black;

@@ -73,6 +73,7 @@ export default {
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
                 console.log(res.status, location.origin)
+                this.reSyncClick = !this.reSyncClick
                 this.mutateLabelRefreshState()
             })
         },
@@ -82,6 +83,7 @@ export default {
                 .then((res) => {
                     console.log(res.status, location.origin)
                     this.mutateLabelRefreshState()
+                    this.reSyncClick = !this.reSyncClick
                     console.log(res.status)
                 })
                 // eslint-disable-next-line handle-callback-err

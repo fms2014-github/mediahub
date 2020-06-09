@@ -9,7 +9,7 @@
         <hr />
         <div v-for="(item, index) in channel" :key="item.id">
             <nuxt-link :to="'/channel/' + info.join(',')">
-                <div :id="index" class="profile-div">
+                <div :id="index" :class="'profile-div ' + item.provider">
                     <div class="profile">
                         <img class="profile-img" :src="item.img" />
                         <div class="profile-content">
@@ -52,19 +52,45 @@ export default {
         }
     },
     async mounted() {
-        try {
-            this.info = this.videoId.split(',')
-            const live = this.videoId.split(',')
-            this.provider = this.info[0]
-            if (this.provider === 'google') {
-                this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
-                const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
-                const streamer = {
-                    name: data.snippet.title,
-                    img: data.snippet.thumbnails.medium.url,
-                    ysubcnt: this.numChange(data.statistics.subscriberCount),
-                    tsubcnt: 0,
-                    bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
+        this.info = this.videoId.split(',')
+        const live = this.videoId.split(',')
+        this.provider = this.info[0]
+        if (this.provider === 'google') {
+            this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
+            const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
+            const streamer = {
+                provider: 'google',
+                name: data.snippet.title,
+                img: data.snippet.thumbnails.medium.url,
+                ysubcnt: this.numChange(data.statistics.subscriberCount),
+                tsubcnt: 0,
+                bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
+            }
+            this.channel.push(streamer)
+            this.info.splice(1, 1, this.channelId)
+            try {
+                const res = (
+                    await this.$backendAxios.getStreamChannel({
+                        channelId: this.channelId,
+                        provider: 'google',
+                    })
+                ).data
+                if (res.length > 1) {
+                    const i = res.findIndex((i) => i.provider === 'twitch')
+                    const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
+                    const streamer = {
+                        provider: 'twitch',
+                        name: data.display_name,
+                        img: data.logo,
+                        ysubcnt: 0,
+                        tsubcnt: this.numChange(data.followers),
+                        bannerImg: data.video_banner,
+                    }
+                    this.channel.push(streamer)
+                    this.info.push('twitch')
+                    this.info.push(res[i].channelId)
+                    live.push('twitch')
+                    live.push(res[i].name)
                 }
                 this.channel.push(streamer)
                 this.info.splice(1, 1, this.channelId)
@@ -103,34 +129,36 @@ export default {
                     }
                 }
 
-                const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
-                const streamer = {
-                    name: data.display_name,
-                    img: data.logo,
-                    ysubcnt: 0,
-                    tsubcnt: this.numChange(data.followers),
-                    bannerImg: data.video_banner,
-                }
-                this.channel.push(streamer)
-                this.info.splice(1, 1, this.channelId)
+            const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
+            const streamer = {
+                provider: 'twitch',
+                name: data.display_name,
+                img: data.logo,
+                ysubcnt: 0,
+                tsubcnt: this.numChange(data.followers),
+                bannerImg: data.video_banner,
+            }
+            this.channel.push(streamer)
+            this.info.splice(1, 1, this.channelId)
 
-                try {
-                    const res = (
-                        await this.$backendAxios.getStreamChannel({
-                            channelId: this.videoId.split(',')[1],
-                            provider: 'twitch',
-                        })
-                    ).data
-                    if (res.length > 1) {
-                        const i = res.findIndex((i) => i.provider === 'google')
-                        const data = (await this.$youtubeApi.youtubeChannelApi(res[i].channelId)).data.items[0]
-                        const streamer = {
-                            name: data.snippet.title,
-                            img: data.snippet.thumbnails.medium.url,
-                            ysubcnt: this.numChange(data.statistics.subscriberCount),
-                            tsubcnt: 0,
-                            bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
-                        }
+            try {
+                const res = (
+                    await this.$backendAxios.getStreamChannel({
+                        channelId: this.videoId.split(',')[1],
+                        provider: 'twitch',
+                    })
+                ).data
+                if (res.length > 1) {
+                    const i = res.findIndex((i) => i.provider === 'google')
+                    const data = (await this.$youtubeApi.youtubeChannelApi(res[i].channelId)).data.items[0]
+                    const streamer = {
+                        provider: 'google',
+                        name: data.snippet.title,
+                        img: data.snippet.thumbnails.medium.url,
+                        ysubcnt: this.numChange(data.statistics.subscriberCount),
+                        tsubcnt: 0,
+                        bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
+                    }
 
                         this.channel.push(streamer)
                         this.info.unshift(res[i].channelId)
@@ -252,6 +280,13 @@ export default {
         }
         flex-wrap: wrap;
     }
+
+    .google:hover {
+        border: 4px solid #da0000be;
+    }
+    .twitch:hover {
+        border: 4px solid #9147ffef;
+    }
     .profile-div {
         width: 90%;
         height: 200px;
@@ -260,6 +295,7 @@ export default {
         background-color: rgb(255, 255, 255);
         box-shadow: 0px 1px 1px 0px rgb(184, 184, 184);
         display: inline-block;
+        box-sizing: border-box;
 
         .profile {
             height: 100px;
