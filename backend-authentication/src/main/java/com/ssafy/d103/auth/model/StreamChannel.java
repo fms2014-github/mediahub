@@ -17,4 +17,7 @@ public class StreamChannel {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column
+    private String channelId;
+
 }

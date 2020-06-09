@@ -12,4 +12,5 @@ import lombok.Setter;
 public class StreamChannelDto {
     private String provider;
     private String channelId;
+    private String twitchChannelId;
 }

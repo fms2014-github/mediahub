@@ -158,8 +158,10 @@ public class MemberController {
                             streamChannelDto.setProvider("google");
                         }else if(StreamChannel.getId().charAt(0) == 'T'){
                             streamChannelDto.setProvider("twitch");
+                            streamChannelDto.setTwitchChannelId(StreamChannel.getChannelId());
                         }
                         streamChannelDto.setChannelId(StreamChannel.getId().substring(2));
+
                         return streamChannelDto;
                     })
                     .collect(Collectors.toList());

@@ -133,6 +133,7 @@ public class TwitchController {
         StreamChannel streamChannel = new StreamChannel();
         streamChannel.setId("T.".concat(twitchUser.getName()));
         streamChannel.setMember(member);
+        streamChannel.setChannelId(twitchUser.get_id());
         streamChannelService.saveStreamChannel(streamChannel);
         customUserDetailsService.saveMember(member);
 
