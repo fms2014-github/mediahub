@@ -48,12 +48,14 @@ export default {
             info: [],
             liveId: '',
             loading: false,
+            labels: [],
         }
     },
     async mounted() {
         this.info = this.videoId.split(',')
         const live = this.videoId.split(',')
         this.provider = this.info[0]
+        this.labels = JSON.parse(localStorage.getItem('labels'))
         if (this.provider === 'google') {
             this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
             const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
@@ -74,9 +76,17 @@ export default {
                         provider: 'google',
                     })
                 ).data
+
                 if (res.length > 1) {
                     const i = res.findIndex((i) => i.provider === 'twitch')
-                    const data = (await this.$twitchApi.twitchChannelApi(res[i].channelId)).data
+                    for (const d of this.labels) {
+                        const idx = d.channels.findIndex((idx) => idx.name === res[i].channelId && idx.provider === 'twitch')
+                        if (idx >= 0) {
+                            this.channelId = d.channels[idx].channelId
+                            break
+                        }
+                    }
+                    const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
                     const streamer = {
                         provider: 'twitch',
                         name: data.display_name,
@@ -87,14 +97,15 @@ export default {
                     }
                     this.channel.push(streamer)
                     this.info.push('twitch')
-                    this.info.push(res[i].channelId)
+                    this.info.push(this.channelId)
                     live.push('twitch')
-                    live.push(res[i].name)
+                    live.push(res[i].channelId)
                 }
             } catch (error) {}
             this.liveId = live.join(',')
+            console.log(this.info)
+            console.log(live)
         } else {
-            this.labels = JSON.parse(localStorage.getItem('labels'))
             for (const d of this.labels) {
                 const i = d.channels.findIndex((i) => i.name === this.info[1] && i.provider === 'twitch')
                 if (i >= 0) {
