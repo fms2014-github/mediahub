@@ -18,11 +18,11 @@ export default function({ $axios, store }, inject) {
     //     baseURL: 'https://www.googleapis.com/youtube/v3/',
     // })
     const apiKey = [
-        'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg',
-        // 'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8',
-        // 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE',
-        // 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so',
-        // 'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
+        // 'AIzaSyAl4t4yoO9z-WfXWC_jX6hz8SeV_7Zqjbg', //x
+        // 'AIzaSyBZcWZTdEQjVlIqx_V_M86bke37lDvV6j8', //x
+        // 'AIzaSyAeFj5orE1ldMI0P_J7LjhEKwwqrbIilmE', //x
+        // 'AIzaSyBu90FIHQnLKwEzUgeoakyc4zl_rBn7-so', //x
+        'AIzaSyCZ_rUOzHmL55FEVXwz1RjeGl4ps--mNkw',
         // 'AIzaSyDYOg3oe_oZZ8hhm3Hj7dfLUTqc6fh8QMc',
         // 'AIzaSyBo9Us9ScAWvLlhcGSssKvtst0E16lDgXs',
         // 'AIzaSyAlCTC6h-4BJPg7a--v2qL7pFeRR_OPDfc',

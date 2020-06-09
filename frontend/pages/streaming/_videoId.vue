@@ -50,6 +50,7 @@ export default {
             labels: [],
             isLoading: false,
             invisibleLoading: true,
+            auth: [],
         }
     },
     async mounted() {
@@ -57,6 +58,7 @@ export default {
         const live = this.videoId.split(',')
         this.provider = this.info[0]
         this.labels = JSON.parse(localStorage.getItem('labels'))
+        this.auth = JSON.parse(localStorage.getItem('auth'))
         if (this.provider === 'google') {
             this.channelId = (await this.$youtubeApi.youtubeVideosApi(this.info[1])).data.items[0].snippet.channelId
             const data = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items[0]
@@ -80,27 +82,24 @@ export default {
 
                 if (res.length > 1) {
                     const i = res.findIndex((i) => i.provider === 'twitch')
-                    for (const d of this.labels) {
-                        const idx = d.channels.findIndex((idx) => idx.name === res[i].channelId && idx.provider === 'twitch')
-                        if (idx >= 0) {
-                            this.channelId = d.channels[idx].channelId
-                            break
-                        }
-                    }
-                    const data = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
+                    const twitchlInfo = (await this.$twitchApi.twitchChannelApi(res[i].twitchChannelId)).data
                     const streamer = {
                         provider: 'twitch',
-                        name: data.display_name,
-                        img: data.logo,
+                        name: twitchlInfo.display_name,
+                        img: twitchlInfo.logo,
                         ysubcnt: 0,
-                        tsubcnt: this.numChange(data.followers),
-                        bannerImg: data.video_banner,
+                        tsubcnt: this.numChange(twitchlInfo.followers),
+                        bannerImg: twitchlInfo.video_banner,
                     }
                     this.channel.push(streamer)
                     this.info.push('twitch')
-                    this.info.push(this.channelId)
-                    live.push('twitch')
-                    live.push(res[i].channelId)
+                    this.info.push(res[i].twitchChannelId)
+
+                    const authI = this.auth.findIndex((i) => i.provider === 'twitch')
+                    if (authI >= 0) {
+                        live.push('twitch')
+                        live.push(res[i].channelId)
+                    }
                 }
             } catch (error) {}
             this.liveId = live.join(',')
@@ -144,21 +143,24 @@ export default {
                         tsubcnt: 0,
                         bannerImg: data.brandingSettings.image.bannerTabletExtraHdImageUrl,
                     }
+                    this.channel.push(streamer)
+                    this.info.unshift(res[i].channelId)
+                    this.info.unshift('google')
 
-                        this.channel.push(streamer)
-                        this.info.unshift(res[i].channelId)
-                        this.info.unshift('google')
-
+                    const authI = this.auth.findIndex((i) => i.provider === 'google')
+                    if (authI >= 0) {
                         const liveInfo = await this.$youtubeApi.youtubuLiveVideoApi(res[i].channelId, res[i].name)
                         if (liveInfo.items.length !== 0) {
                             live.unshift(liveInfo.items[0].id.videoId)
                             live.unshift('google')
                         }
                     }
-                } catch (error) {}
-                this.liveId = live.join(',')
-            }
-        } catch (err) {}
+                }
+            } catch (error) {}
+            this.liveId = live.join(',')
+            console.log(this.info)
+            console.log(live)
+        }
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
