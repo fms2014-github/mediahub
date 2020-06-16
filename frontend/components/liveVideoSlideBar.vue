@@ -82,15 +82,15 @@ export default {
     },
     async mounted() {
         const labels = JSON.parse(localStorage.getItem('labels'))
-        // for (const label of labels) {
-        //     for (const item of label.channels) {
-        //         if (item.provider === 'twitch') continue
-        //         const data = await this.$youtubeApi.youtubuLiveVideoApi(item.channelId, item.name)
-        //         if (data.items.length === 0) continue
-        //         this.liveList.push({ kind: 'google', id: data.items[0].id.videoId })
-        //         if (this.liveList.length === 5) break
-        //     }
-        // }
+        for (const label of labels) {
+            for (const item of label.channels) {
+                if (item.provider === 'twitch') continue
+                const data = await this.$youtubeApi.youtubuLiveVideoApi(item.channelId, item.name)
+                if (data.items.length === 0) continue
+                this.liveList.push({ kind: 'google', id: data.items[0].id.videoId })
+                if (this.liveList.length === 5) break
+            }
+        }
         const auth = JSON.parse(localStorage.getItem('auth'))
         const i = auth.findIndex((i) => i.provider === 'twitch')
         if (i >= 0) {
@@ -195,9 +195,9 @@ export default {
             } else {
                 this.isLoading = false
 
-                // img.setAttribute('src', require('~/assets/images/no-live.png'))
-                // const text = document.getElementById('loading-text')
-                // text.textContent = '현재 진행중인 라이브 방송이 없습니다.'
+                img.setAttribute('src', require('~/assets/images/no-live.png'))
+                const text = document.getElementById('loading-text')
+                text.textContent = '현재 진행중인 라이브 방송이 없습니다.'
             }
         },
     },
