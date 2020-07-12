@@ -15,7 +15,8 @@
         </div>
         <div id="profile-div">
             <div id="profile">
-                <img id="profile-img" :src="streamer.img" />
+                <img v-if="streamer.img" id="profile-img" :src="streamer.img" alt="img" />
+                <img v-else id="none-img" src="../../assets/images/noLogo.png" alt="channelImg" />
                 <div class="profile-content">
                     <div id="profile-name">{{ streamer.name }}</div>
                     <div>
@@ -34,10 +35,6 @@
                     <div id="twitch-btn">
                         <sub-button v-if="twitchButton.channelId !== ''" :play-info="twitchButton" />
                     </div>
-                    <!-- <div id="profile-btns">
-                        <button id="sub-btn" class="profile-btn">구독</button>
-                        <button id="follow-btn" class="profile-btn">팔로우</button>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -72,11 +69,6 @@ export default {
     },
     data: () => {
         return {
-            // key: 'AIzaSyBc27Pc5zyPqNrwPKnCv7HaV6S8hGa5xDw',
-            // key: 'AIzaSyA_4PVT4iLvL92YcMpYrxx_905xfsScqlU',
-            // key: 'AIzaSyCcWNyY_KtbSDxlVXgieCK2wjWo2nerdqM',
-            // key: 'AIzaSyAXdT2gaRi4k8XbxWZgAhxNiTJaQW3BH-4',
-            key: 'AIzaSyBY7P8ZXDfN8frwhLKTiIKjVZoWpW_Uurs',
             channelId: '',
             yChannelId: '',
             tChannelId: '',
@@ -84,7 +76,7 @@ export default {
             orderName: '최신순',
             total: 1,
             streamer: {
-                img: '',
+                img: 'c',
                 name: '',
                 ysubcnt: 0,
                 tsubcnt: 0,
@@ -145,37 +137,34 @@ export default {
             console.log('channelId/t', channelInfo[ti + 1])
             this.twitchButton.channelId = channelInfo[ti + 1]
         }
-        console.log(channelInfo)
         this.provider = channelInfo[0]
         this.channelId = channelInfo[1]
         if (channelInfo.length === 4) {
             this.yChannelId = this.channelId
             this.tChannelId = channelInfo[3]
             this.provider += ',' + channelInfo[2]
-
             this.channelId += ',' + channelInfo[3]
         }
-        if (this.provider === 'google' || this.provider === 'google,twitch') {
-            // const streamer = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data
-            // console.log(streamer)
-            // this.streamer.name = streamer.items[0].snippet.title
-            // this.streamer.description = streamer.items[0].snippet.description
-            // this.streamer.published = streamer.items[0].snippet.publishedAt.substring(0, 10)
-            // this.streamer.img = streamer.items[0].snippet.thumbnails.medium.url
-            // this.streamer.ysubcnt = this.numChange(streamer.items[0].statistics.subscriberCount)
-            // this.streamer.viewCount = streamer.items[0].statistics.viewCount
-            // this.streamer.bannerImg = streamer.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
+        if (this.provider === 'google') {
+            const streamer = (await this.$youtubeApi.youtubeChannelApi(this.channelId)).data.items
+            this.streamer.name = streamer[0].snippet.title
+            this.streamer.description = streamer[0].snippet.description
+            this.streamer.published = streamer[0].snippet.publishedAt.substring(0, 10)
+            this.streamer.img = streamer[0].snippet.thumbnails.medium.url
+            this.streamer.ysubcnt = this.numChange(streamer[0].statistics.subscriberCount)
+            this.streamer.viewCount = streamer[0].statistics.viewCount
+            this.streamer.bannerImg = streamer[0].brandingSettings.image.bannerTabletExtraHdImageUrl
 
-            await this.$youtubeApi.youtubeChannelApi(this.channelId).then((res) => {
-                this.streamer.name = res.data.items[0].snippet.title
-                this.streamer.description = res.data.items[0].snippet.description
-                this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
-                this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
-                this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
-                this.streamer.viewCount = res.data.items[0].statistics.viewCount
-                this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
-            })
-        } else {
+            // await this.$youtubeApi.youtubeChannelApi(this.channelId).then((res) => {
+            //     this.streamer.name = res.data.items[0].snippet.title
+            //     this.streamer.description = res.data.items[0].snippet.description
+            //     this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
+            //     this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
+            //     this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
+            //     this.streamer.viewCount = res.data.items[0].statistics.viewCount
+            //     this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
+            // })
+        } else if (this.provider === 'twitch') {
             const streamer = (await this.$twitchApi.twitchChannelApi(this.channelId)).data
             this.streamer.name = streamer.display_name
             this.streamer.channelName = streamer.name
@@ -185,6 +174,19 @@ export default {
             this.streamer.published = streamer.created_at.substring(0, 10)
             this.streamer.viewCount = streamer.views
             this.streamer.bannerImg = streamer.video_banner
+        } else {
+            await this.$youtubeApi.youtubeChannelApi(this.yChannelId).then((res) => {
+                this.streamer.name = res.data.items[0].snippet.title
+                this.streamer.description = res.data.items[0].snippet.description
+                this.streamer.published = res.data.items[0].snippet.publishedAt.substring(0, 10)
+                this.streamer.img = res.data.items[0].snippet.thumbnails.medium.url
+                this.streamer.ysubcnt = this.numChange(res.data.items[0].statistics.subscriberCount)
+                this.streamer.viewCount = res.data.items[0].statistics.viewCount
+                this.streamer.bannerImg = res.data.items[0].brandingSettings.image.bannerTabletExtraHdImageUrl
+            })
+            const streamer = (await this.$twitchApi.twitchChannelApi(this.tChannelId)).data
+            this.streamer.channelName = streamer.name
+            this.streamer.tsubcnt = this.numChange(streamer.followers)
         }
         this.more()
     },
@@ -230,7 +232,12 @@ export default {
             }
             if (this.provider === 'twitch' || this.provider === 'google,twitch') {
                 if (this.provider === 'google,twitch') this.channelId = this.tChannelId
-                this.vData1 = (await this.$twitchApi.twitchVideosApi(this.channelId)).data.videos
+                this.vData1 = (
+                    await this.$twitchApi.twitchVideosApi(
+                        this.channelId,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.videos
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
                     this.videoList.game = this.vData1[i].game
@@ -252,21 +259,25 @@ export default {
                     }
                     this.list.push(data)
                 }
-                this.vData1 = (await this.$twitchApi.twitchClipsByChannelApi(this.streamer.channelName)).data.clips
-                console.log(this.vData1)
+                this.vData1 = (
+                    await this.$twitchApi.twitchClipsByChannelApi(
+                        this.streamer.channelName,
+                        JSON.parse(localStorage.getItem('auth')).find((i) => i.provider === 'twitch').access_token,
+                    )
+                ).data.clips
                 for (let i = 0; i < this.vData1.length; i++) {
                     this.videoList.game = ''
-                    this.videoList.game = this.vData1[i].game
-                    this.videoList.viewCnt = this.numChange(this.vData1[i].views) + '회'
+                    this.videoList.game = this.vData2[i].game
+                    this.videoList.viewCnt = this.numChange(this.vData2[i].views) + '회'
                     this.videoList.curator = null
-                    this.videoList.curator = this.vData1[i].curator.name
+                    this.videoList.curator = this.vData2[i].curator.name
 
                     const data = {
-                        videoId: this.vData1[i].slug,
-                        title: this.vData1[i].title,
-                        publishedOrigin: this.vData1[i].created_at,
-                        published: this.vData1[i].created_at.substring(0, 10),
-                        thumbnail: this.vData1[i].thumbnails.medium,
+                        videoId: this.vData2[i].slug,
+                        title: this.vData2[i].title,
+                        publishedOrigin: this.vData2[i].created_at,
+                        published: this.vData2[i].created_at.substring(0, 10),
+                        thumbnail: this.vData2[i].thumbnails.medium,
                         live: 'none',
                         provider: 'twitch',
                         profileImg: this.streamer.img,
@@ -278,10 +289,12 @@ export default {
                     }
                     this.list.push(data)
                 }
-                if (this.provider === 'google,twitch')
-                    this.list.sort((a, b) => {
-                        return Date.parse(b.publishedOrigin) - Date.parse(a.publishedOrigin)
-                    })
+                if (this.provider === 'twitch')
+                    if (this.vData1.length !== 0 && this.vData2.length !== 0) {
+                        this.list.sort((a, b) => {
+                            return Date.parse(b.publishedOrigin) - Date.parse(a.publishedOrigin)
+                        })
+                    }
             }
             if (this.provider === 'google,twitch')
                 this.list.sort((a, b) => {
@@ -319,10 +332,7 @@ export default {
 <style lang="scss" scoped>
 #router-view {
     font-family: 'Arita-dotum-Medium';
-    // font-family: 'S-CoreDream-4Regular';
-    // font-family: 'KHNPHU';
-    // font-family: 'HCRDotum';
-    // font-family: 'YESGothic-Regular';
+
     // width: calc(100% - $side-bar-width);
     width: calc(100% - 74px);
     #profile-div {
@@ -346,6 +356,12 @@ export default {
         margin-left: 6px;
         border-radius: 50px;
     }
+    #none-img {
+        width: 100px;
+        height: 100px;
+        background-color: rgb(156, 156, 156);
+        border-radius: 50px;
+    }
     .profile-content {
         height: 75px;
         min-width: 250px;
@@ -358,11 +374,24 @@ export default {
     #profile-descrip {
         font-size: 12.5px;
         margin-bottom: 15px;
-        width: 800px;
+        padding: 25px;
+        width: 50%;
         min-height: 30px;
         max-height: 120px;
         line-height: 20px;
         overflow-y: auto;
+    }
+    #profile-descrip::-webkit-scrollbar {
+        width: 8px;
+    }
+    #profile-descrip::-webkit-scrollbar {
+        width: 8px;
+    }
+    #profile-descrip::-webkit-scrollbar-track {
+        background-color: rgba(231, 231, 231, 0.61);
+    }
+    #profile-descrip::-webkit-scrollbar-thumb {
+        background-color: rgba(219, 202, 202, 0.61);
     }
     #profile-info {
         margin-top: 20px;

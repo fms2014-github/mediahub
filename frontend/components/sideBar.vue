@@ -1,6 +1,6 @@
 <template>
     <div id="side-bar">
-        <button id="logo" @click="logo">로고</button>
+        <button id="logo" @click="logo"><img src="../assets/icon/mediaHub.png" alt="logo" /></button>
         <div id="tree"></div>
     </div>
 </template>
@@ -222,10 +222,6 @@ export default {
                         span.setAttribute('droppable', 'false')
                         node.appendChild(span)
                         node.setAttribute('class', 'child-label2')
-                        console.log('aawwddff1', document.querySelector(`div[data-label-id='${v[i].superId}']`))
-                        console.log('aawwddff2', v[i].superId)
-                        console.log('aawwddff3', node)
-                        console.log('aawwddff4', parentLabel)
                         parentLabel.insertBefore(node, document.querySelector(`div[data-label-id='${v[i].superId}']` + '>.channel'))
                         node.setAttribute('droppable', 'true')
                         span.addEventListener(
@@ -388,6 +384,9 @@ export default {
         background-color: white;
         outline: none;
         cursor: pointer;
+        img {
+            width: 40px;
+        }
     }
 }
 </style>

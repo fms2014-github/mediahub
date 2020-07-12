@@ -5,7 +5,12 @@
                 meeting_room
             </span>
         </button>
-        <button @click="alarmCheck = !alarmCheck">
+        <button
+            @click="
+                alarmCheck = !alarmCheck
+                reSyncClick = false
+            "
+        >
             <span id="alarm-icon" class="material-icons">
                 notifications
             </span>
@@ -33,7 +38,7 @@
 
 <script>
 // import loginIcon from '~/assets/icon/sign-in.svg?inline'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import alarm from '~/components/main/alarm.vue'
 // import logoutIcon from '~/assets/icon/logout.png?inline'
 
@@ -53,6 +58,7 @@ export default {
     mounted() {},
     methods: {
         ...mapActions({ logoutapi: 'login/logoutapi' }),
+        ...mapMutations(['mutateLabelRefreshState']),
         logo() {
             this.$router.push('/')
         },
@@ -66,13 +72,25 @@ export default {
         },
         syncYoutube() {
             this.$youtubeApi.synchronization().then((res) => {
-                console.log(res.status)
+                console.log(res.status, location.origin)
+                this.reSyncClick = !this.reSyncClick
+                this.mutateLabelRefreshState()
             })
         },
         syncTwitch() {
-            this.$backendAxios.twitchSynchronization().then((res) => {
-                console.log(res.status)
-            })
+            this.$backendAxios
+                .twitchSynchronization()
+                .then((res) => {
+                    console.log(res.status, location.origin)
+                    this.mutateLabelRefreshState()
+                    this.reSyncClick = !this.reSyncClick
+                    console.log(res.status)
+                })
+                // eslint-disable-next-line handle-callback-err
+                .catch((err) => {
+                    location.href =
+                        'https://id.twitch.tv/oauth2/authorize?client_id=db8sw2xqe82gk1x78mkubkr5xh545p&response_type=code&scope=channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions collections_edit communities_edit communities_moderate openid user_blocks_edit user_blocks_read user_follows_edit user_read user_subscriptions viewing_activity_read&redirect_uri=http://localhost:3000/twitch/code'
+                })
         },
     },
 }

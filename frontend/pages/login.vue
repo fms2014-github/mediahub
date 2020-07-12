@@ -1,14 +1,25 @@
 <template>
     <div id="login-page">
         <video id="background-video" preload="auto" autoplay="true" loop="loop" muted="muted" volume="0">
-            <source src="/login-background.mp4" />
+            <source src="/login-background.webm" />
         </video>
         <div id="background-video-overlay"></div>
         <transition name="animate" enter-active-class="animated zoomInDown" leave-active-class="animated zoomOutDonw">
             <div v-if="animate" v-show="loading" id="login-page-modal">
-                <h1 id="title">MEDIA HUB</h1>
+                <div id="login-title">
+                    <h2>
+                        <span>M</span>
+                        <span>E</span>
+                        <span>D</span>
+                        <span>I</span>
+                        <span id="last">A</span>
+                        <span>H</span>
+                        <span>U</span>
+                        <span>B</span>
+                    </h2>
+                </div>
                 <div id="login-button-wrap">
-                    <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login with Google</button>
+                    <button id="border-animate" @click="login"><img src="../assets/images/google-logo.png" />Login</button>
                     <div class="border"></div>
                     <div class="border"></div>
                     <div class="border"></div>
@@ -69,64 +80,121 @@ export default {
 <style lang="scss" scoped>
 #login-page {
     font-family: 'Arita-dotum-Medium';
-    position: relative;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background-color: #350901;
+    z-index: -5;
     #background-video {
         position: absolute;
-        top: 0px;
+        top: -30px;
         left: 0px;
-        width: auto;
-        height: auto;
-        min-width: 100%;
-        min-height: 100%;
         z-index: -3;
-        overflow: hidden;
+        background-color: #350901;
     }
     #background-video-overlay {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: auto;
-        height: auto;
-        min-width: 100%;
-        min-height: 100%;
+        position: fixed;
+        right: 0px;
+        bottom: 0px;
+        width: 100vw;
+        height: 100vh;
         z-index: -1;
-        background-color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(211, 211, 211, 0.493);
         overflow: hidden;
         //background-color: rgba(0, 0, 0, 0.6);
     }
     #login-page-modal {
+        position: absolute;
         transition: all 1s;
-        width: 80%;
-        min-width: 400px;
-        max-width: 560px;
-        height: 45%;
-        max-height: 338px;
-        min-height: 225px;
+        width: 520px;
+        height: 430px;
+        transform: rotate(-7.7deg);
+        top: 320px;
+        left: 753px;
+        border-radius: 27px;
+        // width: 80%;
+        // min-width: 400px;
+        // max-width: 560px;
+        // height: 45%;
+        // max-height: 338px;
+        // min-height: 225px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: white;
-        box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
-        #title {
-            margin-bottom: 10% !important;
+        background-color: rgba(0, 0, 0, 0);
+        // box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2), 0px 0px 24px 2px rgba(0, 0, 0, 0.2);
+        #login-title {
+            @import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+            width: 100%;
+            height: 40%;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            h2 {
+                height: 100px;
+            }
+
+            h2 span {
+                position: relative;
+                top: 2px;
+                display: inline-block;
+                animation: bounce 0.3s ease infinite alternate;
+                font-family: 'Titan One', cursive;
+                font-size: 40px;
+                color: rgb(22, 22, 22);
+                text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc, 0 5px 0 #ccc, 0 6px 0 transparent, 0 7px 0 transparent,
+                    0 8px 0 transparent, 0 9px 0 transparent, 0 10px 10px rgba(0, 0, 0, 0.4);
+            }
+
+            h2 span:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+            h2 span:nth-child(3) {
+                animation-delay: 0.2s;
+            }
+            h2 span:nth-child(4) {
+                animation-delay: 0.3s;
+            }
+            h2 span:nth-child(5) {
+                animation-delay: 0.4s;
+            }
+            h2 span:nth-child(6) {
+                animation-delay: 0.5s;
+            }
+            h2 span:nth-child(7) {
+                animation-delay: 0.6s;
+            }
+            h2 span:nth-child(8) {
+                animation-delay: 0.7s;
+            }
+
+            @keyframes bounce {
+                100% {
+                    top: -2px;
+                    text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc, 0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc,
+                        0 9px 0 #ccc, 0 50px 25px rgba(0, 0, 0, 0.2);
+                }
+            }
+            #last {
+                margin-right: 10px;
+            }
         }
         #login-button-wrap {
             position: relative;
-            width: 50%;
+            width: 40%;
+            height: 64px;
+
             z-index: 100;
             text-align: center;
-            border: {
-                width: 1px;
-                style: solid;
-                color: rgb(238, 238, 238);
-            }
             z-index: 100;
             #border-animate,
             #border-animate:hover,
@@ -137,10 +205,10 @@ export default {
                 height: 100%;
                 padding: 15px;
                 vertical-align: middle;
-                color: rgb(31, 31, 31);
+                color: rgb(24, 24, 24);
                 text-decoration: none;
                 border-width: 0px;
-                background-color: rgba(255, 255, 255, 0.774);
+                background-color: rgba(197, 197, 197, 0.082);
                 img {
                     width: 32px;
                     height: 32px;
@@ -154,9 +222,9 @@ export default {
             .border {
                 position: absolute;
                 border: {
-                    width: 2px;
+                    width: 0.1px;
                     style: solid;
-                    color: rgba(236, 217, 168, 0.363);
+                    color: rgba(78, 78, 78, 0.555);
                     radius: 2px;
                 }
                 z-index: 1;
@@ -165,30 +233,30 @@ export default {
                 opacity: 0;
             }
             .border-top {
-                top: -4px;
-                right: -4px;
-                border-right-width: 2px;
+                top: 0px;
+                right: 0px;
+                border-right-width: 0.1px;
                 animation-name: borderTopToBottom;
                 opacity: 1;
             }
             .border-right {
-                bottom: -4px;
-                right: -4px;
-                border-bottom-width: 2px;
+                // bottom: -4px;
+                right: 0px;
+                border-bottom-width: 0.1px;
                 animation-name: borderRightToLeft;
                 opacity: 1;
             }
             .border-bottom {
-                bottom: 0px;
-                left: -4px;
-                border-left-width: 2px;
+                // bottom: 10px;
+                left: 0px;
+                border-left-width: 0.1px;
                 animation-name: borderBottomToTop;
                 opacity: 1;
             }
             .border-left {
-                top: -4px;
-                left: -4px;
-                border-top-width: 2px;
+                top: 0px;
+                left: 0px;
+                border-top-width: 0.1px;
                 animation-name: borderLeftToRight;
                 opacity: 1;
             }
@@ -202,11 +270,11 @@ export default {
             }
             @keyframes borderBottomToTop {
                 from {
-                    top: 73px;
+                    top: 64px;
                     padding-top: 0px;
                 }
                 to {
-                    top: -2px;
+                    top: 0px;
                     padding-top: 64px;
                 }
             }
@@ -215,7 +283,7 @@ export default {
                     padding-right: 0px;
                 }
                 to {
-                    padding-right: calc(100% + 2px);
+                    padding-right: calc(100% - 2px);
                 }
             }
             @keyframes borderRightToLeft {
@@ -223,7 +291,7 @@ export default {
                     padding-left: 0px;
                 }
                 to {
-                    padding-left: calc(100% + 2px);
+                    padding-left: calc(100% - 2px);
                 }
             }
         }

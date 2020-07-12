@@ -62,9 +62,7 @@ export default {
     },
     async beforeMount() {
         if (localStorage.getItem('auth') !== null) {
-            console.log(localStorage.getItem('auth'))
             const temp = JSON.parse(localStorage.getItem('auth'))
-            console.log('before::', temp)
             const twitchInfo = temp.find((i) => i.provider === 'twitch')
             if (temp.find((i) => i.provider === 'twitch') !== undefined) {
                 const { data } = await this.$backendAxios.twitchTokerRefresh()
@@ -116,7 +114,7 @@ export default {
                 const list = []
                 const channelInfo = await this.$twitchApi.twitchChannelApi(channelId)
                 const searchVideosRes = await this.$twitchApi.twitchVideosApi(channelId)
-                for (let i = 0; i < (searchVideosRes.data.videos.length >= 2 ? 2 : searchVideosRes.data.videos.length); i++) {
+                for (let i = 0; i < 2; i++) {
                     const data = {
                         videoId: searchVideosRes.data.videos[i]._id,
                         title: searchVideosRes.data.videos[i].title,
@@ -127,14 +125,15 @@ export default {
                         provider: 'twitch',
                         profileImg: channelInfo.data.logo,
                         viewCnt: this.numChange(searchVideosRes.data.videos[i].views) + '회',
-                        channelName: channelInfo.data.display_name,
+                        channelName: channelInfo.data.name,
                         channelId,
                         game: searchVideosRes.data.videos[i].game,
                     }
                     list.push(data)
                 }
-                const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.display_name)
-                for (let i = 0; i < clipRes.data.clips.length >= 2 ? 2 : clipRes.data.clips.length; i++) {
+                const clipRes = await this.$twitchApi.twitchClipsByChannelApi(channelInfo.data.name)
+                for (let i = 0; i < 2; i++) {
+                    console.log(clipRes.data.clips[i] === undefined)
                     const data = {
                         videoId: clipRes.data.clips[i].slug,
                         title: clipRes.data.clips[i].title,
@@ -145,13 +144,14 @@ export default {
                         provider: 'twitch',
                         profileImg: channelInfo.data.logo,
                         viewCnt: this.numChange(clipRes.data.clips[i].views) + '회',
-                        channelName: channelInfo.data.display_name,
+                        channelName: channelInfo.data.name,
                         channelId,
                         game: clipRes.data.clips[i].game,
                         curator: clipRes.data.clips[i].curator.name,
                     }
                     list.push(data)
                 }
+                this.subscriptionList.push({ channelName: channelInfo.data.display_name, provider, videoList: list })
             }
         },
         numChange(n) {
@@ -178,7 +178,7 @@ export default {
             }
             return nCnt
         },
-        ...mapGetters({ jwt: 'login/getJwt' }),
+        ...mapGetters({ getJwt: 'login/getJwt' }),
     },
 }
 </script>

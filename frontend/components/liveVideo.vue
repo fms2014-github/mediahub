@@ -70,13 +70,18 @@ export default {
                         this.twitchPlayer = new Twitch.Player('twitch-video', options)
                         // eslint-disable-next-line no-undef
                         this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
+                            this.$emit('load-complete')
                             document.querySelector('#twitch-video iframe').style.width = '100%'
                             document.querySelector('#twitch-video iframe').style.height = '100%'
                         })
                     }, 100)
                 } else if (this.videoId.split(',')[0] === 'google') {
                     this.youtubeId = this.videoId.split(',')[1]
-                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    try {
+                        this.liveChatId = (
+                            await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
+                        ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    } catch (err) {}
                     console.log('123qweasdzcx', this.liveChatId)
                 }
             } else {
@@ -95,6 +100,7 @@ export default {
                         // eslint-disable-next-line no-undef
                         this.twitchPlayer.addEventListener(Twitch.Player.READY, () => {
                             document.querySelector('#twitch-video iframe').style.width = '100%'
+                            this.$emit('load-complete')
                             document.querySelector('#twitch-video iframe').style.height = '100%'
                         })
                         if (this.twitchId !== '' && this.youtubeId !== '') {
@@ -107,13 +113,18 @@ export default {
                 }
                 if (this.videoId.split(',')[0] === 'google') {
                     this.youtubeId = this.videoId.split(',')[1]
-                    this.liveChatId = (await this.$youtubeApi.youtubeVideosApi(this.youtubeId)).data.items[0].liveStreamingDetails.activeLiveChatId
+                    try {
+                        this.liveChatId = (
+                            await this.$youtubeApi.youtubeVideosApi(this.youtubeId)
+                        ).data.items[0].liveStreamingDetails.activeLiveChatId
+                    } catch (err) {}
                     console.log('123qweasdzcx', this.liveChatId)
                 }
             }
         },
         ready(e) {
             this.player = e.target
+            this.$emit('load-complete')
             document.querySelector('#youtube-video iframe').style.width = '100%'
             document.querySelector('#youtube-video iframe').style.height = '100%'
         },

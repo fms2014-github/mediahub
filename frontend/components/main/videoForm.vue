@@ -3,13 +3,20 @@
         <div class="video-div">
             <div class="video-list">
                 <div v-for="l in vlist" :key="l.id" class="video-form">
-                    <nuxt-link v-if="!l.curator" :to="'/uploaded/video/' + l.provider + '/' + l.videoId + '?id=' + l.channelId">
+                    <nuxt-link v-if="l.live === 'live'" :to="'/streaming/' + l.provider + ',' + l.videoId">
                         <div class="img-wrap">
                             <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
                             <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
                             <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
                             <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
-			    <img v-if="l.curator" id="clip" src="../../assets/icon/clip.png" alt="" class="img-icon" />
+                        </div>
+                    </nuxt-link>
+                    <nuxt-link v-else-if="!l.curator" :to="'/uploaded/video/' + l.provider + '/' + l.videoId + '?id=' + l.channelId">
+                        <div class="img-wrap">
+                            <img v-if="l.provider === 'google'" id="img-y" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
+                            <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
+                            <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
                         </div>
                     </nuxt-link>
                     <nuxt-link v-else :to="'/uploaded/clip/' + l.videoId + '?id=' + l.channelId">
@@ -18,6 +25,7 @@
                             <img v-else-if="l.provider === 'twitch'" id="img-t" :src="l.thumbnail" alt="" class="img-url" />
                             <img v-if="l.provider === 'google'" src="../../assets/icon/youtubeIcon2.png" alt="" class="img-icon" />
                             <img v-else-if="l.provider === 'twitch'" src="../../assets/icon/twitchIcon2.png" alt="" class="img-icon" />
+                            <img v-if="l.curator !== ''" id="clip" src="../../assets/icon/clip.png" alt="" class="img-icon" />
                         </div>
                     </nuxt-link>
                     <nuxt-link :to="'/channel/' + l.provider + ',' + l.channelId">
